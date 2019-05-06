@@ -30,6 +30,7 @@ public class Consts {
     public static final LocalDateTime SECOND_LOCAL_DATE_TIME = LocalDateTime.now(ZoneId.of("Brazil/East"));
 
 
-    private Consts() {}
+    private Consts() {
+    }
 
 }

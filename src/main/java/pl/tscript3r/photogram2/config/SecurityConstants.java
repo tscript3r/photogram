@@ -8,6 +8,7 @@ class SecurityConstants {
     static final String HEADER_TYPE = "Authorization";
     static final String CLIENT_DOMAIN_URL = "*";
 
-    private SecurityConstants() {}
+    private SecurityConstants() {
+    }
 
 }

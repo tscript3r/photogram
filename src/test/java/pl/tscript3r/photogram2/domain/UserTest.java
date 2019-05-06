@@ -11,12 +11,12 @@ import static pl.tscript3r.photogram2.Consts.*;
 public class UserTest {
 
     public static User getDefaultUser() {
-        return new User(ID, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, LOCAL_DATE_TIME, Collections.emptySet());
+        return new User(ID, NAME, USERNAME, PASSWORD, EMAIL, BIO);
     }
 
     public static User getSecondUser() {
-        return new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, SECOND_EMAIL_CONFIRMED,
-                SECOND_BIO, SECOND_LOCAL_DATE_TIME, Collections.emptySet());
+        return new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL,
+                SECOND_BIO);
     }
 
     @DisplayName("User equals with ID")

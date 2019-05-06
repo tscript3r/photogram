@@ -10,16 +10,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domain.User;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 import static pl.tscript3r.photogram2.api.v1.dtos.UserDtoTest.getDefaultUserDto;
 import static pl.tscript3r.photogram2.domain.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram2.domain.UserTest.getSecondUser;

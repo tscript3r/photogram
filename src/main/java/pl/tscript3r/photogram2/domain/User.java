@@ -18,14 +18,16 @@ public class User extends DomainEntity {
 
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private Boolean emailConfirmed = false;
 
     @Column(columnDefinition = "text")
@@ -34,20 +36,23 @@ public class User extends DomainEntity {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(Long id, String name, String username, String password, String email, Boolean emailConfirmed,
-                String bio, LocalDateTime creationDate, Set<Role> roles) {
+    public User(Long id, String name, String username, String password, String email, String bio) {
         super(id);
         this.name = name;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.emailConfirmed = emailConfirmed;
         this.bio = bio;
-        this.creationDate = creationDate;
-        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
 }

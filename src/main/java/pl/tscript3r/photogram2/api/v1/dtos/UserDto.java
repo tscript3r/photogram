@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -19,7 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserDto implements Dto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Nullable
     private Long id;
 
@@ -49,7 +47,6 @@ public class UserDto implements Dto {
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Valid
     @Nullable
     private Set<RoleDto> roles = new HashSet<>();
 

@@ -3,7 +3,8 @@ package pl.tscript3r.photogram2.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static pl.tscript3r.photogram2.Consts.*;
 
 class RoleTest {

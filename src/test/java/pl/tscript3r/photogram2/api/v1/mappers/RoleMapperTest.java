@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import pl.tscript3r.photogram2.api.v1.dtos.RoleDto;
 import pl.tscript3r.photogram2.domain.Role;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RoleMapperTest {
 

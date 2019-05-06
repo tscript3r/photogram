@@ -1,15 +1,17 @@
 package pl.tscript3r.photogram2.api.v1.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.exceptions.controllers.BadRequestPhotogramException;
 import pl.tscript3r.photogram2.services.UserService;
 
 import javax.validation.Valid;
-
+import javax.validation.constraints.Email;
 import java.security.Principal;
+import java.util.List;
 import java.util.Set;
 
 import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.USER_MAPPING;
@@ -35,17 +37,17 @@ public class UserController {
     }
 
     @GetMapping("find")
-    public UserDto findBy(@RequestParam(value = "username", defaultValue = "") String username,
-                               @RequestParam(value = "email", defaultValue = "") String email,
-                               @RequestParam(value = "id", required = false) Long id) {
-        if(isSet(username))
+    public UserDto findBy(@RequestParam(value = "username", required = false) String username,
+                          @RequestParam(value = "email", required = false) String email,
+                          @RequestParam(value = "id", required = false) Long id) {
+        if (isSet(username))
             return userService.getByUsernameDto(username);
-        if(isSet(email))
+        if (isSet(email))
             return userService.getByEmailDto(email);
-        if(id != null)
+        if (id != null)
             return userService.getByIdDto(id);
 
-        throw new BadRequestPhotogramException("400: bad request. Specify any of parameter: id / email / username");
+        throw new BadRequestPhotogramException("Bad request - specify any of: id / email / username");
     }
 
     private Boolean isSet(String username) {
@@ -54,13 +56,37 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto add(@Valid @RequestBody UserDto userDto) {
         return userService.save(userDto);
     }
 
     @PutMapping
-    public UserDto updateUser(Principal principal, @Valid @RequestBody UserDto userDto) {
+    public UserDto update(Principal principal, @Valid @RequestBody UserDto userDto, BindingResult bindingResult) {
+        checkUpdateValidationErrors(bindingResult);
+        checkIdAndEmail(userDto);
         return userService.update(principal, userDto);
+    }
+
+    private void checkUpdateValidationErrors(BindingResult bindingResult) {
+        List<ObjectError> objectErrors = bindingResult.getAllErrors();
+        for (ObjectError objectError : objectErrors)
+            if (objectError.getCode() != null) {
+                String errorCode = objectError.getCode();
+                if (errorCode.equalsIgnoreCase("Size") ||
+                        errorCode.equalsIgnoreCase("Email"))
+                    throw new BadRequestPhotogramException("Some of the given values are incorrect.");
+                // TODO: probably to refactor
+            }
+    }
+
+    private void checkIdAndEmail(UserDto userDto) {
+        if (userDto.getId() == null && userDto.getEmail() == null)
+            throw new BadRequestPhotogramException("Specify id or/and email");
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(Principal principal, @PathVariable Long id) {
+        // TODO: implement & test
     }
 
 }
