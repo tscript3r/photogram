@@ -87,4 +87,9 @@ public class UserController {
         userService.delete(id);
     }
 
+    @GetMapping("reset")
+    public void resetPassword(@RequestParam(value = "email") String email) {
+        userService.resetPassword(email);
+    }
+
 }

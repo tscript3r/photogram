@@ -34,4 +34,6 @@ public interface UserService {
 
     UserDto getByEmailDto(String email);
 
+    void resetPassword(String email);
+
 }

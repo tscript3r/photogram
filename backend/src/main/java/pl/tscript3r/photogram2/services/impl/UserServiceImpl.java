@@ -133,4 +133,10 @@ public class UserServiceImpl implements UserService {
         else
             userRepository.deleteById(id);
     }
+
+    @Override
+    public void resetPassword(String email) {
+
+    }
+
 }
