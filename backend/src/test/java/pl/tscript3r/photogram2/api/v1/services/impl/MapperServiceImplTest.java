@@ -11,6 +11,9 @@ import org.springframework.context.ApplicationContext;
 import pl.tscript3r.photogram2.api.v1.dtos.Dto;
 import pl.tscript3r.photogram2.api.v1.mappers.CollectionMapper;
 import pl.tscript3r.photogram2.api.v1.mappers.Mapper;
+import pl.tscript3r.photogram2.api.v1.mappers.RoleMapper;
+import pl.tscript3r.photogram2.api.v1.mappers.UserMapper;
+import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.DataStructure;
 import pl.tscript3r.photogram2.exceptions.services.MapperServicePhotogramException;
 
@@ -23,7 +26,20 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("Mapper service")
 @ExtendWith(MockitoExtension.class)
-class MapperServiceImplTest {
+public class MapperServiceImplTest {
+
+    public static MapperService getInstance() {
+        ApplicationContext applicationContext = mock(ApplicationContext.class);
+        MapperServiceImpl result = new MapperServiceImpl();
+        var beanMap = new HashMap<String, Mapper>();
+        RoleMapper roleMapper = new RoleMapper();
+        beanMap.put("userMapper", new UserMapper(roleMapper));
+        beanMap.put("roleMapper", new RoleMapper());
+        when(applicationContext.getBeansOfType(Mapper.class)).thenReturn(beanMap);
+        result.setApplicationContext(applicationContext);
+        verify(applicationContext, times(1)).getBeansOfType(Mapper.class);
+        return result;
+    }
 
     @Mock
     ApplicationContext applicationContext;

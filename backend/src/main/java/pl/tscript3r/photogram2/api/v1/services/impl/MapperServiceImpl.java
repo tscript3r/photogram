@@ -36,6 +36,14 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         }
     }
 
+    private Mapper getMapper(DataStructure source) {
+        for (Mapper mapper : mappers)
+            if (mapper.compatible(source.getClass()))
+                return mapper;
+        throw new MapperServicePhotogramException("Mapper for [" +
+                source.getClass().getName() + "] not found");
+    }
+
     private MapperServicePhotogramException getCustomException(ClassCastException e, Class source, Class target) {
         String message = "Class cast exception by %s of [%s] -> [%s]";
         if (isCollection(source))
@@ -47,14 +55,6 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
 
     private boolean isCollection(Object o) {
         return o instanceof Collection || o instanceof Map;
-    }
-
-    private Mapper getMapper(DataStructure source) {
-        for (Mapper mapper : mappers)
-            if (mapper.compatible(source.getClass()))
-                return mapper;
-        throw new MapperServicePhotogramException("Mapper for [" +
-                source.getClass().getName() + "] not found");
     }
 
     @Override

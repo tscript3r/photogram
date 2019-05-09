@@ -3,37 +3,36 @@ package pl.tscript3r.photogram2.services;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.User;
 
+import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.Set;
 
 public interface UserService {
 
-    User save(User user);
+    User save(@NotNull User user, @NotNull Boolean passwordEncode, @NotNull Boolean addDefaultRole);
 
-    UserDto save(UserDto user);
+    UserDto save(@NotNull UserDto user);
 
-    UserDto update(Principal principal, UserDto userDto);
+    UserDto update(Principal principal, @NotNull UserDto userDto);
 
-    User update(User user);
-
-    void delete(Long id);
+    void delete(@NotNull Long id);
 
     Set<UserDto> getAllDto();
 
     User getByPrincipal(Principal principal);
 
-    User getById(Long id);
+    User getById(@NotNull Long id);
 
-    UserDto getByIdDto(Long id);
+    UserDto getByIdDto(@NotNull Long id);
 
-    User getByUsername(String username);
+    User getByUsername(@NotNull String username);
 
-    UserDto getByUsernameDto(String username);
+    UserDto getByUsernameDto(@NotNull String username);
 
-    User getByEmail(String email);
+    User getByEmail(@NotNull String email);
 
-    UserDto getByEmailDto(String email);
+    UserDto getByEmailDto(@NotNull String email);
 
-    void resetPassword(String email);
+    void resetPassword(@NotNull String email);
 
 }

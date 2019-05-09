@@ -31,9 +31,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user) {
-        user.addRole(roleService.getDefault());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public User save(User user, Boolean passwordEncode, Boolean addDefaultRole) {
+        if (addDefaultRole)
+            user.addRole(roleService.getDefault());
+        if (passwordEncode)
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -41,15 +43,14 @@ public class UserServiceImpl implements UserService {
     public UserDto save(UserDto userDto) {
         // TODO: confirmation mail needs to be send here
         User user = mapperService.map(userDto, User.class);
-        return mapperService.map(save(user), UserDto.class);
+        return mapperService.map(save(user, true, true), UserDto.class);
     }
 
     @Override
     public UserDto update(Principal principal, UserDto userDto) {
         // TODO: access permissions check?
         User existingUser = getExistingUser(userDto);
-        updateValues(existingUser, userDto);
-        save(existingUser);
+        updateValuesAndSave(existingUser, userDto);
         return mapperService.map(existingUser, UserDto.class);
     }
 
@@ -61,7 +62,9 @@ public class UserServiceImpl implements UserService {
         throw new UserNotFoundPhotogramException("Specify id or email");
     }
 
-    private void updateValues(User existingUser, UserDto userDto) {
+    private void updateValuesAndSave(User existingUser, UserDto userDto) {
+        boolean passwordEncode = false;
+
         if (userDto.getEmail() != null &&
                 !existingUser.getEmail().equalsIgnoreCase(userDto.getEmail())) {
             existingUser.setEmail(userDto.getEmail());
@@ -72,15 +75,14 @@ public class UserServiceImpl implements UserService {
             existingUser.setBio(userDto.getBio());
         if (userDto.getName() != null)
             existingUser.setName(userDto.getName());
-        if (userDto.getPassword() != null)
+        if (userDto.getPassword() != null) {
+            passwordEncode = true;
             existingUser.setPassword(userDto.getPassword());
+        }
         if (userDto.getUsername() != null)
             existingUser.setUsername(userDto.getUsername());
-    }
 
-    @Override
-    public User update(User user) {
-        return userRepository.save(user);
+        save(existingUser, passwordEncode, false);
     }
 
     @Override
