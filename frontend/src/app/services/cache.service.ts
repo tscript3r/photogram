@@ -18,4 +18,12 @@ export class CacheService {
     return this.request[requestUrl];
   }
 
+  invalidateCache(requestUrl: string): void {
+    this.request[requestUrl] = null;
+  }
+
+  clear(): void {
+    this.request = {};
+  }
+
 }
