@@ -60,9 +60,9 @@ class UserControllerTest {
     @Test
     @DisplayName("Get all users")
     void getAll() throws Exception {
-        Set<UserDto> inputUsers = Collections.singleton(getDefaultUserDto());
+        var inputUsers = Collections.singletonList(getDefaultUserDto());
         when(userService.getAllDto()).thenReturn(inputUsers);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING)
+        var result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -93,14 +93,14 @@ class UserControllerTest {
     @Test
     @DisplayName("Get by ID")
     void getByIdFound() throws Exception {
-        UserDto input = getDefaultUserDto();
+        var input = getDefaultUserDto();
         when(userService.getByIdDto(any())).thenReturn(getDefaultUserDto());
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        UserDto output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
+        var output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
         assertEquals(input.getId(), output.getId());
         assertEquals(input.getEmail(), output.getEmail());
     }
@@ -118,42 +118,42 @@ class UserControllerTest {
     @Test
     @DisplayName("Find by username")
     void findByUsername() throws Exception {
-        UserDto input = getDefaultUserDto();
+        var input = getDefaultUserDto();
         when(userService.getByUsernameDto(any())).thenReturn(input);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/find?username=any")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        UserDto output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
+        var output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
         assertEquals(input.getUsername(), output.getUsername());
     }
 
     @Test
     @DisplayName("Find by id")
     void findById() throws Exception {
-        UserDto input = getDefaultUserDto();
+        var input = getDefaultUserDto();
         when(userService.getByIdDto(any())).thenReturn(input);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/find?id=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        UserDto output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
+        var output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
         assertEquals(input.getId(), output.getId());
     }
 
     @Test
     @DisplayName("Find by email")
     void findByEmail() throws Exception {
-        UserDto input = getDefaultUserDto();
+        var input = getDefaultUserDto();
         when(userService.getByEmailDto(any())).thenReturn(input);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/find?email=any@any.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        UserDto output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
+        var output = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
         assertEquals(input.getEmail(), output.getEmail());
     }
 

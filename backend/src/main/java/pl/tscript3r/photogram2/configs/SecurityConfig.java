@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthentication jwtAuthentication = new JwtAuthentication(authenticationManager());
+        var jwtAuthentication = new JwtAuthentication(authenticationManager());
         jwtAuthentication.setFilterProcessesUrl(PUBLIC_MATCHERS[0]);
         // TODO: for h2-console
         http.headers().frameOptions().disable();

@@ -23,7 +23,7 @@ public class UserTest {
     @DisplayName("User equals with ID")
     @Test
     void userEqualsWithId() {
-        User secondUser = getSecondUser();
+        var secondUser = getSecondUser();
         secondUser.setId(ID);
         assertEquals(getDefaultUser(), secondUser);
     }
@@ -31,7 +31,7 @@ public class UserTest {
     @DisplayName("User not equals with ID")
     @Test
     void userNotEqualsWithId() {
-        User defaultUser = getDefaultUser();
+        var defaultUser = getDefaultUser();
         defaultUser.setId(SECOND_ID);
         assertNotEquals(getDefaultUser(), defaultUser);
     }
@@ -39,7 +39,7 @@ public class UserTest {
     @DisplayName("New user function validation")
     @Test
     void newUser() {
-        User user = new User(NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, LOCAL_DATE_TIME, Collections.emptySet());
+        var user = new User(NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, LOCAL_DATE_TIME, Collections.emptySet());
         assertTrue(user.isNew());
         user.setId(ID);
         assertFalse(user.isNew());

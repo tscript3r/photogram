@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.Role;
 import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.services.UserNotFoundPhotogramException;
@@ -17,6 +16,7 @@ import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -48,14 +48,14 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MapperService mapperService = getInstance();
+        var mapperService = getInstance();
         userService = new UserServiceImpl(userRepository, roleService, passwordEncoder, mapperService);
     }
 
     @Test
     @DisplayName("Save domain")
     void saveDomain() {
-        User user = getDefaultUser();
+        var user = getDefaultUser();
         when(roleService.getDefault()).thenReturn(new Role());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
         userService.save(user, true, true);
@@ -67,7 +67,7 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Save domain without pass encode & default role")
     void saveDomainWithoutPassEncodeAndDefaultRole() {
-        User user = getDefaultUser();
+        var user = getDefaultUser();
         userService.save(user, false, false);
         verify(roleService, times(0)).getDefault();
         verify(passwordEncoder, times(0)).encode(any());
@@ -77,7 +77,7 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Save DTO")
     void saveDto() {
-        UserDto userDto = getDefaultUserDto();
+        var userDto = getDefaultUserDto();
         when(roleService.getDefault()).thenReturn(new Role());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
         when(userRepository.save(any())).thenReturn(getDefaultUser());
@@ -91,14 +91,14 @@ class UserServiceImplTest {
     @DisplayName("Update DTO by ID")
     void updateDtoById() {
         Principal principal = () -> USERNAME;
-        UserDto userDto = getSecondUserDto();
-        User modifiedUser = getDefaultUser();
+        var userDto = getSecondUserDto();
+        var modifiedUser = getDefaultUser();
 
         when(userRepository.findById(any())).thenReturn(Optional.of(modifiedUser));
         when(userRepository.save(any())).thenReturn(modifiedUser);
         when(passwordEncoder.encode(any())).thenReturn(SECOND_PASSWORD);
 
-        UserDto modifiedUserDto = userService.update(principal, userDto);
+        var modifiedUserDto = userService.update(principal, userDto);
         assertEquals(SECOND_EMAIL, modifiedUserDto.getEmail());
         assertEquals(SECOND_BIO, modifiedUserDto.getBio());
         assertEquals(SECOND_NAME, modifiedUserDto.getName());
@@ -113,8 +113,8 @@ class UserServiceImplTest {
     @DisplayName("Update DTO by email")
     void updateDtoByEmail() {
         Principal principal = () -> USERNAME;
-        UserDto userDto = getSecondUserDto();
-        User modifiedUser = getDefaultUser();
+        var userDto = getSecondUserDto();
+        var modifiedUser = getDefaultUser();
         userDto.setId(null);
         userDto.setPassword(null);
         userDto.setBio(null);
@@ -140,7 +140,7 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Update DTO without email & id")
     void updateDtoWithoutEmailAndId() {
-        UserDto userDto = new UserDto();
+        var userDto = new UserDto();
         userDto.setName(SECOND_NAME);
         userDto.setUsername(SECOND_USERNAME);
         Principal principal = () -> USERNAME;
@@ -151,8 +151,11 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Get all DTOs")
     void getAllDto() {
-        when(userRepository.findAll()).thenReturn(Arrays.asList(getDefaultUser(), getSecondUser()));
-        Set<UserDto> userDtos = userService.getAllDto();
+        var users = new ArrayList<User>();
+        users.add(getDefaultUser());
+        users.add(getSecondUser());
+        when(userRepository.findAll()).thenReturn(users);
+        var userDtos = userService.getAllDto();
         assertEquals(2, userDtos.size());
         verify(userRepository, times(1)).findAll();
     }
@@ -180,7 +183,7 @@ class UserServiceImplTest {
     @DisplayName("Get DTO by existing ID")
     void getByIdDto() {
         when(userRepository.findById(any())).thenReturn(Optional.of(getDefaultUser()));
-        UserDto returnedUserDto = userService.getByIdDto(any());
+        var returnedUserDto = userService.getByIdDto(any());
         assertEquals(getDefaultUser().getEmail(), returnedUserDto.getEmail());
         verify(userRepository, times(1)).findById(any());
     }
@@ -211,7 +214,7 @@ class UserServiceImplTest {
     @DisplayName("Get DTO by existing username")
     void getByUsernameDto() {
         when(userRepository.findByUsername(any())).thenReturn(Optional.of(getDefaultUser()));
-        UserDto returnedUserDto = userService.getByUsernameDto(any());
+        var returnedUserDto = userService.getByUsernameDto(any());
         assertEquals(getDefaultUser().getEmail(), returnedUserDto.getEmail());
         verify(userRepository, times(1)).findByUsername(any());
     }

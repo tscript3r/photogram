@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Set<UserDto> getAll() {
+    public List<UserDto> getAll() {
         return userService.getAllDto();
     }
 
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     private void checkUpdateValidationErrors(BindingResult bindingResult) {
-        List<ObjectError> objectErrors = bindingResult.getAllErrors();
+        var objectErrors = bindingResult.getAllErrors();
         for (ObjectError objectError : objectErrors)
             if (objectError.getCode() != null) {
                 String errorCode = objectError.getCode();

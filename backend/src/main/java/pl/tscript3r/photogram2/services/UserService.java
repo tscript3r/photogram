@@ -5,7 +5,7 @@ import pl.tscript3r.photogram2.domains.User;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
-import java.util.Set;
+import java.util.List;
 
 public interface UserService {
 
@@ -17,7 +17,7 @@ public interface UserService {
 
     void delete(@NotNull Long id);
 
-    Set<UserDto> getAllDto();
+    List<UserDto> getAllDto();
 
     User getByPrincipal(Principal principal);
 

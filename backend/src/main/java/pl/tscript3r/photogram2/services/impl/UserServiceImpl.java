@@ -2,6 +2,7 @@ package pl.tscript3r.photogram2.services.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.User;
@@ -11,10 +12,10 @@ import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -42,14 +43,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto save(UserDto userDto) {
         // TODO: confirmation mail needs to be send here
-        User user = mapperService.map(userDto, User.class);
+        var user = mapperService.map(userDto, User.class);
         return mapperService.map(save(user, true, true), UserDto.class);
     }
 
     @Override
     public UserDto update(Principal principal, UserDto userDto) {
         // TODO: access permissions check?
-        User existingUser = getExistingUser(userDto);
+        var existingUser = getExistingUser(userDto);
         updateValuesAndSave(existingUser, userDto);
         return mapperService.map(existingUser, UserDto.class);
     }
@@ -86,8 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<UserDto> getAllDto() {
-        return new HashSet<>(mapperService.map(userRepository.findAll(), UserDto.class));
+    public List<UserDto> getAllDto() {
+        return mapperService.map(userRepository.findAll(), UserDto.class);
     }
 
     @Override

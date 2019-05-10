@@ -8,13 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static pl.tscript3r.photogram2.Consts.*;
 
 @DisplayName("Role")
-class RoleTest {
+public class RoleTest {
 
-    static Role getDefaultRole() {
+    public static Role getDefaultRole() {
         return new Role(ID, NAME);
     }
 
-    static Role getSecondRole() {
+    public static Role getSecondRole() {
         return new Role(SECOND_ID, SECOND_NAME);
     }
 

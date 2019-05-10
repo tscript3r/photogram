@@ -28,7 +28,7 @@ public class Consts {
     public static final Boolean SECOND_EMAIL_CONFIRMED = false;
     public static final String SECOND_BIO = "second_bio";
     public static final LocalDateTime SECOND_LOCAL_DATE_TIME = LocalDateTime.now(ZoneId.of("Brazil/East"));
-
+    public static final String SECOND_ROLE = "SECOND_ROLE";
 
     private Consts() {
     }

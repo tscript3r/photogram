@@ -57,19 +57,20 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         return o instanceof Collection || o instanceof Map;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <E extends DataStructure, T extends DataStructure> List<E> map(@NotNull Collection<T> source,
-                                                                          @NotNull Class<E> convertTo) {
+    public <E extends DataStructure, T extends DataStructure, F extends Collection<E>>
+    F map(@NotNull Collection<T> source, @NotNull Class<E> convertTo) {
         try {
             if (source.isEmpty())
-                return new ArrayList<>();
-            return getExtendedMapper(source).map(source, convertTo);
+                return (F) new ArrayList<E>();
+            return getCollectionMapper(source).map(source, convertTo);
         } catch (ClassCastException e) {
             throw getCustomException(e, source.getClass(), convertTo);
         }
     }
 
-    private <T extends DataStructure> CollectionMapper getExtendedMapper(Collection<T> source) {
+    private <T extends DataStructure> CollectionMapper getCollectionMapper(Collection<T> source) {
         Mapper mapper = getMapper(source.iterator().next());
         if (mapper instanceof CollectionMapper)
             return (CollectionMapper) mapper;

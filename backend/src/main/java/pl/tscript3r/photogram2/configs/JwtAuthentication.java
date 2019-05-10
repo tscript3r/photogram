@@ -13,10 +13,8 @@ import pl.tscript3r.photogram2.api.v1.dtos.LoginUserDto;
 import pl.tscript3r.photogram2.exceptions.PhotogramException;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +44,7 @@ public class JwtAuthentication extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authentication) throws IOException, ServletException {
+                                            Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         List<String> roles = new ArrayList<>();
         user.getAuthorities()
