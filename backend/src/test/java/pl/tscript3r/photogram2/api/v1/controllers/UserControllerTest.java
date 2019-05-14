@@ -262,14 +262,14 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Add invalid (to short name) DTO")
+    @DisplayName("Add invalid (to short firstname) DTO")
     void addInvalidDtoWithoutToShortName() throws Exception {
         performPostMockMvc(status().isBadRequest(), getValuesMapForJson(NAME_KEY, "123")); // min 4
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
-    @DisplayName("Add invalid (to long name) DTO")
+    @DisplayName("Add invalid (to long firstname) DTO")
     void addInvalidDtoWithoutToLongName() throws Exception {
         performPostMockMvc(status().isBadRequest(),
                 getValuesMapForJson(NAME_KEY, "1234567890_123456")); // max 16, is 17
@@ -277,7 +277,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Add invalid (without name) DTO")
+    @DisplayName("Add invalid (without firstname) DTO")
     void addInvalidDtoWithoutName() throws Exception {
         performPostMockMvc(status().isBadRequest(), getValuesMapForJson(NAME_KEY));
         verify(userService, times(0)).save(any(UserDto.class));

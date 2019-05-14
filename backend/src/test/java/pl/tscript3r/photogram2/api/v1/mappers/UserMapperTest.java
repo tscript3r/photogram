@@ -32,7 +32,7 @@ class UserMapperTest {
         assertEquals(user.getBio(), userDto.getBio());
         assertEquals(user.getCreationDate(), userDto.getCreationDate());
         assertEquals(user.getEmail(), userDto.getEmail());
-        assertEquals(user.getName(), userDto.getName());
+        assertEquals(user.getFirstname(), userDto.getName());
         assertEquals(user.getPassword(), userDto.getPassword());
         assertEquals(user.getUsername(), userDto.getUsername());
     }

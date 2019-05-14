@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getBio() != null)
             existingUser.setBio(userDto.getBio());
         if (userDto.getName() != null)
-            existingUser.setName(userDto.getName());
+            existingUser.setFirstname(userDto.getName());
         if (userDto.getPassword() != null) {
             passwordEncode = true;
             existingUser.setPassword(userDto.getPassword());

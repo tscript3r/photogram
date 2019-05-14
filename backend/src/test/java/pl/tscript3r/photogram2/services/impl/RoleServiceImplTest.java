@@ -37,14 +37,14 @@ class RoleServiceImplTest {
     }
 
     @Test
-    @DisplayName("Get existing by name")
+    @DisplayName("Get existing by firstname")
     void getByName() {
         when(roleRepository.findByName(any())).thenReturn(Optional.of(getSecondRole()));
         assertNotNull(roleService.getByName(SECOND_ROLE));
     }
 
     @Test
-    @DisplayName("Get non existing by name")
+    @DisplayName("Get non existing by firstname")
     void getNonExistingByName() {
         when(roleRepository.findByName(any())).thenThrow(RoleNotFoundPhotogramException.class);
         assertThrows(RoleNotFoundPhotogramException.class, () -> roleService.getByName(""));
