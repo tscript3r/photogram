@@ -15,16 +15,17 @@ import java.util.*;
 @Service
 public class MapperServiceImpl implements MapperService, ApplicationContextAware {
 
-    private Set<Mapper> mappers = new HashSet<>();
+    private final Set<Mapper> mappers = new HashSet<>();
 
     @Override
-    public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         mappers.addAll(applicationContext.getBeansOfType(Mapper.class)
                 .values());
     }
 
     @Override
-    public <E extends DataStructure, T extends DataStructure> E map(@NotNull T source, @NotNull Class<E> convertTo) {
+    public <E extends DataStructure, T extends DataStructure> E map(@NotNull final T source,
+                                                                    @NotNull final Class<E> convertTo) {
         try {
             Mapper mapper = getMapper(source);
             if (mapper.compatible(convertTo))
@@ -36,7 +37,7 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         }
     }
 
-    private Mapper getMapper(DataStructure source) {
+    private Mapper getMapper(final DataStructure source) {
         for (Mapper mapper : mappers)
             if (mapper.compatible(source.getClass()))
                 return mapper;
@@ -53,14 +54,14 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         return new MapperServicePhotogramException(message, e);
     }
 
-    private boolean isCollection(Object o) {
+    private boolean isCollection(final Object o) {
         return o instanceof Collection || o instanceof Map;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <E extends DataStructure, T extends DataStructure, F extends Collection<E>>
-    F map(@NotNull Collection<T> source, @NotNull Class<E> convertTo) {
+    F map(@NotNull final Collection<T> source, @NotNull final Class<E> convertTo) {
         try {
             if (source.isEmpty())
                 return (F) new ArrayList<E>();
@@ -70,7 +71,7 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         }
     }
 
-    private <T extends DataStructure> CollectionMapper getCollectionMapper(Collection<T> source) {
+    private <T extends DataStructure> CollectionMapper getCollectionMapper(final Collection<T> source) {
         Mapper mapper = getMapper(source.iterator().next());
         if (mapper instanceof CollectionMapper)
             return (CollectionMapper) mapper;

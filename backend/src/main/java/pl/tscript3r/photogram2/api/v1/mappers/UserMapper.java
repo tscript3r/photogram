@@ -20,14 +20,14 @@ public class UserMapper extends AbstractMapper<User, UserDto> implements Collect
     }
 
     @Override
-    protected UserDto firstToSecond(User source) {
+    protected UserDto firstToSecond(final User source) {
         return new UserDto(source.getId(), source.getFirstname(), source.getUsername(), source.getPassword(), source.getEmail(),
                 source.getEmailConfirmed(), source.getBio(), source.getCreationDate(),
                 new HashSet<>(roleMapper.map(source.getRoles(), RoleDto.class)));
     }
 
     @Override
-    protected User secondToFirst(UserDto source) {
+    protected User secondToFirst(final UserDto source) {
         return new User(source.getName(), source.getUsername(), source.getPassword(), source.getEmail(),
                 source.getEmailConfirmed(), source.getBio(), source.getCreationDate(),
                 new HashSet<>(roleMapper.map(source.getRoles(), Role.class)));

@@ -5,7 +5,10 @@ import pl.tscript3r.photogram2.domains.DataStructure;
 import pl.tscript3r.photogram2.exceptions.mappers.MapperPhotogramException;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,7 +16,7 @@ public interface CollectionMapper extends Mapper {
 
     @SuppressWarnings("unchecked")
     default <T extends DataStructure, S extends DataStructure, F extends Collection<T>>
-    F map(@NotNull Collection<S> source, @NotNull Class<T> target) {
+    F map(@NotNull final Collection<S> source, @NotNull final Class<T> target) {
         Stream<T> mappedStream = getMappedStream(source, target);
 
         if (source instanceof LinkedHashSet)
@@ -28,7 +31,7 @@ public interface CollectionMapper extends Mapper {
     }
 
     private <T extends DataStructure, S extends DataStructure> Stream<T>
-    getMappedStream(Collection<S> source, Class<T> target) {
+    getMappedStream(final Collection<S> source, final Class<T> target) {
         return source.stream()
                 .map(data -> map(data, target));
     }

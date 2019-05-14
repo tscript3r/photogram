@@ -11,7 +11,6 @@ import pl.tscript3r.photogram2.services.UserService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Set;
 
 import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.USER_MAPPING;
 
@@ -45,11 +44,10 @@ public class UserController {
             return userService.getByEmailDto(email);
         if (id != null)
             return userService.getByIdDto(id);
-
         throw new BadRequestPhotogramException("Bad request - specify any of: id / email / username");
     }
 
-    private Boolean isSet(String username) {
+    private Boolean isSet(final String username) {
         return (username != null && !username.isEmpty());
     }
 
@@ -66,18 +64,18 @@ public class UserController {
         return userService.update(principal, userDto);
     }
 
-    private void checkUpdateValidationErrors(BindingResult bindingResult) {
+    private void checkUpdateValidationErrors(final BindingResult bindingResult) {
         var objectErrors = bindingResult.getAllErrors();
         for (ObjectError objectError : objectErrors)
             if (objectError.getCode() != null) {
                 String errorCode = objectError.getCode();
                 if (!errorCode.equalsIgnoreCase("NotEmpty"))
-                    throw new BadRequestPhotogramException("Some of the given values are incorrect.");
+                    throw new BadRequestPhotogramException("Some of the given values are incorrect");
                 // TODO: probably to refactor?
             }
     }
 
-    private void checkIdAndEmail(UserDto userDto) {
+    private void checkIdAndEmail(final UserDto userDto) {
         if (userDto.getId() == null && userDto.getEmail() == null)
             throw new BadRequestPhotogramException("Specify id or/and email");
     }

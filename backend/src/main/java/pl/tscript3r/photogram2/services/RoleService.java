@@ -8,6 +8,6 @@ public interface RoleService {
 
     Role getDefault();
 
-    Role getByName(@NotNull String name);
+    Role getByName(@NotNull final String name);
 
 }

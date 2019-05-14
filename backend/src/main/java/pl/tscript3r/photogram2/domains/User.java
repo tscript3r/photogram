@@ -18,6 +18,7 @@ import java.util.Set;
 @Entity
 public class User extends DomainEntity {
 
+    @Column(nullable = false)
     private String firstname;
 
     @Column(nullable = false, unique = true)

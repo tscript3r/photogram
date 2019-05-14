@@ -8,12 +8,12 @@ import pl.tscript3r.photogram2.domains.Role;
 public class RoleMapper extends AbstractMapper<Role, RoleDto> implements CollectionMapper {
 
     @Override
-    protected RoleDto firstToSecond(Role source) {
+    protected RoleDto firstToSecond(final Role source) {
         return new RoleDto(source.getName());
     }
 
     @Override
-    protected Role secondToFirst(RoleDto source) {
+    protected Role secondToFirst(final RoleDto source) {
         return new Role(null, source.getName());
     }
 

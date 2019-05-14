@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user, Boolean passwordEncode, Boolean addDefaultRole) {
+    public User save(final User user, final Boolean passwordEncode, final Boolean addDefaultRole) {
         if (addDefaultRole)
             user.addRole(roleService.getDefault());
         if (passwordEncode)
@@ -41,21 +41,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto save(UserDto userDto) {
+    public UserDto save(final UserDto userDto) {
         // TODO: confirmation mail needs to be send here
         var user = mapperService.map(userDto, User.class);
         return mapperService.map(save(user, true, true), UserDto.class);
     }
 
     @Override
-    public UserDto update(Principal principal, UserDto userDto) {
+    public UserDto update(final Principal principal, final UserDto userDto) {
         // TODO: access permissions check?
         var existingUser = getExistingUser(userDto);
         updateValuesAndSave(existingUser, userDto);
         return mapperService.map(existingUser, UserDto.class);
     }
 
-    private User getExistingUser(UserDto userDto) {
+    private User getExistingUser(final UserDto userDto) {
         if (userDto.getId() != null)
             return getById(userDto.getId());
         if (userDto.getEmail() != null)
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         throw new UserNotFoundPhotogramException("Specify id or email");
     }
 
-    private void updateValuesAndSave(User existingUser, UserDto userDto) {
+    private void updateValuesAndSave(final User existingUser, final UserDto userDto) {
         boolean passwordEncode = false;
 
         if (userDto.getEmail() != null &&
@@ -92,45 +92,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByPrincipal(Principal principal) {
+    public User getByPrincipal(final Principal principal) {
         return null;
     }
 
     @Override
-    public User getById(Long id) {
+    public User getById(final Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundPhotogramException(String.format("User id=%s not found", id)));
     }
 
     @Override
-    public UserDto getByIdDto(Long id) {
+    public UserDto getByIdDto(final Long id) {
         return mapperService.map(getById(id), UserDto.class);
     }
 
     @Override
-    public User getByUsername(String username) {
+    public User getByUsername(final String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new UserNotFoundPhotogramException(String.format("Username=%s not found", username)));
     }
 
     @Override
-    public UserDto getByUsernameDto(String username) {
+    public UserDto getByUsernameDto(final String username) {
         return mapperService.map(getByUsername(username), UserDto.class);
     }
 
     @Override
-    public User getByEmail(String email) {
+    public User getByEmail(final String email) {
         return userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundPhotogramException(String.format("Given email=%s not found", email)));
     }
 
     @Override
-    public UserDto getByEmailDto(String email) {
+    public UserDto getByEmailDto(final String email) {
         return mapperService.map(getByEmail(email), UserDto.class);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(final Long id) {
         if (!userRepository.existsById(id))
             throw new UserNotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));
         else
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String email) {
+    public void resetPassword(final String email) {
 
     }
 

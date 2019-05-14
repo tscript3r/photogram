@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(final String username) {
         User user = userService.getByUsername(username);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         Set<Role> userRoles = user.getRoles();

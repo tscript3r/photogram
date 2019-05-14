@@ -6,19 +6,19 @@ import javax.validation.constraints.NotNull;
 
 public interface ImageService {
 
-    void setAvatar(@NotNull Long userId, @NotNull Long imageId);
+    void setAvatar(@NotNull final Long userId, @NotNull final Long imageId);
 
     /**
      * @param userId        id of the user
      * @param multipartFile received image file
      * @return id of the saved file
      */
-    Long save(@NotNull Long userId, @NotNull MultipartFile multipartFile);
+    Long save(@NotNull final Long userId, @NotNull final MultipartFile multipartFile);
 
-    MultipartFile loadAvatar(@NotNull Long userId);
+    MultipartFile loadAvatar(@NotNull final Long userId);
 
-    MultipartFile load(@NotNull Long userId, @NotNull Long imageId);
+    MultipartFile load(@NotNull final Long userId, @NotNull final Long imageId);
 
-    void delete(@NotNull Long userId, @NotNull Long imageId);
+    void delete(@NotNull final Long userId, @NotNull final Long imageId);
 
 }

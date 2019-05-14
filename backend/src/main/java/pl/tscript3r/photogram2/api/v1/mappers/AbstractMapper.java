@@ -9,8 +9,8 @@ import java.lang.reflect.ParameterizedType;
 @SuppressWarnings("unchecked")
 abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> implements Mapper {
 
-    private Class<E> first;
-    private Class<F> second;
+    private final Class<E> first;
+    private final Class<F> second;
 
     public AbstractMapper() {
         this.first = (Class<E>) ((ParameterizedType) getClass()
@@ -20,12 +20,13 @@ abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> 
     }
 
     @Override
-    public <T extends DataStructure> Boolean compatible(@NotNull Class<T> t) {
+    public <T extends DataStructure> Boolean compatible(@NotNull final Class<T> t) {
         return t == first || t == second;
     }
 
     @Override
-    public <T extends DataStructure, S extends DataStructure> T map(@NotNull S source, @NotNull Class<T> target) {
+    public <T extends DataStructure, S extends DataStructure> T map(@NotNull final S source,
+                                                                    @NotNull final Class<T> target) {
         try {
             if (isCompatible(source, target))
                 if (first.isInstance(source))
@@ -40,12 +41,12 @@ abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> 
         }
     }
 
-    private <T extends DataStructure> Boolean isCompatible(DataStructure source, Class<T> target) {
+    private <T extends DataStructure> Boolean isCompatible(final DataStructure source, final Class<T> target) {
         return (compatible(source.getClass()) && compatible(target) && source.getClass() != target);
     }
 
-    protected abstract F firstToSecond(E source);
+    protected abstract F firstToSecond(final E source);
 
-    protected abstract E secondToFirst(F source);
+    protected abstract E secondToFirst(final F source);
 
 }
