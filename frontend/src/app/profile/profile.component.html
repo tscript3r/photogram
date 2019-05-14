@@ -1,0 +1,154 @@
+<app-navbar></app-navbar>
+
+<!-- Page Content -->
+<div class="container bootstrap-snippet header-container">
+  <div class="">
+    <div class="container py-5">
+      <div *ngIf="user?.id > 0" class="media col-md-10 col-lg-8 col-xl-7 p-0 my-4 mx-auto">
+        <img src="{{ userHost }}/{{ user?.id }}.png" alt class="d-block ui-w-100 rounded-circle" />
+        <div class="media-body ml-5">
+          <h4 class="font-weight-bold ">{{ user?.name }}</h4>
+          <h6 class="">{{ user?.username }}</h6>
+          <div class="text-muted mb-4">{{ user?.bio }}</div>
+          <span style="margin-right:10px;" class="d-inline-block text-dark ml-3">
+            <strong>{{ user?.post?.length }}</strong>
+            <span style="margin-left:6px;" class="text-muted"><i class="fa fa-image"></i></span>
+          </span>
+          <span class="d-inline-block text-dark">
+            <strong>Since {{ user?.createdDate | date: "mediumDate" }}</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+    <ul class="nav nav-tabs tabs-alt justify-content-center" style="margin-top:-60px;">
+      <li class="nav-item">
+        <a class="nav-link py-4 active" data-toggle="tab" href="#posts">Posts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-4" data-toggle="tab" href="#likes">Liked Posts</a>
+      </li>
+      <li *ngIf="user?.username == accountService.loggInUsername" class="nav-item">
+        <a class="nav-link py-4" data-toggle="tab" href="#settings">Settings</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tab-content" style="margin-top:20px;">
+    <div class="tab-pane fade active show" id="posts">
+      <div class="row">
+        <div *ngFor="let post of user?.post" class="col-lg-4 col-sm-6 portfolio-item">
+          <div class="card">
+            <a (click)="seeOnePost(post?.id)" style="cursor:pointer;"><img class="card-img-top" src="{{ postHost }}/{{ post?.name }}.png"
+                alt="" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="likes">
+      <div class="row">
+        <div *ngFor="let userLikePost of user?.likedPost" class="col-lg-4 col-sm-6 portfolio-item">
+          <div class="card">
+            <a (click)="seeOnePost(userLikePost?.id)" style="cursor:pointer;"><img class="card-img-top" src="{{ postHost }}/{{ userLikePost?.name }}.png"
+                alt="" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade col-md-10 col-lg-8 col-xl-7 p-0 my-4 mx-auto" id="settings">
+      <form #updateProfileForm="ngForm" (ngSubmit)="onUpdateUser(updateProfileForm.value)" enctype="multipart/form-data">
+        <input type="hidden" class="form-control" name="id" ngModel="{{ user?.id }}" required />
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input ngModel="{{ user?.name }}" type="text" class="form-control" name="name" id="name" aria-describedby="name"
+            placeholder="Name" />
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input ngModel="{{ user?.username }}" type="text" class="form-control" name="username" id="username"
+            placeholder="Username" disabled />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input ngModel="{{ user?.email }}" type="text" class="form-control" name="email" id="email" placeholder="Email" />
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea ngModel="{{ user?.bio }}" class="form-control" name="bio" id="bio" rows="3" placeholder="Bio"></textarea>
+        </div>
+        <div class="form-group">
+          <!-- <label for="picture">Profile Picture</label> -->
+          <input style="display:none;" (change)="onProfilePictureSelected($event)" #fileToUpload type="file" class="form-control-file"
+            name="file" placeholder="photo" accept="image/*" required />
+          <div class="mt-2">
+            <button type="button" class="btn btn-info" (click)="fileToUpload.click()">
+              <i class="fa fa-fw fa-camera"></i><span>Change Photo</span>
+            </button>
+          </div>
+        </div>
+        <button routerLink="/home" class="btn btn-secondary" type="button" style="margin-right: 20px;">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-success">Save</button>
+      </form>
+      <br /><br />
+      <button class="btn" data-toggle="modal" data-target="#changePassword" style="color: #EB6864;">
+        Chage Password</button><br /><br />
+    </div>
+  </div>
+</div>
+<br />
+
+<footer class="text-muted">
+  <div class="container">
+    <p>Orchard &copy; 2019</p>
+  </div>
+</footer>
+
+<!-- modal change password -->
+<div id="changePassword" class="modal fade">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #changePasswordForm="ngForm" (ngSubmit)="onChangePassword(changePasswordForm.value)">
+          <div class="modal-body">
+            <input type="hidden" class="form-control" name="username" placeholder="Current password" ngModel="{{ user?.username }}"
+              required />
+
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" class="form-control" name="currentpassword" placeholder="Curent Password" required
+                ngModel />
+            </div>
+
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" class="form-control" name="newpassword" placeholder="New Password" required
+                ngModel />
+            </div>
+
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input type="password" class="form-control" name="confirmpassword" placeholder="Confirm Password"
+                required ngModel />
+            </div>
+            <div class="modal-footer">
+              <button id="changePasswordDismiss" type="button" class="btn btn-danger" data-dismiss="modal">
+                Close
+              </button>
+              <button [disabled]="!changePasswordForm.valid" type="submit" class="btn btn-success">
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

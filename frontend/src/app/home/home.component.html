@@ -1,0 +1,81 @@
+<app-navbar></app-navbar>
+
+<!-- Page Content -->
+<div class="container">
+  <h1 class="mt-4 mb-3"></h1>
+  <div class="row">
+    <!-- Blog Entries Column -->
+    <div class="col-md-8">
+      <!-- Blog Post -->
+      <div *ngFor="let post of posts" class="card mb-4">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center">
+              <div (click)="getUserProfile(post.username)" class="mr-2" style="cursor: pointer">
+                <img class="rounded-circle" width="45" src="{{ userHost }}/{{ post?.userImageId }}.png" alt="" />
+              </div>
+              <div (click)="getUserProfile(post.username)" style="cursor: pointer" class="ml-2">
+                <div class="h5 m-0">{{ post.username }}</div>
+                <div class="h7 text-muted">
+                  {{ post.postedDate | date: "mediumDate" }}, near
+                  {{ post.location }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div *ngIf="user.username == post.username" class="dropdown">
+                <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                  <a class="dropdown-item" (click)="onDelete(post?.id)">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <img (click)="seeOnePost(post.id)" style="cursor:pointer;" class="card-img-top" src="{{ postHost }}/{{ post?.name }}.png"
+          alt="Card image cap" />
+        <div class="card-body">
+         <h5 style="color:#18BC9C;cursor:pointer;" (click)="getUserProfile(post.username)" class="card-title">
+            {{ post.username }}
+          </h5>
+          <p class="card-text">{{ post.caption }}</p>
+        </div>
+      </div>
+      <br />
+      <br />
+      <ul class="pagination justify-content-center mb-4">
+      </ul>
+    </div>
+
+    <!-- Sidebar  -->
+    <div class="col-md-4">
+      <div>
+        <div class="card mb-4" style="background-color:#ecf0f1;">
+          <div class=" card-body">
+            <div class="m-t-30 text-center">
+              <a *ngIf="user?.id > 0" (click)="getUserProfile(user?.username)">
+                <img src="{{ userHost }}/{{ user?.id }}.png" alt="" class="img-fluid rounded-circle w-60" width="60"
+                  height="60" /></a>
+              <h6 class="card-title m-t-10">{{ user?.username }}</h6>
+              <a (click)="getUserProfile(user.username)" style="cursor:pointer;" class="link">
+                <span style="margin-right: 5px;" class="font-medium">{{
+                  user.post?.length
+                  }}</span><i class="fa fa-image"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row -->
+</div>
+<!-- /.container -->
+<footer class="text-muted">
+  <div class="container">
+    <p>Orchard &copy; 2019</p>
+  </div>
+</footer>
