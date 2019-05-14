@@ -18,7 +18,7 @@ public class User extends DomainEntity {
 
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

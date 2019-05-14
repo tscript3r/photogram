@@ -16,7 +16,7 @@ import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.USER_MAP
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] PUBLIC_MATCHERS = {USER_MAPPING + "/login", USER_MAPPING, "/image/**",
+    private static final String[] PUBLIC_MATCHERS = {USER_MAPPING + "/login", USER_MAPPING + "/**", "/image/**",
             "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/h2-console/**"};
 
     private final UserDetailsService userDetailsService;
