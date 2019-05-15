@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.tscript3r.photogram2.exceptions.services.RoleNotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.RoleRepository;
 
 import java.util.Optional;
@@ -46,8 +46,8 @@ class RoleServiceImplTest {
     @Test
     @DisplayName("Get non existing by firstname")
     void getNonExistingByName() {
-        when(roleRepository.findByName(any())).thenThrow(RoleNotFoundPhotogramException.class);
-        assertThrows(RoleNotFoundPhotogramException.class, () -> roleService.getByName(""));
+        when(roleRepository.findByName(any())).thenThrow(NotFoundPhotogramException.class);
+        assertThrows(NotFoundPhotogramException.class, () -> roleService.getByName(""));
     }
 
 }

@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.services.UserNotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             return getById(userDto.getId());
         if (userDto.getEmail() != null)
             return getByEmail(userDto.getEmail());
-        throw new UserNotFoundPhotogramException("Specify id or email");
+        throw new NotFoundPhotogramException("Specify id or email");
     }
 
     private void updateValuesAndSave(final User existingUser, final UserDto userDto) {
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(final Long id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new UserNotFoundPhotogramException(String.format("User id=%s not found", id)));
+                new NotFoundPhotogramException(String.format("User id=%s not found", id)));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(final String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new UserNotFoundPhotogramException(String.format("Username=%s not found", username)));
+                new NotFoundPhotogramException(String.format("Username=%s not found", username)));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(final String email) {
         return userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundPhotogramException(String.format("Given email=%s not found", email)));
+                new NotFoundPhotogramException(String.format("Given email=%s not found", email)));
     }
 
     @Override
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(final Long id) {
         if (!userRepository.existsById(id))
-            throw new UserNotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));
+            throw new NotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));
         else
             userRepository.deleteById(id);
     }

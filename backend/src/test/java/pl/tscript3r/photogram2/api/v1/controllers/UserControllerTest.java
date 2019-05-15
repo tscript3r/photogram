@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram2.exceptions.services.UserNotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.services.UserService;
 
 import java.util.Collections;
@@ -83,7 +83,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Get by ID not found")
     void getByIdNotFound() throws Exception {
-        when(userService.getByIdDto(any())).thenThrow(UserNotFoundPhotogramException.class);
+        when(userService.getByIdDto(any())).thenThrow(NotFoundPhotogramException.class);
         mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -352,7 +352,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Fail delete caused by non existing id")
     void deleteNonExistingId() throws Exception {
-        doThrow(UserNotFoundPhotogramException.class).when(userService).delete(any());
+        doThrow(NotFoundPhotogramException.class).when(userService).delete(any());
         mockMvc.perform(MockMvcRequestBuilders.delete(USER_MAPPING + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

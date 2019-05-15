@@ -10,16 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.Role;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.services.UserNotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -145,7 +143,7 @@ class UserServiceImplTest {
         userDto.setUsername(SECOND_USERNAME);
         Principal principal = () -> USERNAME;
 
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.update(principal, userDto));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.update(principal, userDto));
     }
 
     @Test
@@ -176,7 +174,7 @@ class UserServiceImplTest {
     @DisplayName("Get by non existing ID")
     void getByNonExistingId() {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.getById(any()));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.getById(any()));
     }
 
     @Test
@@ -192,7 +190,7 @@ class UserServiceImplTest {
     @DisplayName("Get DTO by non existing ID")
     void getByNonExistingIdDto() {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.getByIdDto(any()));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.getByIdDto(any()));
     }
 
     @Test
@@ -207,7 +205,7 @@ class UserServiceImplTest {
     @DisplayName("Get by non existing username")
     void getByNonExistingUsername() {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.getByUsername(USERNAME));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.getByUsername(USERNAME));
     }
 
     @Test
@@ -223,7 +221,7 @@ class UserServiceImplTest {
     @DisplayName("Get DTO by non existing username")
     void getByNonExistingUsernameDto() {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.getByUsernameDto(USERNAME));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.getByUsernameDto(USERNAME));
     }
 
     @Test
@@ -255,7 +253,7 @@ class UserServiceImplTest {
     @DisplayName("Get DTO by non existing email")
     void getByNonExistingEmailDto() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.getByEmailDto(EMAIL));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.getByEmailDto(EMAIL));
     }
 
     @Test
@@ -270,7 +268,7 @@ class UserServiceImplTest {
     @DisplayName("Delete by non existing ID")
     void deleteNonExistingId() {
         when(userRepository.existsById(any())).thenReturn(false);
-        assertThrows(UserNotFoundPhotogramException.class, () -> userService.delete(1L));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.delete(1L));
     }
 
 }
