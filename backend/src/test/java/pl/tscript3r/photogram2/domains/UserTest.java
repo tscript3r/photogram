@@ -20,26 +20,26 @@ public class UserTest {
                 SECOND_BIO);
     }
 
-    @DisplayName("User equals with ID")
     @Test
+    @DisplayName("Equals only with same ID")
     void userEqualsWithId() {
         var secondUser = getSecondUser();
         secondUser.setId(ID);
         assertEquals(getDefaultUser(), secondUser);
     }
 
-    @DisplayName("User not equals with ID")
     @Test
+    @DisplayName("Not equals with only different ID")
     void userNotEqualsWithId() {
         var defaultUser = getDefaultUser();
         defaultUser.setId(SECOND_ID);
         assertNotEquals(getDefaultUser(), defaultUser);
     }
 
-    @DisplayName("New user function validation")
     @Test
+    @DisplayName("New user function validation")
     void newUser() {
-        var user = new User(NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, LOCAL_DATE_TIME, Collections.emptySet());
+        var user = new User(NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, CREATION_DATE, Collections.emptySet());
         assertTrue(user.isNew());
         user.setId(ID);
         assertFalse(user.isNew());

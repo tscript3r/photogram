@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("Role mapper")
 class RoleMapperTest {
 
-    private RoleMapper roleMapper;
-
     static void compareUserRoleWithUserRoleDto(Role role, RoleDto roleDto) {
         assertEquals(role.getName(), roleDto.getName());
     }
+
+    private RoleMapper roleMapper;
 
     @BeforeEach
     void setUp() {
