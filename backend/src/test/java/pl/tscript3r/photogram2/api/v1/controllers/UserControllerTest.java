@@ -2,7 +2,6 @@ package pl.tscript3r.photogram2.api.v1.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +51,6 @@ class UserControllerTest {
 
     @MockBean
     UserService userService;
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     @DisplayName("Get all users")
