@@ -1,10 +1,10 @@
 package pl.tscript3r.photogram2.api.v1.mappers;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
@@ -26,8 +26,6 @@ import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
 @ExtendWith(MockitoExtension.class)
 class UserMapperTest {
 
-    private UserMapper userMapper;
-
     static void compareUserWithUserDto(User user, UserDto userDto) {
         assertEquals(user.getBio(), userDto.getBio());
         assertEquals(user.getCreationDate(), userDto.getCreationDate());
@@ -40,10 +38,8 @@ class UserMapperTest {
     @Mock
     RoleMapper roleMapper;
 
-    @BeforeEach
-    void setUp() {
-        userMapper = new UserMapper(roleMapper);
-    }
+    @InjectMocks
+    UserMapper userMapper;
 
     @Test
     @DisplayName("User to UserDto map validation")
