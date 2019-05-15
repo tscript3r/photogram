@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
-import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.USER_MAPPING;
+import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.*;
 
 @RestController
 @RequestMapping(USER_MAPPING)
@@ -35,9 +35,9 @@ public class UserController {
     }
 
     @GetMapping("find")
-    public UserDto findBy(@RequestParam(value = "username", required = false) String username,
-                          @RequestParam(value = "email", required = false) String email,
-                          @RequestParam(value = "id", required = false) Long id) {
+    public UserDto findBy(@RequestParam(value = USERNAME_PARAM, required = false) String username,
+                          @RequestParam(value = EMAIL_PARAM, required = false) String email,
+                          @RequestParam(value = ID_PARAM, required = false) Long id) {
         if (isSet(username))
             return userService.getByUsernameDto(username);
         if (isSet(email))

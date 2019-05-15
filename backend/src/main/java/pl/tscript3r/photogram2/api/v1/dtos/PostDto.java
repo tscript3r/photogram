@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,14 +23,13 @@ public class PostDto implements Dto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<CommentDto> comments;
 
-    @NotEmpty
-    @Size(min = 3, max = 32)
+    @Nullable
     private String caption;
 
     @Nullable
     private String location;
 
-    @Nullable
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long imageId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

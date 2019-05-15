@@ -3,10 +3,7 @@ package pl.tscript3r.photogram2.domains;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,9 +16,10 @@ import java.util.List;
 public class Post extends DomainEntity {
 
     @OneToOne
+    @Column(nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @Column(columnDefinition = "text", nullable = false)
@@ -33,7 +31,7 @@ public class Post extends DomainEntity {
     private Long imageId;
 
     @Column(nullable = false)
-    private Integer likes;
+    private Integer likes = 0;
 
     @CreationTimestamp
     private LocalDateTime creationDate;
