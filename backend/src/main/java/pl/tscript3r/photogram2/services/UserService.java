@@ -1,5 +1,6 @@
 package pl.tscript3r.photogram2.services;
 
+import org.springframework.lang.Nullable;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.User;
 
@@ -13,13 +14,13 @@ public interface UserService {
 
     UserDto save(@NotNull final UserDto user);
 
-    UserDto update(Principal principal, @NotNull final UserDto userDto);
+    UserDto update(@Nullable final Principal principal, @NotNull final UserDto userDto);
 
     void delete(final @NotNull Long id);
 
     List<UserDto> getAllDto();
 
-    User getByPrincipal(Principal principal);
+    User getByPrincipal(@Nullable final Principal principal);
 
     User getById(@NotNull final Long id);
 

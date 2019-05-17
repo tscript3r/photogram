@@ -2,26 +2,30 @@ package pl.tscript3r.photogram2.api.v1.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
-import pl.tscript3r.photogram2.exceptions.services.ForbiddenPhotogramException;
-import pl.tscript3r.photogram2.exceptions.services.IgnoredPhotogramException;
-import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
+import pl.tscript3r.photogram2.api.v1.dtos.PostDtoList;
+import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
+import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
+import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.services.PostService;
 
+import java.io.IOException;
+import java.security.Principal;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -46,76 +50,70 @@ class PostControllerTest {
     @MockBean
     PostService postService;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     @DisplayName("Get latest without parameters")
     void getLatestWithoutParameters() throws Exception {
-        var inputPostDtos = getInputPostDtoList();
+        var inputPostDtos = getInputPostDtoSlice();
         when(postService.getLatest(any())).thenReturn(inputPostDtos);
-        var result = mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING)
+        var outputPostDtos = getOutputPostDtos(mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn();
-        TypeReference<List<PostDto>> typeReference = new TypeReference<>() {
-        };
-        List<PostDto> outputPostDtos = objectMapper.readValue(result.getResponse().getContentAsString(), typeReference);
-        assertEquals(inputPostDtos.size(), outputPostDtos.size());
+                .andReturn());
+        assertEquals(inputPostDtos.getContent().size(), outputPostDtos.getContent().size());
         verify(postService, times(1)).getLatest(any());
     }
 
-    private List<PostDto> getInputPostDtoList() {
-        return Arrays.asList(getDefaultPostDto(), getSecondPostDto());
+    private Slice<PostDto> getInputPostDtoSlice() {
+        return new SliceImpl<>(Arrays.asList(getDefaultPostDto(), getSecondPostDto()));
+    }
+
+    private PostDtoList getOutputPostDtos(MvcResult response) throws IOException {
+        TypeReference<PostDtoList> typeReference = new TypeReference<>() {
+        };
+        return objectMapper.readValue(response.getResponse().getContentAsString(), typeReference);
     }
 
     @Test
     @DisplayName("Get latest with username param")
     void getLatestWithUserParam() throws Exception {
-        var inputPostDtos = getInputPostDtoList();
-        when(postService.getLatest(any(), any())).thenReturn(inputPostDtos);
-        var result = mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "?" + USERNAME_PARAM + "=any")
+        var inputPostDtos = getInputPostDtoSlice();
+        when(postService.getLatest(anyString(), any())).thenReturn(inputPostDtos);
+        var outputPostDtos = getOutputPostDtos(mockMvc
+                .perform(MockMvcRequestBuilders.get(POST_MAPPING + "?" + USERNAME_PARAM + "=any")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn();
-        TypeReference<List<PostDto>> typeReference = new TypeReference<>() {
-        };
-        List<PostDto> outputPostDtos = objectMapper.readValue(result.getResponse().getContentAsString(), typeReference);
-        assertEquals(inputPostDtos.size(), outputPostDtos.size());
-        verify(postService, times(1)).getLatest(any(), any());
+                .andReturn());
+        assertEquals(inputPostDtos.getContent().size(), outputPostDtos.getContent().size());
+        verify(postService, times(1)).getLatest(anyString(), any());
     }
 
     @Test
-    @DisplayName("Get latest with count param")
+    @DisplayName("Get latest with pageable param")
     void getLatestWithCountParam() throws Exception {
-        var inputPostDtos = getInputPostDtoList();
+        var inputPostDtos = getInputPostDtoSlice();
         when(postService.getLatest(any())).thenReturn(inputPostDtos);
-        mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "?" + COUNT_PARAM + "=666")
+        mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "?page=1&size=2&sort=id,desc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        verify(postService, times(1)).getLatest(666);
+        verify(postService, times(1)).getLatest(any());
     }
 
     @Test
     @DisplayName("Get latest users own posts")
     void getLatestUsersOwnPosts() throws Exception {
-        var inputPostDtos = getInputPostDtoList();
-        when(postService.getLatestUsersPosts(any(), any())).thenReturn(inputPostDtos);
-        var result = mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "?" + OWN_PARAM + "=true")
+        var inputPostDtos = getInputPostDtoSlice();
+        when(postService.getLatest(any(Principal.class), any())).thenReturn(inputPostDtos);
+        var outputPostDtos = getOutputPostDtos(mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "?" + OWN_PARAM + "=true")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn();
-        TypeReference<List<PostDto>> typeReference = new TypeReference<>() {
-        };
-        List<PostDto> outputPostDtos = objectMapper.readValue(result.getResponse().getContentAsString(), typeReference);
-        assertEquals(inputPostDtos.size(), outputPostDtos.size());
-        verify(postService, times(1)).getLatestUsersPosts(any(), any());
+                .andReturn());
+        assertEquals(inputPostDtos.getContent().size(), outputPostDtos.getContent().size());
+        verify(postService, times(1)).getLatest(any(Principal.class), any());
     }
 
     @Test

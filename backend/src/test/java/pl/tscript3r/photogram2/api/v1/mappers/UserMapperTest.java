@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.mappers.MapperPhotogramException;
+import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 
 import java.util.*;
 

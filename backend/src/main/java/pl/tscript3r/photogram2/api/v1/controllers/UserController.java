@@ -1,11 +1,12 @@
 package pl.tscript3r.photogram2.api.v1.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram2.exceptions.controllers.BadRequestPhotogramException;
+import pl.tscript3r.photogram2.exceptions.BadRequestPhotogramException;
 import pl.tscript3r.photogram2.services.UserService;
 
 import javax.validation.Valid;
@@ -16,13 +17,10 @@ import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.*;
 
 @RestController
 @RequestMapping(USER_MAPPING)
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public List<UserDto> getAll() {

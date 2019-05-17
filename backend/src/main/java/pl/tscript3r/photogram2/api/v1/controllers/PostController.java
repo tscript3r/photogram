@@ -1,19 +1,24 @@
 package pl.tscript3r.photogram2.api.v1.controllers;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
-import pl.tscript3r.photogram2.exceptions.controllers.BadRequestPhotogramException;
+import pl.tscript3r.photogram2.exceptions.BadRequestPhotogramException;
 import pl.tscript3r.photogram2.services.PostService;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.*;
 
 @RestController
 @RequestMapping(POST_MAPPING)
+@RequiredArgsConstructor
 public class PostController {
 
     static final String LIKE_MAPPING = "/like";
@@ -23,22 +28,20 @@ public class PostController {
 
     private final PostService postService;
 
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
-
     @GetMapping
-    public List<PostDto> getLatest(Principal principal,
-                                   @RequestParam(value = COUNT_PARAM, required = false) Integer count,
-                                   @RequestParam(value = OWN_PARAM, required = false) Boolean ownPosts,
-                                   @RequestParam(value = USERNAME_PARAM, required = false) String username) {
+    public Slice<PostDto> getLatest(Principal principal,
+                                    @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                    @RequestParam(value = OWN_PARAM, required = false) Boolean ownPosts,
+                                    @RequestParam(value = USERNAME_PARAM, required = false) String username) {
+
         if (isSet(ownPosts) && ownPosts && isSet(username))
             throw new BadRequestPhotogramException("Specify either own param or username param");
         if (isSet(ownPosts) && ownPosts)
-            return postService.getLatestUsersPosts(principal, count);
+            return postService.getLatest(principal, pageable);
         if (isSet(username))
-            return postService.getLatest(username, count);
-        return postService.getLatest(count);
+            return postService.getLatest(username, pageable);
+
+        return postService.getLatest(pageable);
     }
 
     private Boolean isSet(final String input) {

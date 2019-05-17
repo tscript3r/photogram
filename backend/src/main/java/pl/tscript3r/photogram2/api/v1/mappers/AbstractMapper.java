@@ -1,7 +1,7 @@
 package pl.tscript3r.photogram2.api.v1.mappers;
 
 import pl.tscript3r.photogram2.domains.DataStructure;
-import pl.tscript3r.photogram2.exceptions.mappers.MapperPhotogramException;
+import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.ParameterizedType;

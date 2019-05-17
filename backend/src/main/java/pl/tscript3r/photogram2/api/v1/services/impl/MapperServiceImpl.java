@@ -7,7 +7,7 @@ import pl.tscript3r.photogram2.api.v1.mappers.CollectionMapper;
 import pl.tscript3r.photogram2.api.v1.mappers.Mapper;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.DataStructure;
-import pl.tscript3r.photogram2.exceptions.services.MapperServicePhotogramException;
+import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -30,7 +30,7 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
             Mapper mapper = getMapper(source);
             if (mapper.compatible(convertTo))
                 return mapper.map(source, convertTo);
-            throw new MapperServicePhotogramException("Type [" + source.getClass().getName()
+            throw new MapperPhotogramException("Type [" + source.getClass().getName()
                     + "] cannot be converted to [" + convertTo.getName() + "]");
         } catch (ClassCastException e) {
             throw getCustomException(e, source.getClass(), convertTo);
@@ -41,17 +41,17 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         for (Mapper mapper : mappers)
             if (mapper.compatible(source.getClass()))
                 return mapper;
-        throw new MapperServicePhotogramException("Mapper for [" +
+        throw new MapperPhotogramException("Mapper for [" +
                 source.getClass().getName() + "] not found");
     }
 
-    private MapperServicePhotogramException getCustomException(ClassCastException e, Class source, Class target) {
+    private MapperPhotogramException getCustomException(ClassCastException e, Class source, Class target) {
         String message = "Class cast exception by %s of [%s] -> [%s]";
         if (isCollection(source))
             message = String.format(message, "collection mapping", source.getName(), target.getName());
         else
             message = String.format(message, "mapping", source.getName(), target.getName());
-        return new MapperServicePhotogramException(message, e);
+        return new MapperPhotogramException(message, e);
     }
 
     private boolean isCollection(final Object o) {
@@ -75,7 +75,7 @@ public class MapperServiceImpl implements MapperService, ApplicationContextAware
         Mapper mapper = getMapper(source.iterator().next());
         if (mapper instanceof CollectionMapper)
             return (CollectionMapper) mapper;
-        throw new MapperServicePhotogramException("Mapper for [" +
+        throw new MapperPhotogramException("Mapper for [" +
                 source.getClass().getName() + "] is not an CollectionMapper, consider refactor");
     }
 

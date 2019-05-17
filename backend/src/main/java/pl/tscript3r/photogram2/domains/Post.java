@@ -16,7 +16,6 @@ import java.util.List;
 public class Post extends DomainEntity {
 
     @OneToOne
-    @Column(nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
