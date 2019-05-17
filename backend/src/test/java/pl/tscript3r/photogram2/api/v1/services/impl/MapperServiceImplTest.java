@@ -15,7 +15,7 @@ import pl.tscript3r.photogram2.api.v1.mappers.RoleMapper;
 import pl.tscript3r.photogram2.api.v1.mappers.UserMapper;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.DataStructure;
-import pl.tscript3r.photogram2.exceptions.services.MapperServicePhotogramException;
+import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 
 import java.util.*;
 
@@ -79,7 +79,7 @@ public class MapperServiceImplTest {
     @DisplayName("Mapping without mapper for source")
     void mapWithoutMapperForSource() {
         when(mapper.compatible(any())).thenReturn(false);
-        Assertions.assertThrows(MapperServicePhotogramException.class, () ->
+        Assertions.assertThrows(MapperPhotogramException.class, () ->
                 mapperService.map(new DataStructure() {
                 }, DataStructure.class)
         );
@@ -91,7 +91,7 @@ public class MapperServiceImplTest {
     void mapWithoutMapperForTarget() {
         when(mapper.compatible(any())).thenReturn(true);
         when(mapper.compatible(DataStructure.class)).thenReturn(false);
-        Assertions.assertThrows(MapperServicePhotogramException.class, () ->
+        Assertions.assertThrows(MapperPhotogramException.class, () ->
                 mapperService.map(new Dto() {
                 }, DataStructure.class)
         );
@@ -130,7 +130,7 @@ public class MapperServiceImplTest {
         }, new DataStructure() {
         });
         when(mapper.compatible(any())).thenReturn(true);
-        Assertions.assertThrows(MapperServicePhotogramException.class, () ->
+        Assertions.assertThrows(MapperPhotogramException.class, () ->
                 mapperService.map(domains, DataStructure.class)
         );
     }
@@ -140,7 +140,7 @@ public class MapperServiceImplTest {
     void mapClassCastExceptionHandling() {
         when(mapper.compatible(any())).thenReturn(true);
         when(mapper.map(any(), any())).thenThrow(new ClassCastException());
-        Assertions.assertThrows(MapperServicePhotogramException.class, () ->
+        Assertions.assertThrows(MapperPhotogramException.class, () ->
                 mapperService.map(new DataStructure() {
                 }, Dto.class)
         );
@@ -151,7 +151,7 @@ public class MapperServiceImplTest {
     void collectionMapClassCastExceptionHandling() {
         when(collectionMapper.compatible(any())).thenReturn(true);
         when(collectionMapper.map(anyCollection(), any())).thenThrow(new ClassCastException());
-        Assertions.assertThrows(MapperServicePhotogramException.class, () ->
+        Assertions.assertThrows(MapperPhotogramException.class, () ->
                 mapperService.map(Collections.singletonList(new DataStructure() {
                 }), Dto.class)
         );

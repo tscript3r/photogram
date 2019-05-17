@@ -13,7 +13,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Long save(@NotNull final Long userId, @NotNull final MultipartFile multipartFile) {
+    public Long save(@NotNull final Long userId, @NotNull final Long postId, @NotNull final MultipartFile multipartFile) {
         return null;
     }
 

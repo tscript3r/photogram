@@ -1,5 +1,6 @@
 package pl.tscript3r.photogram2.services.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,13 +19,10 @@ import java.util.Set;
 @Primary
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
-
-    public UserDetailsServiceImpl(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public UserDetails loadUserByUsername(final String username) {

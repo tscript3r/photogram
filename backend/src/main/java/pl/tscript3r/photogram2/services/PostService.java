@@ -1,19 +1,20 @@
 package pl.tscript3r.photogram2.services;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.lang.Nullable;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
-import java.util.List;
 
 public interface PostService {
 
-    List<PostDto> getLatest(@Nullable final Integer count);
+    Slice<PostDto> getLatest(@NotNull final Pageable pageable);
 
-    List<PostDto> getLatest(@NotNull final String username, @Nullable final Integer count);
+    Slice<PostDto> getLatest(@NotNull final String username, @NotNull final Pageable pageable);
 
-    List<PostDto> getLatestUsersPosts(@Nullable final Principal principal, @Nullable final Integer count);
+    Slice<PostDto> getLatest(@NotNull final Principal principal, @NotNull final Pageable pageable);
 
     PostDto save(@Nullable final Principal principal, @NotNull final PostDto postDto);
 

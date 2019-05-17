@@ -13,7 +13,7 @@ public interface ImageService {
      * @param multipartFile received image file
      * @return id of the saved file
      */
-    Long save(@NotNull final Long userId, @NotNull final MultipartFile multipartFile);
+    Long save(@NotNull final Long userId, @NotNull final Long postId, @NotNull final MultipartFile multipartFile);
 
     MultipartFile loadAvatar(@NotNull final Long userId);
 

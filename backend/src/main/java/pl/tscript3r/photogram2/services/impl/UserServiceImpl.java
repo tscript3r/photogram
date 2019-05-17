@@ -1,12 +1,13 @@
 package pl.tscript3r.photogram2.services.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
@@ -16,20 +17,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final MapperService mapperService;
-
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder,
-                           MapperService mapperService) {
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-        this.mapperService = mapperService;
-    }
 
     @Override
     public User save(final User user, final Boolean passwordEncode, final Boolean addDefaultRole) {

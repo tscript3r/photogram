@@ -1,21 +1,19 @@
 package pl.tscript3r.photogram2.services.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram2.domains.Role;
-import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.RoleRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-
-    public RoleServiceImpl(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
 
     @Override
     public Role getDefault() {

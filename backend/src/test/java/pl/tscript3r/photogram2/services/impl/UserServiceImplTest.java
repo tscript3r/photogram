@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.Role;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.services.NotFoundPhotogramException;
+import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
