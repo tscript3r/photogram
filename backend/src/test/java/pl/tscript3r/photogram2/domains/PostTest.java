@@ -13,11 +13,8 @@ import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
 public class PostTest {
 
     public static Post getDefaultPost() {
-        var result = new Post();
+        var result = new Post(getDefaultUser(), CAPTION, LOCATION);
         result.setId(ID);
-        result.setUser(getDefaultUser());
-        result.setCaption(CAPTION);
-        result.setLocation(LOCATION);
         result.setImageId(IMAGE_ID);
         result.setLikes(LIKES);
         result.setCreationDate(CREATION_DATE);
@@ -25,11 +22,8 @@ public class PostTest {
     }
 
     public static Post getSecondPost() {
-        var result = new Post();
+        var result = new Post(getSecondUser(), SECOND_CAPTION, SECOND_LOCATION);
         result.setId(SECOND_ID);
-        result.setUser(getSecondUser());
-        result.setCaption(SECOND_CAPTION);
-        result.setLocation(SECOND_LOCATION);
         result.setImageId(SECOND_IMAGE_ID);
         result.setLikes(SECOND_LIKES);
         result.setCreationDate(SECOND_CREATION_DATE);

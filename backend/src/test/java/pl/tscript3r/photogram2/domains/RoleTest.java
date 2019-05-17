@@ -21,16 +21,14 @@ public class RoleTest {
     @DisplayName("Role equals with ID")
     @Test
     void userEqualsWithId() {
-        Role secondRole = getSecondRole();
-        secondRole.setId(ID);
+        Role secondRole = new Role(ID, SECOND_NAME);
         assertEquals(getDefaultRole(), secondRole);
     }
 
     @DisplayName("Role not equals with ID")
     @Test
     void userNotEqualsWithId() {
-        Role defaultRole = getDefaultRole();
-        defaultRole.setId(SECOND_ID);
+        Role defaultRole = new Role(SECOND_ID, NAME);
         assertNotEquals(getDefaultRole(), defaultRole);
     }
 

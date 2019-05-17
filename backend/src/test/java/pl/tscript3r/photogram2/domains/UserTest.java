@@ -3,8 +3,6 @@ package pl.tscript3r.photogram2.domains;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static pl.tscript3r.photogram2.Consts.*;
 
@@ -12,12 +10,13 @@ import static pl.tscript3r.photogram2.Consts.*;
 public class UserTest {
 
     public static User getDefaultUser() {
-        return new User(ID, NAME, USERNAME, PASSWORD, EMAIL, BIO);
+        return new User(ID, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
+                null, null, null, CREATION_DATE);
     }
 
     public static User getSecondUser() {
-        return new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL,
-                SECOND_BIO);
+        return new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, SECOND_EMAIL_CONFIRMED,
+                SECOND_BIO, null, null, null, SECOND_CREATION_DATE);
     }
 
     @Test
@@ -39,7 +38,8 @@ public class UserTest {
     @Test
     @DisplayName("New user function validation")
     void newUser() {
-        var user = new User(NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, CREATION_DATE, Collections.emptySet());
+        var user = new User(null, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, null,
+                null, null, CREATION_DATE);
         assertTrue(user.isNew());
         user.setId(ID);
         assertFalse(user.isNew());

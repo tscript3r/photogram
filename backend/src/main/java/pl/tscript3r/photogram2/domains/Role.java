@@ -1,23 +1,22 @@
 package pl.tscript3r.photogram2.domains;
 
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "roles")
 public class Role extends DomainEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
+
+    Role() {
+    }
 
     public Role(Long id, String name) {
         super(id);

@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram2.domains.Role;
 import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
@@ -26,6 +25,7 @@ import static pl.tscript3r.photogram2.Consts.*;
 import static pl.tscript3r.photogram2.api.v1.dtos.UserDtoTest.getDefaultUserDto;
 import static pl.tscript3r.photogram2.api.v1.dtos.UserDtoTest.getSecondUserDto;
 import static pl.tscript3r.photogram2.api.v1.services.impl.MapperServiceImplTest.getInstance;
+import static pl.tscript3r.photogram2.domains.RoleTest.getDefaultRole;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
 
@@ -54,7 +54,7 @@ class UserServiceImplTest {
     @DisplayName("Save domain")
     void saveDomain() {
         var user = getDefaultUser();
-        when(roleService.getDefault()).thenReturn(new Role());
+        when(roleService.getDefault()).thenReturn(getDefaultRole());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
         userService.save(user, true, true);
         verify(roleService, times(1)).getDefault();
@@ -76,7 +76,7 @@ class UserServiceImplTest {
     @DisplayName("Save DTO")
     void saveDto() {
         var userDto = getDefaultUserDto();
-        when(roleService.getDefault()).thenReturn(new Role());
+        when(roleService.getDefault()).thenReturn(getDefaultRole());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
         when(userRepository.save(any())).thenReturn(getDefaultUser());
         userService.save(userDto);

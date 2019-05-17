@@ -32,13 +32,7 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
 
     @Override
     protected Post secondToFirst(final PostDto source) {
-        Post result = new Post();
-        result.setUser(
-                userService.getById(source.getUserId())
-        );
-        result.setCaption(source.getCaption());
-        result.setLocation(source.getLocation());
-        return result;
+        return new Post(userService.getById(source.getUserId()), source.getCaption(), source.getLocation());
     }
 
 }

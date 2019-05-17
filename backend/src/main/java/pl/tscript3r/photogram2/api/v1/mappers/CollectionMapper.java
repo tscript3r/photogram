@@ -5,10 +5,7 @@ import pl.tscript3r.photogram2.domains.DataStructure;
 import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,7 +20,7 @@ public interface CollectionMapper extends Mapper {
             return (F) mappedStream.collect(Collectors.toCollection(LinkedHashSet::new));
         if (source instanceof HashSet || source instanceof PersistentSet)
             return (F) mappedStream.collect(Collectors.toCollection(HashSet::new));
-        if (source instanceof ArrayList)
+        if (source instanceof ArrayList || isUnmodifiableList(source))
             return (F) mappedStream.collect(Collectors.toCollection(ArrayList::new));
 
         throw new MapperPhotogramException(
@@ -34,6 +31,13 @@ public interface CollectionMapper extends Mapper {
     getMappedStream(final Collection<S> source, final Class<T> target) {
         return source.stream()
                 .map(data -> map(data, target));
+    }
+
+    // is private in Collections (why?) :(
+    private boolean isUnmodifiableList(final Collection o) {
+        return Collections.unmodifiableList(Collections.EMPTY_LIST)
+                .getClass()
+                .isAssignableFrom(o.getClass());
     }
 
 }

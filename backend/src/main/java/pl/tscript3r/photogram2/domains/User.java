@@ -1,6 +1,7 @@
 package pl.tscript3r.photogram2.domains;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,28 +12,31 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "users")
 public class User extends DomainEntity {
 
+    @Setter
     @Column(nullable = false)
     private String firstname;
 
+    @Setter
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Setter
     @Column(nullable = false)
     private String password;
 
+    @Setter
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Setter
     @Column(nullable = false)
     private Boolean emailConfirmed = false;
 
+    @Setter
     @Column(columnDefinition = "text")
     private String bio;
 
@@ -53,25 +57,7 @@ public class User extends DomainEntity {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    public User(String firstname, String username, String password, String email, Boolean emailConfirmed,
-                String bio, LocalDateTime creationDate, Set<Role> roles) {
-        this.firstname = firstname;
-        this.username = username;
-        this.password = password;
-        this.emailConfirmed = emailConfirmed;
-        this.email = email;
-        this.bio = bio;
-        this.creationDate = creationDate;
-        this.roles = roles;
-    }
-
-    public User(Long id, String firstname, String username, String password, String email, String bio) {
-        super(id);
-        this.firstname = firstname;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.bio = bio;
+    User() {
     }
 
     public User(String firstname, String username, String password, String email, String bio) {
@@ -82,8 +68,43 @@ public class User extends DomainEntity {
         this.bio = bio;
     }
 
+    public User(Long id, String firstname, String username, String password, String email, Boolean emailConfirmed,
+                String bio, Set<Role> roles, List<Post> posts, List<Post> likedPost, LocalDateTime creationDate) {
+        super(id);
+        this.firstname = firstname;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.emailConfirmed = emailConfirmed;
+        this.bio = bio;
+        this.roles = roles;
+        this.posts = posts;
+        this.likedPost = likedPost;
+        this.creationDate = creationDate;
+    }
+
     public void addRole(Role role) {
         roles.add(role);
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+    }
+
+    public void addLikedPost(Post post) {
+        posts.add(post);
+    }
+
+    public void removeRole(Role role) {
+        roles.remove(role);
+    }
+
+    public void removePost(Post post) {
+        posts.remove(post);
+    }
+
+    public void removeLikedPost(Post post) {
+        posts.remove(post);
     }
 
 }
