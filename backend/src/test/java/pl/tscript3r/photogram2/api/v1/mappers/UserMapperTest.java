@@ -1,6 +1,5 @@
 package pl.tscript3r.photogram2.api.v1.mappers;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static pl.tscript3r.photogram2.api.v1.dtos.UserDtoTest.getDefaultUserDto;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
@@ -28,7 +28,6 @@ class UserMapperTest {
 
     static void compareUserWithUserDto(User user, UserDto userDto) {
         assertEquals(user.getBio(), userDto.getBio());
-        assertEquals(user.getCreationDate(), userDto.getCreationDate());
         assertEquals(user.getEmail(), userDto.getEmail());
         assertEquals(user.getFirstname(), userDto.getName());
         assertEquals(user.getPassword(), userDto.getPassword());
@@ -45,7 +44,6 @@ class UserMapperTest {
     @DisplayName("User to UserDto map validation")
     void userToUserDto() {
         var user = getDefaultUser();
-        when(roleMapper.map(anyCollection(), any())).thenReturn(Lists.emptyList());
         var userDto = userMapper.map(user, UserDto.class);
         compareUserWithUserDto(user, userDto);
         verify(roleMapper, times(1)).map(anyCollection(), any());
@@ -55,10 +53,8 @@ class UserMapperTest {
     @DisplayName("UserDto to User map validation")
     void userDtoToUser() {
         var userDto = getDefaultUserDto();
-        when(roleMapper.map(anyCollection(), any())).thenReturn(Lists.emptyList());
         var user = userMapper.map(userDto, User.class);
         compareUserWithUserDto(user, userDto);
-        verify(roleMapper, times(1)).map(anyCollection(), any());
     }
 
     @Test

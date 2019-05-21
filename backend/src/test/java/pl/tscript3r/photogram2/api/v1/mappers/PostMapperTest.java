@@ -10,9 +10,13 @@ import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.domains.Post;
 import pl.tscript3r.photogram2.services.UserService;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.when;
+import static pl.tscript3r.photogram2.api.v1.dtos.CommentDtoTest.getDefaultCommentDto;
 import static pl.tscript3r.photogram2.api.v1.dtos.PostDtoTest.getDefaultPostDto;
 import static pl.tscript3r.photogram2.domains.PostTest.getDefaultPost;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
@@ -29,6 +33,7 @@ class PostMapperTest {
         assertEquals(post.getImageId(), postDto.getImageId());
         assertEquals(post.getLikes(), postDto.getLikesCount());
         assertEquals(post.getCreationDate(), postDto.getCreationDate());
+        assertEquals(post.getComments().size(), postDto.getComments().size());
     }
 
     void comparePostDtoWithPost(PostDto postDto, Post post) {
@@ -40,12 +45,16 @@ class PostMapperTest {
     @Mock
     UserService userService;
 
+    @Mock
+    CommentMapper commentMapper;
+
     @InjectMocks
     PostMapper postMapper;
 
     @Test
     @DisplayName("Post to PostDto map validation")
     void firstToSecond() {
+        when(commentMapper.map(anyCollection(), any())).thenReturn(Collections.singletonList(getDefaultCommentDto()));
         var post = getDefaultPost();
         var postDto = postMapper.firstToSecond(post);
         comparePostWithPostDto(post, postDto);

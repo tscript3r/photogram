@@ -10,10 +10,13 @@ public interface ImageService {
 
     /**
      * @param userId        id of the user
+     * @param postId        id of the image owner post
      * @param multipartFile received image file
      * @return id of the saved file
      */
     Long save(@NotNull final Long userId, @NotNull final Long postId, @NotNull final MultipartFile multipartFile);
+
+    Long reserveNextImageId(@NotNull final Long userId);
 
     MultipartFile loadAvatar(@NotNull final Long userId);
 

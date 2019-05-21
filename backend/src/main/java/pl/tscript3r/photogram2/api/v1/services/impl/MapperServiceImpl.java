@@ -2,6 +2,7 @@ package pl.tscript3r.photogram2.api.v1.services.impl;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import pl.tscript3r.photogram2.api.v1.mappers.CollectionMapper;
 import pl.tscript3r.photogram2.api.v1.mappers.Mapper;
@@ -12,6 +13,7 @@ import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
+@Lazy
 @Service
 public class MapperServiceImpl implements MapperService, ApplicationContextAware {
 

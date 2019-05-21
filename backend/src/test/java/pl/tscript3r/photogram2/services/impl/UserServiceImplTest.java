@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.User;
+import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.RoleService;
@@ -159,7 +160,16 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Get by principal")
     void getByPrincipal() {
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(getDefaultUser()));
+        assertNotNull(userService.getByPrincipal(() -> USERNAME));
+    }
+
+    @Test
+    @DisplayName("Get by principal with null arg")
+    void getByPrincipalWithNullArg() {
+        assertThrows(ForbiddenPhotogramException.class, () -> userService.getByPrincipal(null));
     }
 
     @Test

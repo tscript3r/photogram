@@ -1,5 +1,6 @@
 package pl.tscript3r.photogram2.api.v1.mappers;
 
+import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.internal.PersistentSet;
 import pl.tscript3r.photogram2.domains.DataStructure;
 import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
@@ -20,9 +21,8 @@ public interface CollectionMapper extends Mapper {
             return (F) mappedStream.collect(Collectors.toCollection(LinkedHashSet::new));
         if (source instanceof HashSet || source instanceof PersistentSet)
             return (F) mappedStream.collect(Collectors.toCollection(HashSet::new));
-        if (source instanceof ArrayList || isUnmodifiableList(source))
+        if (source instanceof ArrayList || isUnmodifiableList(source) || source instanceof PersistentBag)
             return (F) mappedStream.collect(Collectors.toCollection(ArrayList::new));
-
         throw new MapperPhotogramException(
                 String.format("Given collection %s has been not implemented, consider refactor", source.getClass()));
     }
@@ -35,7 +35,7 @@ public interface CollectionMapper extends Mapper {
 
     // is private in Collections (why?) :(
     private boolean isUnmodifiableList(final Collection o) {
-        return Collections.unmodifiableList(Collections.EMPTY_LIST)
+        return Collections.unmodifiableList(Collections.emptyList())
                 .getClass()
                 .isAssignableFrom(o.getClass());
     }

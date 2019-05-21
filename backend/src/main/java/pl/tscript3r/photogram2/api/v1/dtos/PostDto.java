@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,11 +18,10 @@ public class PostDto implements Dto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long userId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<CommentDto> comments;
+    private List<CommentDto> comments = new ArrayList<>();
 
     @Nullable
     private String caption;

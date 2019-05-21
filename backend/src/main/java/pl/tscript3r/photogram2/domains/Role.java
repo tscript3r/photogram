@@ -18,7 +18,7 @@ public class Role extends DomainEntity {
     Role() {
     }
 
-    public Role(Long id, String name) {
+    public Role(final Long id, final String name) {
         super(id);
         this.name = name;
     }

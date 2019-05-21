@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 public class Comment extends DomainEntity {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -26,10 +26,10 @@ public class Comment extends DomainEntity {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    Comment() {
+    public Comment() {
     }
 
-    public Comment(User user, Post post, String content) {
+    public Comment(final User user, final Post post, final String content) {
         this.user = user;
         this.post = post;
         this.content = content;

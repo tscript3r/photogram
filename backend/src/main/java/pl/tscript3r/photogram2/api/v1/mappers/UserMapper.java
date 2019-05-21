@@ -1,6 +1,6 @@
 package pl.tscript3r.photogram2.api.v1.mappers;
 
-import org.springframework.context.annotation.Lazy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.tscript3r.photogram2.api.v1.dtos.RoleDto;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
@@ -9,14 +9,10 @@ import pl.tscript3r.photogram2.domains.User;
 import java.util.HashSet;
 
 @Component
+@RequiredArgsConstructor
 public class UserMapper extends AbstractMapper<User, UserDto> implements CollectionMapper {
 
     private final RoleMapper roleMapper;
-
-    @Lazy
-    public UserMapper(RoleMapper roleMapper) {
-        this.roleMapper = roleMapper;
-    }
 
     @Override
     protected UserDto firstToSecond(final User source) {

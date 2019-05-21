@@ -28,22 +28,22 @@ INSERT INTO `USERS_ROLES` (`user_id`, `role_id`) VALUES  (4, 1);
 INSERT INTO `USERS_ROLES` (`user_id`, `role_id`) VALUES  (5, 1);
 
 
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('First post ever', 666, 'Wrocław', CURRENT_TIMESTAMP , 1, 1);
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('Warsaw from Heaven', 123, 'Warszawa', CURRENT_TIMESTAMP , 2, 1);
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('Just an cat', 1, 'Wrocław', CURRENT_TIMESTAMP , 3, 1);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('First post ever', 666, 'Wrocław', CURRENT_TIMESTAMP , 1, 1, true);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('Warsaw from Heaven', 123, 'Warszawa', CURRENT_TIMESTAMP , 2, 1, true);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('Just an cat', 1, 'Wrocław', CURRENT_TIMESTAMP , 3, 1, true);
 
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('Wroclaw from Heaven', 13, 'Warszawa', CURRENT_TIMESTAMP , 1, 2);
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('Just an dog', 12, 'Wrocław', CURRENT_TIMESTAMP , 3, 2);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('Wroclaw from Heaven', 13, 'Warszawa', CURRENT_TIMESTAMP , 1, 2, true);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('Just an dog', 12, 'Wrocław', CURRENT_TIMESTAMP , 3, 2, true);
 
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('Gdansk from Heaven', 4, 'Gdansk', CURRENT_TIMESTAMP , 1, 3);
-INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`)
-VALUES ('Just an birth', 11, 'Wrocław', CURRENT_TIMESTAMP , 2, 3);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('Gdansk from Heaven', 4, 'Gdansk', CURRENT_TIMESTAMP , 1, 3, true);
+INSERT INTO `POSTS` (`caption`, `likes`, `location`, `creation_date`, `image_id`, `user_id`, `valid`)
+VALUES ('Just an birth', 11, 'Wrocław', CURRENT_TIMESTAMP , 2, 3, true);
 
 INSERT INTO `COMMENTS` (`content`, `creation_date`, `post_id`, `user_id`)
 VALUES ('First comment ever', CURRENT_TIMESTAMP , 1, 1);

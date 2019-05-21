@@ -60,7 +60,8 @@ public class User extends DomainEntity {
     User() {
     }
 
-    public User(String firstname, String username, String password, String email, String bio) {
+    public User(final String firstname, final String username, final String password,
+                final String email, final String bio) {
         this.firstname = firstname;
         this.username = username;
         this.password = password;
@@ -83,27 +84,27 @@ public class User extends DomainEntity {
         this.creationDate = creationDate;
     }
 
-    public void addRole(Role role) {
+    public void addRole(final Role role) {
         roles.add(role);
     }
 
-    public void addPost(Post post) {
+    public void addPost(final Post post) {
         posts.add(post);
     }
 
-    public void addLikedPost(Post post) {
+    public void addLikedPost(final Post post) {
         posts.add(post);
     }
 
-    public void removeRole(Role role) {
+    public void removeRole(final Role role) {
         roles.remove(role);
     }
 
-    public void removePost(Post post) {
+    public void removePost(final Post post) {
         posts.remove(post);
     }
 
-    public void removeLikedPost(Post post) {
+    public void removeLikedPost(final Post post) {
         posts.remove(post);
     }
 

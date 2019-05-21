@@ -5,6 +5,7 @@ import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.ParameterizedType;
+import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> implements Mapper {
@@ -45,8 +46,22 @@ abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> 
         return (compatible(source.getClass()) && compatible(target) && source.getClass() != target);
     }
 
-    protected abstract F firstToSecond(final E source);
+    protected abstract F firstToSecond(@NotNull final E source);
 
-    protected abstract E secondToFirst(final F source);
+    protected abstract E secondToFirst(@NotNull final F source);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractMapper<?, ?> that = (AbstractMapper<?, ?>) o;
+        return Objects.equals(first, that.first) &&
+                Objects.equals(second, that.second);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
 
 }
