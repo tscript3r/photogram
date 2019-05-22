@@ -55,11 +55,12 @@ public class UserController {
         return userService.save(userDto);
     }
 
-    @PutMapping
-    public UserDto update(Principal principal, @Valid @RequestBody UserDto userDto, BindingResult bindingResult) {
+    @PutMapping("{id}")
+    public UserDto update(Principal principal, @PathVariable("id") Long id, @Valid @RequestBody UserDto userDto,
+                          BindingResult bindingResult) {
         checkUpdateValidationErrors(bindingResult);
         checkIdAndEmail(userDto);
-        return userService.update(principal, userDto);
+        return userService.update(principal, id, userDto);
     }
 
     private void checkUpdateValidationErrors(final BindingResult bindingResult) {
@@ -80,7 +81,7 @@ public class UserController {
 
     @DeleteMapping("{id}")
     public void delete(Principal principal, @PathVariable Long id) {
-        userService.delete(id);
+        userService.delete(principal, id);
     }
 
     @GetMapping("reset")

@@ -23,6 +23,7 @@ public class CommentDto implements Dto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long postId;
     private String content;
 

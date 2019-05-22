@@ -14,9 +14,9 @@ public interface UserService {
 
     UserDto save(@NotNull final UserDto user);
 
-    UserDto update(@Nullable final Principal principal, @NotNull final UserDto userDto);
+    UserDto update(@Nullable final Principal principal, @NotNull final Long id, @NotNull final UserDto userDto);
 
-    void delete(final @NotNull Long id);
+    void delete(@Nullable final Principal principal, @NotNull final Long id);
 
     List<UserDto> getAllDto();
 

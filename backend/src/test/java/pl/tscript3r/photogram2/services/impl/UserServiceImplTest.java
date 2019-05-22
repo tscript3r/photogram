@@ -93,11 +93,12 @@ class UserServiceImplTest {
         var userDto = getSecondUserDto();
         var modifiedUser = getDefaultUser();
 
+        when(roleService.requireLogin(any())).thenReturn(roleService);
         when(userRepository.findById(any())).thenReturn(Optional.of(modifiedUser));
         when(userRepository.save(any())).thenReturn(modifiedUser);
         when(passwordEncoder.encode(any())).thenReturn(SECOND_PASSWORD);
 
-        var modifiedUserDto = userService.update(principal, userDto);
+        var modifiedUserDto = userService.update(principal, ID, userDto);
         assertEquals(SECOND_EMAIL, modifiedUserDto.getEmail());
         assertEquals(SECOND_BIO, modifiedUserDto.getBio());
         assertEquals(SECOND_NAME, modifiedUserDto.getName());
@@ -106,45 +107,39 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).findById(any());
         verify(userRepository, times(1)).save(any());
         verify(passwordEncoder, times(1)).encode(any());
+        verify(roleService, times(1)).requireLogin(any());
+        verify(roleService, times(1)).accessValidation(any(), any());
     }
 
     @Test
-    @DisplayName("Update DTO by email")
-    void updateDtoByEmail() {
-        Principal principal = () -> USERNAME;
-        var userDto = getSecondUserDto();
-        var modifiedUser = getDefaultUser();
-        userDto.setId(null);
-        userDto.setPassword(null);
-        userDto.setBio(null);
-        userDto.setName(null);
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(modifiedUser));
-        when(userRepository.save(any())).thenReturn(modifiedUser);
-
-        UserDto modifiedUserDto = userService.update(principal, userDto);
-
-        assertFalse(modifiedUserDto.getEmailConfirmed());
-        assertEquals(SECOND_EMAIL, modifiedUserDto.getEmail());
-        assertEquals(SECOND_USERNAME, modifiedUserDto.getUsername());
-
-        assertEquals(PASSWORD, modifiedUserDto.getPassword());
-        assertEquals(NAME, modifiedUserDto.getName());
-        assertEquals(BIO, modifiedUserDto.getBio());
-
-        verify(userRepository, times(1)).findByEmail(any());
-        verify(userRepository, times(1)).save(any());
-        verify(passwordEncoder, times(0)).encode(any());
-    }
-
-    @Test
-    @DisplayName("Update DTO without email & id")
+    @DisplayName("Update DTO without id")
     void updateDtoWithoutEmailAndId() {
         var userDto = new UserDto();
         userDto.setName(SECOND_NAME);
         userDto.setUsername(SECOND_USERNAME);
         Principal principal = () -> USERNAME;
 
-        assertThrows(NotFoundPhotogramException.class, () -> userService.update(principal, userDto));
+        when(roleService.requireLogin(any())).thenReturn(roleService);
+
+        assertThrows(NotFoundPhotogramException.class, () -> userService.update(principal, ID, userDto));
+    }
+
+    @Test
+    @DisplayName("Update DTO without login")
+    void updateDtoWithoutLogin() {
+        when(roleService.requireLogin(any())).thenThrow(ForbiddenPhotogramException.class);
+        assertThrows(ForbiddenPhotogramException.class, () -> userService.update(null, ID, getDefaultUserDto()));
+        verify(roleService, times(1)).requireLogin(any());
+    }
+
+    @Test
+    @DisplayName("Update DTO without resource access rights")
+    void updateDotWithoutAccessRights() {
+        when(roleService.requireLogin(any())).thenReturn(roleService);
+        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        assertThrows(ForbiddenPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
+        verify(roleService, times(1)).requireLogin(any());
+        verify(roleService, times(1)).accessValidation(any(), any());
     }
 
     @Test
@@ -269,16 +264,40 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Delete by ID")
     void delete() {
+        when(roleService.requireLogin(any())).thenReturn(roleService);
         when(userRepository.existsById(any())).thenReturn(true);
-        userService.delete(1L);
+        userService.delete(() -> USERNAME, 1L);
         verify(userRepository, times(1)).deleteById(any());
+        verify(roleService, times(1)).requireLogin(any());
+        verify(roleService, times(1)).accessValidation(any(), any());
     }
 
     @Test
     @DisplayName("Delete by non existing ID")
     void deleteNonExistingId() {
+        when(roleService.requireLogin(any())).thenReturn(roleService);
         when(userRepository.existsById(any())).thenReturn(false);
-        assertThrows(NotFoundPhotogramException.class, () -> userService.delete(1L));
+        assertThrows(NotFoundPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
+        verify(roleService, times(1)).requireLogin(any());
+        verify(roleService, times(1)).accessValidation(any(), any());
+    }
+
+    @Test
+    @DisplayName("Delete by ID other user without access rights")
+    void deleteWithoutResourceAccessRights() {
+        when(roleService.requireLogin(any())).thenReturn(roleService);
+        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        assertThrows(ForbiddenPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
+        verify(roleService, times(1)).requireLogin(any());
+        verify(roleService, times(1)).accessValidation(any(), any());
+    }
+
+    @Test
+    @DisplayName("Delete without login")
+    void deleteWithoutLogin() {
+        doThrow(ForbiddenPhotogramException.class).when(roleService).requireLogin(any());
+        assertThrows(ForbiddenPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
+        verify(roleService, times(1)).requireLogin(any());
     }
 
 }

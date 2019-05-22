@@ -1,6 +1,7 @@
 package pl.tscript3r.photogram2.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
+import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.List;
 
@@ -43,19 +45,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(final Principal principal, final UserDto userDto) {
-        // TODO: access permissions check?
-        var existingUser = getExistingUser(userDto);
+    public UserDto update(final Principal principal, final Long id, final UserDto userDto) {
+        roleService.requireLogin(principal)
+                .accessValidation(principal, userDto.getId());
+        var existingUser = getById(id);
         updateValuesAndSave(existingUser, userDto);
         return mapperService.map(existingUser, UserDto.class);
-    }
-
-    private User getExistingUser(final UserDto userDto) {
-        if (userDto.getId() != null)
-            return getById(userDto.getId());
-        if (userDto.getEmail() != null)
-            return getByEmail(userDto.getEmail());
-        throw new NotFoundPhotogramException("Specify id or email");
     }
 
     private void updateValuesAndSave(final User existingUser, final UserDto userDto) {
@@ -127,7 +122,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(final Long id) {
+    public void delete(@Nullable final Principal principal, @NotNull final Long id) {
+        roleService.requireLogin(principal)
+                .accessValidation(principal, id);
         if (!userRepository.existsById(id))
             throw new NotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));
         else

@@ -16,6 +16,7 @@ public class PostTest {
         result.setId(ID);
         result.setImageId(IMAGE_ID);
         result.setLikes(LIKES);
+        result.setDislikes(LIKES);
         result.setCreationDate(CREATION_DATE);
         result.getComments().add(new Comment(getDefaultUser(), result, CONTENT)); // with getDefaultComment stackOverflow
         return result;
@@ -77,6 +78,56 @@ public class PostTest {
         post.setImageId(-1L);
         assertNull(post.getImageId());
         assertFalse(post.getValid());
+    }
+
+    @Test
+    @DisplayName("Increment likes")
+    void incrementLikes() {
+        var post = getDefaultPost();
+        post.incrementLikes();
+        assertEquals(2, post.getLikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Decrement likes")
+    void incrementDislikes() {
+        var post = getDefaultPost();
+        post.incrementDislikes();
+        assertEquals(2, post.getDislikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Decrement likes")
+    void decrementLikes() {
+        var post = getDefaultPost();
+        post.decrementLikes();
+        assertEquals(0, post.getLikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Decrement dislikes")
+    void decrementDislikes() {
+        var post = getDefaultPost();
+        post.decrementDislikes();
+        assertEquals(0, post.getDislikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Decrement likes equal 0")
+    void decrementLikesEqualZero() {
+        var post = getDefaultPost();
+        post.decrementLikes();
+        post.decrementLikes();
+        assertEquals(0, post.getLikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Decrement dislikes equal 0")
+    void decrementDislikesEqualZero() {
+        var post = getDefaultPost();
+        post.decrementDislikes();
+        post.decrementDislikes();
+        assertEquals(0, post.getDislikes().intValue());
     }
 
 }

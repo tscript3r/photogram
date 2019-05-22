@@ -44,6 +44,11 @@ public class PostController {
         return postService.getLatest(pageable);
     }
 
+    @GetMapping("{id}")
+    public PostDto getById(@PathVariable("id") Long id) {
+        return postService.getByIdDto(id);
+    }
+
     private Boolean isSet(final String input) {
         return (input != null && !input.isEmpty());
     }
@@ -58,34 +63,34 @@ public class PostController {
         return postService.save(principal, postDto);
     }
 
-    @PutMapping
-    public PostDto update(Principal principal, @Valid @RequestBody PostDto postDto) {
-        return postService.update(principal, postDto);
+    @PutMapping("{id}")
+    public PostDto update(Principal principal, @PathVariable("id") Long id, @Valid @RequestBody PostDto postDto) {
+        return postService.update(principal, id, postDto);
     }
 
-    @DeleteMapping("{postId}")
-    public void delete(Principal principal, @PathVariable("postId") Long postId) {
+    @DeleteMapping("{id}")
+    public void delete(Principal principal, @PathVariable("id") Long postId) {
         postService.delete(principal, postId);
     }
 
-    @PutMapping("{postId}" + LIKE_MAPPING)
-    public PostDto like(Principal principal, @PathVariable("postId") Long postId) {
-        return postService.like(principal, postId);
+    @PutMapping("{id}" + LIKE_MAPPING)
+    public PostDto like(Principal principal, @PathVariable("id") Long postId) {
+        return postService.react(PostService.Reactions.LIKE, principal, postId);
     }
 
-    @PutMapping("{postId}" + UNLIKE_MAPPING)
-    public PostDto unlike(Principal principal, @PathVariable("postId") Long postId) {
-        return postService.unlike(principal, postId);
+    @PutMapping("{id}" + UNLIKE_MAPPING)
+    public PostDto unlike(Principal principal, @PathVariable("id") Long postId) {
+        return postService.react(PostService.Reactions.UNLIKE, principal, postId);
     }
 
-    @PutMapping("{postId}" + DISLIKE_MAPPING)
-    public PostDto dislike(Principal principal, @PathVariable("postId") Long postId) {
-        return postService.dislike(principal, postId);
+    @PutMapping("{id}" + DISLIKE_MAPPING)
+    public PostDto dislike(Principal principal, @PathVariable("id") Long postId) {
+        return postService.react(PostService.Reactions.DISLIKE, principal, postId);
     }
 
-    @PutMapping("{postId}" + UNDISLIKE_MAPPING)
-    public PostDto undislike(Principal principal, @PathVariable("postId") Long postId) {
-        return postService.undislike(principal, postId);
+    @PutMapping("{id}" + UNDISLIKE_MAPPING)
+    public PostDto undislike(Principal principal, @PathVariable("id") Long postId) {
+        return postService.react(PostService.Reactions.UNDISLIKE, principal, postId);
     }
 
 }

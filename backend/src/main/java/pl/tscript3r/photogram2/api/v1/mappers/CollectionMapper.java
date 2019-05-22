@@ -3,7 +3,7 @@ package pl.tscript3r.photogram2.api.v1.mappers;
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.internal.PersistentSet;
 import pl.tscript3r.photogram2.domains.DataStructure;
-import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
+import pl.tscript3r.photogram2.exceptions.InternalErrorPhotogramException;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -23,7 +23,7 @@ public interface CollectionMapper extends Mapper {
             return (F) mappedStream.collect(Collectors.toCollection(HashSet::new));
         if (source instanceof ArrayList || isUnmodifiableList(source) || source instanceof PersistentBag)
             return (F) mappedStream.collect(Collectors.toCollection(ArrayList::new));
-        throw new MapperPhotogramException(
+        throw new InternalErrorPhotogramException(
                 String.format("Given collection %s has been not implemented, consider refactor", source.getClass()));
     }
 

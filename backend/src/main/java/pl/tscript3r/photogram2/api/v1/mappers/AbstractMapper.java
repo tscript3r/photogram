@@ -1,11 +1,10 @@
 package pl.tscript3r.photogram2.api.v1.mappers;
 
 import pl.tscript3r.photogram2.domains.DataStructure;
-import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
+import pl.tscript3r.photogram2.exceptions.InternalErrorPhotogramException;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.ParameterizedType;
-import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> implements Mapper {
@@ -34,10 +33,10 @@ abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> 
                     return (T) firstToSecond((E) source);
                 else if (second.isInstance(source))
                     return (T) secondToFirst((F) source);
-            throw new MapperPhotogramException("Object [" + source.getClass().getName() + "] could not be mapped to ["
+            throw new InternalErrorPhotogramException("Object [" + source.getClass().getName() + "] could not be mapped to ["
                     + target.getName() + "]");
         } catch (ClassCastException e) {
-            throw new MapperPhotogramException("Class cast exception by mapping from [" + source.getClass().getName()
+            throw new InternalErrorPhotogramException("Class cast exception by mapping from [" + source.getClass().getName()
                     + "] to [" + target.getName() + "]", e);
         }
     }
@@ -49,19 +48,5 @@ abstract class AbstractMapper<E extends DataStructure, F extends DataStructure> 
     protected abstract F firstToSecond(@NotNull final E source);
 
     protected abstract E secondToFirst(@NotNull final F source);
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AbstractMapper<?, ?> that = (AbstractMapper<?, ?>) o;
-        return Objects.equals(first, that.first) &&
-                Objects.equals(second, that.second);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(first, second);
-    }
 
 }

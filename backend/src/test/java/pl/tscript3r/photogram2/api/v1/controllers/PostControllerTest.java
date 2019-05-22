@@ -128,6 +128,26 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("Get by id")
+    void getById() throws Exception {
+        when(postService.getByIdDto(any())).thenReturn(getDefaultPostDto());
+        mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Get by non existing id")
+    void getByIdNotExisting() throws Exception {
+        when(postService.getByIdDto(any())).thenThrow(NotFoundPhotogramException.class);
+        mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @DisplayName("Add valid post")
     void addValidPost() throws Exception {
         PostDto postDto = new PostDto();
@@ -156,20 +176,20 @@ class PostControllerTest {
     @DisplayName("Update post")
     void updatePost() throws Exception {
         PostDto postDto = new PostDto();
-        mockMvc.perform(MockMvcRequestBuilders.put(POST_MAPPING)
+        mockMvc.perform(MockMvcRequestBuilders.put(POST_MAPPING + "/1")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isOk());
-        verify(postService, times(1)).update(any(), any());
+        verify(postService, times(1)).update(any(), any(), any());
     }
 
     @Test
     @DisplayName("Update other users post - access denied")
     void updateOtherUsersPostException() throws Exception {
         PostDto postDto = new PostDto();
-        when(postService.update(any(), any())).thenThrow(ForbiddenPhotogramException.class);
-        mockMvc.perform(MockMvcRequestBuilders.put(POST_MAPPING)
+        when(postService.update(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
+        mockMvc.perform(MockMvcRequestBuilders.put(POST_MAPPING + "/1")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(postDto)))
@@ -212,7 +232,7 @@ class PostControllerTest {
     @DisplayName("Like existing post")
     void likeExistingPost() throws Exception {
         mockMvcPerform(LIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).like(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
     }
 
     private void mockMvcPerform(String mappingSuffix, ResultMatcher expectedResult) throws Exception {
@@ -225,118 +245,118 @@ class PostControllerTest {
     @Test
     @DisplayName("Like previous liked post")
     void likePreviousLikedPost() throws Exception {
-        when(postService.like(any(), any())).thenThrow(IgnoredPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(LIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).like(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
     }
 
     @Test
     @DisplayName("Like unexisting post")
     void likeUnexistingPost() throws Exception {
-        when(postService.like(any(), any())).thenThrow(NotFoundPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(LIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).like(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
     }
 
     @Test
     @DisplayName("Like without principal")
     void likeWithoutPrincipal() throws Exception {
-        when(postService.like(any(), any())).thenThrow(ForbiddenPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(LIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).like(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
     }
 
     @Test
     @DisplayName("Unlike existing previous liked post")
     void unlikeExistingPreviousLikedPost() throws Exception {
         mockMvcPerform(UNLIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).unlike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Unlike existing non liked post")
     void unlikeExistingNonLikedPost() throws Exception {
-        when(postService.unlike(any(), any())).thenThrow(IgnoredPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(UNLIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).unlike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Unlike non existing post")
     void unlikeNonExistingPost() throws Exception {
-        when(postService.unlike(any(), any())).thenThrow(NotFoundPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(UNLIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).unlike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Unlike without principal")
     void unlikeWithoutPrincipal() throws Exception {
-        when(postService.unlike(any(), any())).thenThrow(ForbiddenPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(UNLIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).unlike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Dislike existing post")
     void dislikeExistingPost() throws Exception {
         mockMvcPerform(DISLIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).dislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Dislike previous disliked post")
     void dislikePreviousDislikedPost() throws Exception {
-        when(postService.dislike(any(), any())).thenThrow(IgnoredPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(DISLIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).dislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Dislike unexisting post")
     void dislikeUnexistingPost() throws Exception {
-        when(postService.dislike(any(), any())).thenThrow(NotFoundPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(DISLIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).dislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Dislike without principal")
     void dislikeWithoutPrincipal() throws Exception {
-        when(postService.dislike(any(), any())).thenThrow(ForbiddenPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(DISLIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).dislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Undislike existing previous liked post")
     void undislikeExistingPreviousLikedPost() throws Exception {
         mockMvcPerform(UNDISLIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).undislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Undislike existing non liked post")
     void undislikeExistingNonLikedPost() throws Exception {
-        when(postService.undislike(any(), any())).thenThrow(IgnoredPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).undislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Undislike non existing post")
     void undislikeNonExistingPost() throws Exception {
-        when(postService.undislike(any(), any())).thenThrow(NotFoundPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).undislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Undislike without principal")
     void undislikeWithoutPrincipal() throws Exception {
-        when(postService.undislike(any(), any())).thenThrow(ForbiddenPhotogramException.class);
+        when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).undislike(any(), any());
+        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
     }
 
 }

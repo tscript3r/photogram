@@ -10,22 +10,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.util.Assert.notNull;
-
 @Getter
 @Entity
 @Table(name = "posts")
 public class Post extends DomainEntity {
 
+    @Setter
     @OneToOne
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @Setter
     @Column(columnDefinition = "text")
     private String caption;
 
+    @Setter
     @Nullable
     private String location;
 
@@ -39,7 +40,7 @@ public class Post extends DomainEntity {
      * This could be done just with imageId (not null), but in the
      * future I'm predicting, that there will be more requirements
      * to have an valid post, that is why I have added this field.
-     * <p>
+     *
      * TODO: add some thread / schedule to auto remove expired non valid posts
      */
     @Setter
@@ -50,6 +51,10 @@ public class Post extends DomainEntity {
     private Integer likes = 0;
 
     @Setter
+    @Column(nullable = false)
+    private Integer dislikes = 0;
+
+    @Setter
     @CreationTimestamp
     private LocalDateTime creationDate;
 
@@ -57,9 +62,6 @@ public class Post extends DomainEntity {
     }
 
     public Post(final User user, final String caption, final String location) {
-        final String FIELD_NEEDS_TO_BE_SET = "%s needs to be set";
-        notNull(user, String.format(FIELD_NEEDS_TO_BE_SET, "user"));
-
         this.user = user;
         this.caption = caption;
         this.location = location;
@@ -70,6 +72,24 @@ public class Post extends DomainEntity {
             valid = true;
             imageId = id;
         }
+    }
+
+    public void incrementLikes() {
+        likes++;
+    }
+
+    public void decrementLikes() {
+        if (likes > 0)
+            likes--;
+    }
+
+    public void incrementDislikes() {
+        dislikes++;
+    }
+
+    public void decrementDislikes() {
+        if (dislikes > 0)
+            dislikes--;
     }
 
 }

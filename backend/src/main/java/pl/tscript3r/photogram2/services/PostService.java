@@ -11,6 +11,8 @@ import java.security.Principal;
 
 public interface PostService {
 
+    enum Reactions {LIKE, UNLIKE, DISLIKE, UNDISLIKE}
+
     Slice<PostDto> getLatest(@NotNull final Pageable pageable);
 
     Slice<PostDto> getLatest(@NotNull final String username, @NotNull final Pageable pageable);
@@ -19,18 +21,14 @@ public interface PostService {
 
     Post getById(@NotNull final Long id);
 
+    PostDto getByIdDto(@NotNull final Long id);
+
     PostDto save(@Nullable final Principal principal, @NotNull final PostDto postDto);
 
-    PostDto update(@Nullable final Principal principal, @NotNull final PostDto postDto);
+    PostDto update(@Nullable final Principal principal, @NotNull final Long id, @NotNull final PostDto postDto);
 
-    void delete(@Nullable final Principal principal, @NotNull final Long postId);
+    void delete(@Nullable final Principal principal, @NotNull final Long id);
 
-    PostDto like(@Nullable final Principal principal, @NotNull final Long postId);
-
-    PostDto unlike(@Nullable final Principal principal, @NotNull final Long postId);
-
-    PostDto dislike(@Nullable final Principal principal, @NotNull final Long postId);
-
-    PostDto undislike(@Nullable final Principal principal, @NotNull final Long postId);
+    PostDto react(@NotNull Reactions reaction, @Nullable final Principal principal, @NotNull final Long id);
 
 }

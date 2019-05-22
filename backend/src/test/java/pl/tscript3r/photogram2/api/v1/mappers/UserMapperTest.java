@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.MapperPhotogramException;
+import pl.tscript3r.photogram2.exceptions.InternalErrorPhotogramException;
 
 import java.util.*;
 
@@ -93,7 +93,7 @@ class UserMapperTest {
         // Excepting that vector will be never used for true usages, because why?
         Vector<User> users = new Vector<>();
         users.add(getDefaultUser());
-        assertThrows(MapperPhotogramException.class, () -> userMapper.map(users, UserDto.class));
+        assertThrows(InternalErrorPhotogramException.class, () -> userMapper.map(users, UserDto.class));
     }
 
 }

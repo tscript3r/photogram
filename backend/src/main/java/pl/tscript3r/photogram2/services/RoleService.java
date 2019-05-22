@@ -9,18 +9,16 @@ import java.security.Principal;
 
 public interface RoleService {
 
-    enum Operations {CREATE, READ, UPDATE, DELETE}
-
-    ;
-
     Role getDefault();
 
     Role getByName(@NotNull final String name);
 
-    Boolean isAdmin(User user);
+    Boolean isAdmin(@NotNull final User user);
 
-    void accessValidation(@NotNull Operations operations, @Nullable Principal principal, @Nullable Long userId);
+    Boolean isModerator(@NotNull final User user);
 
-    // TODO: Boolean / void (throw) accessValidation(@NotNull CRUDOperations.CREATE, @Nullable Principal principal, @Nullable Long userId)
+    void accessValidation(@Nullable final Principal principal, @Nullable final Long resourcesUserId);
+
+    RoleService requireLogin(@Nullable final Principal principal);
 
 }

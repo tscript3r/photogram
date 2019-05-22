@@ -46,13 +46,21 @@ public class User extends DomainEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private List<Post> likedPost = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "users_likes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
+    private Set<Post> likedPost = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "users_dislikes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
+    private Set<Post> dislikedPost = new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime creationDate;
@@ -70,7 +78,7 @@ public class User extends DomainEntity {
     }
 
     public User(Long id, String firstname, String username, String password, String email, Boolean emailConfirmed,
-                String bio, Set<Role> roles, List<Post> posts, List<Post> likedPost, LocalDateTime creationDate) {
+                String bio, Set<Role> roles, List<Post> posts, Set<Post> likedPost, LocalDateTime creationDate) {
         super(id);
         this.firstname = firstname;
         this.username = username;
@@ -88,24 +96,20 @@ public class User extends DomainEntity {
         roles.add(role);
     }
 
-    public void addPost(final Post post) {
-        posts.add(post);
+    public Boolean addLikedPost(final Post post) {
+        return likedPost.add(post);
     }
 
-    public void addLikedPost(final Post post) {
-        posts.add(post);
+    public Boolean removeLikedPost(final Post post) {
+        return likedPost.remove(post);
     }
 
-    public void removeRole(final Role role) {
-        roles.remove(role);
+    public Boolean addDislikedPost(final Post post) {
+        return dislikedPost.add(post);
     }
 
-    public void removePost(final Post post) {
-        posts.remove(post);
-    }
-
-    public void removeLikedPost(final Post post) {
-        posts.remove(post);
+    public Boolean removeDislikedPost(final Post post) {
+        return dislikedPost.remove(post);
     }
 
 }

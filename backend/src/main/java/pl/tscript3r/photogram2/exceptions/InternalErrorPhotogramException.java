@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class MapperPhotogramException extends PhotogramException {
+public class InternalErrorPhotogramException extends PhotogramException {
 
-    public MapperPhotogramException(String message) {
+    public InternalErrorPhotogramException(String message) {
         super(message);
     }
 
-    public MapperPhotogramException(String message, Throwable cause) {
+    public InternalErrorPhotogramException(String message, Throwable cause) {
         super(message, cause);
     }
 

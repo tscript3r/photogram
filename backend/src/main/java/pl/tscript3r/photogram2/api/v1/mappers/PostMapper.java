@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import pl.tscript3r.photogram2.api.v1.dtos.CommentDto;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.domains.Post;
+import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.services.UserService;
 
 
@@ -36,7 +37,10 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
 
     @Override
     protected Post secondToFirst(final PostDto source) {
-        return new Post(userService.getById(source.getUserId()), source.getCaption(), source.getLocation());
+        User user = null;
+        if (source.getUserId() != null)
+            user = userService.getById(source.getUserId());
+        return new Post(user, source.getCaption(), source.getLocation());
     }
 
 }

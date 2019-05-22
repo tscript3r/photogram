@@ -50,4 +50,28 @@ class RoleServiceImplTest {
         assertThrows(NotFoundPhotogramException.class, () -> roleService.getByName(""));
     }
 
+    @Test
+    void getDefault1() {
+    }
+
+    @Test
+    void getByName1() {
+    }
+
+    @Test
+    void isAdmin() {
+    }
+
+    @Test
+    void isModerator() {
+    }
+
+    @Test
+    void accessValidation() {
+    }
+
+    @Test
+    void requireLogin() {
+    }
+
 }

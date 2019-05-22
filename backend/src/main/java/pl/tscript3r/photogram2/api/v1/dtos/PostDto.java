@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class PostDto implements Dto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     private Long userId;
