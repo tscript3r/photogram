@@ -17,6 +17,7 @@ public class Consts {
     public static final String BIO = "bio";
     public static final LocalDateTime CREATION_DATE = LocalDateTime.now();
     public static final int LIKES = 1;
+    public static final int DISLIKES = 1;
     public static final long IMAGE_ID = 2;
 
     public static final long SECOND_ID = 2L;

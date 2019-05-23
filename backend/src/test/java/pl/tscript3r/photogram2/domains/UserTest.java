@@ -13,12 +13,12 @@ public class UserTest {
 
     public static User getDefaultUser() {
         return new User(ID, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
-                new HashSet<>(), null, null, CREATION_DATE);
+                new HashSet<>(), null, CREATION_DATE);
     }
 
     public static User getSecondUser() {
         return new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, SECOND_EMAIL_CONFIRMED,
-                SECOND_BIO, new HashSet<>(), null, null, SECOND_CREATION_DATE);
+                SECOND_BIO, new HashSet<>(), null, SECOND_CREATION_DATE);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class UserTest {
     @Test
     @DisplayName("New user validation")
     void newUser() {
-        var user = new User(null, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO, null,
+        var user = new User(null, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
                 null, null, CREATION_DATE);
         assertTrue(user.isNew());
         user.setId(ID);

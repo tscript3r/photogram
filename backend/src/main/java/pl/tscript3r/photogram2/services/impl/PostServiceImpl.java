@@ -10,6 +10,7 @@ import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.Post;
 import pl.tscript3r.photogram2.domains.User;
+import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
 import pl.tscript3r.photogram2.exceptions.InternalErrorPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.PostRepository;
@@ -90,7 +91,8 @@ public class PostServiceImpl implements PostService {
     public PostDto update(final Principal principal, @NotNull final Long id, @NotNull final PostDto postDto) {
         var updatedPost = mapperService.map(postDto, Post.class);
         var originalPost = getById(id);
-        roleService.accessValidation(principal, originalPost.getUser().getId());
+        roleService.requireLogin(principal)
+                .accessValidation(principal, originalPost.getUser().getId());
         updateValues(originalPost, updatedPost);
         postRepository.save(originalPost);
         return mapperService.map(originalPost, PostDto.class);
@@ -110,33 +112,57 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto react(@NotNull Reactions reaction, Principal principal, @NotNull Long id) {
+    public PostDto react(@NotNull final Reactions reaction, final Principal principal, @NotNull final Long id) {
         roleService.requireLogin(principal);
         var post = getById(id);
-        var reactedBy = userService.getByPrincipal(principal);
+        var reactedByUser = userService.getByPrincipal(principal);
         switch (reaction) {
             case LIKE:
-                if (reactedBy.addLikedPost(post))
+                if (reactedByUser.addLikedPost(post))
                     post.incrementLikes();
+                else
+                    throwAlreadyReactedIgnoredException();
                 break;
             case UNLIKE:
-                if (reactedBy.removeLikedPost(post))
+                if (reactedByUser.removeLikedPost(post))
                     post.decrementLikes();
+                else
+                    throwNotReactedIgnoredException();
                 break;
             case DISLIKE:
-                if (reactedBy.addDislikedPost(post))
+                if (reactedByUser.addDislikedPost(post))
                     post.incrementDislikes();
+                else
+                    throwAlreadyReactedIgnoredException();
                 break;
             case UNDISLIKE:
-                if (reactedBy.removeDislikedPost(post))
+                if (reactedByUser.removeDislikedPost(post))
                     post.decrementDislikes();
+                else
+                    throwNotReactedIgnoredException();
                 break;
             default:
-                throw new InternalErrorPhotogramException("Not recognized reaction");
+                throw new InternalErrorPhotogramException("Not recognized reaction=" + reaction.name());
         }
+        checkIfAlreadyReactedOppositeAndIfRemove(reaction, reactedByUser, post);
         post = postRepository.save(post);
-        userService.save(reactedBy, false, false);
+        userService.save(reactedByUser, false, false);
         return mapperService.map(post, PostDto.class);
+    }
+
+    private void checkIfAlreadyReactedOppositeAndIfRemove(final Reactions reaction, final User user, final Post post) {
+        if (reaction == Reactions.LIKE && user.hasDislikedPost(post))
+            user.removeDislikedPost(post);
+        if (reaction == Reactions.DISLIKE && user.hasLikedPost(post))
+            user.removeLikedPost(post);
+    }
+
+    private void throwAlreadyReactedIgnoredException() {
+        throw new IgnoredPhotogramException("Already reacted that way, ignored");
+    }
+
+    private void throwNotReactedIgnoredException() {
+        throw new IgnoredPhotogramException("Not reacted that way, ignored");
     }
 
 }

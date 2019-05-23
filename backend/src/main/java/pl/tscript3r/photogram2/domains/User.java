@@ -78,7 +78,7 @@ public class User extends DomainEntity {
     }
 
     public User(Long id, String firstname, String username, String password, String email, Boolean emailConfirmed,
-                String bio, Set<Role> roles, List<Post> posts, Set<Post> likedPost, LocalDateTime creationDate) {
+                String bio, Set<Role> roles, List<Post> posts, LocalDateTime creationDate) {
         super(id);
         this.firstname = firstname;
         this.username = username;
@@ -88,7 +88,6 @@ public class User extends DomainEntity {
         this.bio = bio;
         this.roles = roles;
         this.posts = posts;
-        this.likedPost = likedPost;
         this.creationDate = creationDate;
     }
 
@@ -110,6 +109,14 @@ public class User extends DomainEntity {
 
     public Boolean removeDislikedPost(final Post post) {
         return dislikedPost.remove(post);
+    }
+
+    public Boolean hasLikedPost(final Post post) {
+        return likedPost.contains(post);
+    }
+
+    public Boolean hasDislikedPost(final Post post) {
+        return dislikedPost.contains(post);
     }
 
 }

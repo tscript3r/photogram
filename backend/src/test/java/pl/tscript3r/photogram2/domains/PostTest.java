@@ -16,7 +16,7 @@ public class PostTest {
         result.setId(ID);
         result.setImageId(IMAGE_ID);
         result.setLikes(LIKES);
-        result.setDislikes(LIKES);
+        result.setDislikes(DISLIKES);
         result.setCreationDate(CREATION_DATE);
         result.getComments().add(new Comment(getDefaultUser(), result, CONTENT)); // with getDefaultComment stackOverflow
         return result;

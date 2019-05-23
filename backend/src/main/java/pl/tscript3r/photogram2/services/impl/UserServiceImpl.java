@@ -1,7 +1,6 @@
 package pl.tscript3r.photogram2.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(@Nullable final Principal principal, @NotNull final Long id) {
+    public void delete(final Principal principal, @NotNull final Long id) {
         roleService.requireLogin(principal)
                 .accessValidation(principal, id);
         if (!userRepository.existsById(id))
