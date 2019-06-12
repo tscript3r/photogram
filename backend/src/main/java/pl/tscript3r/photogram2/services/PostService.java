@@ -3,6 +3,7 @@ package pl.tscript3r.photogram2.services;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.domains.Post;
 
@@ -30,5 +31,7 @@ public interface PostService {
     void delete(@Nullable final Principal principal, @NotNull final Long id);
 
     PostDto react(@NotNull Reactions reaction, @Nullable final Principal principal, @NotNull final Long id);
+
+    PostDto addImage(@Nullable final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile);
 
 }

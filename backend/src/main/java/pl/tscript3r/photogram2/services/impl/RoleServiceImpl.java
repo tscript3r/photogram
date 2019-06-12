@@ -1,22 +1,25 @@
 package pl.tscript3r.photogram2.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram2.domains.Role;
-import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.RoleRepository;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
 import javax.validation.constraints.NotNull;
-import java.security.Principal;
 
+@Slf4j
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
+
+    public static final String DEFAULT_USER_ROLE = "USER";
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String MODERATOR_ROLE = "MODERATOR";
 
     private final UserService userService;
     private final RoleRepository roleRepository;
@@ -29,7 +32,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getDefault() {
-        return getByName("USER");
+        // TODO: refactor to load it once
+        return getByName(DEFAULT_USER_ROLE);
     }
 
     @Override
@@ -38,41 +42,4 @@ public class RoleServiceImpl implements RoleService {
                 .orElseThrow(() -> new NotFoundPhotogramException(String.format("Role name=%s not found", name)));
     }
 
-    @Override
-    public Boolean isAdmin(@NotNull final User user) {
-        return user.getRoles().contains(getByName("ADMIN"));
-    }
-
-    @Override
-    public Boolean isModerator(@NotNull final User user) {
-        return user.getRoles().contains(getByName("MODERATOR"));
-    }
-
-    @Override
-    public void accessValidation(final Principal principal, final Long resourcesUserId) {
-        // Assumption: admin & moderator roles should be able to do any CRUD operations for any user
-        // in case of spring security allowing to get some resource without login then it should be allowed
-        // in case when userId is not specified it means that user is doing something with his own resource,
-        // which of course should be allowed.
-        if (resourcesUserId == null || principal == null)
-            return;
-        User user = userService.getByPrincipal(principal);
-        if (!(isResourceOwner(user, resourcesUserId) || isAdmin(user) || isModerator(user)))
-            throwForbiddenException();
-    }
-
-    private boolean isResourceOwner(final User user, final long resourcesUserId) {
-        return user.getId() == resourcesUserId;
-    }
-
-    private void throwForbiddenException() {
-        throw new ForbiddenPhotogramException("Forbidden");
-    }
-
-    @Override
-    public RoleService requireLogin(Principal principal) {
-        if (principal == null)
-            throwForbiddenException();
-        return this;
-    }
 }

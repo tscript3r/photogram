@@ -20,10 +20,7 @@ import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.PostRepository;
-import pl.tscript3r.photogram2.services.ImageService;
-import pl.tscript3r.photogram2.services.PostService;
-import pl.tscript3r.photogram2.services.RoleService;
-import pl.tscript3r.photogram2.services.UserService;
+import pl.tscript3r.photogram2.services.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +55,9 @@ class PostServiceImplTest {
 
     @Mock
     MapperService mapperService;
+
+    @Mock
+    AuthorizationService authorizationService;
 
     @InjectMocks
     PostServiceImpl postService;
@@ -147,7 +147,7 @@ class PostServiceImplTest {
     void saveSuccessful() {
         var processedPost = getDefaultPost();
 
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(mapperService.map(any(PostDto.class), any())).thenReturn(processedPost);
         when(imageService.reserveNextImageId(any())).thenReturn(RandomUtils.nextLong());
         when(postRepository.save(any())).thenReturn(processedPost);
@@ -155,9 +155,9 @@ class PostServiceImplTest {
 
         assertNotNull(postService.save(() -> USERNAME, getDefaultPostDto()));
         assertNull(processedPost.getId()); // <- would be set by postRepository, and should be passed as null by saving
-        assertNotNull(processedPost.getImageId());
+        assertFalse(processedPost.getImages().isEmpty());
 
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
         verify(postRepository, times(1)).save(any());
     }
 
@@ -168,7 +168,7 @@ class PostServiceImplTest {
         var processedPost = getDefaultPost();
         processedPost.setUser(null);
 
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(mapperService.map(any(PostDto.class), any())).thenReturn(processedPost);
         when(userService.getByPrincipal(any())).thenReturn(getDefaultUser());
         when(imageService.reserveNextImageId(any())).thenReturn(RandomUtils.nextLong());
@@ -177,10 +177,10 @@ class PostServiceImplTest {
 
         assertNotNull(postService.save(() -> USERNAME, getDefaultPostDto()));
         assertNull(processedPost.getId());
-        assertNotNull(processedPost.getImageId());
+        assertFalse(processedPost.getImages().isEmpty());
         assertNotNull(processedPost.getUser());
 
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
         verify(userService, times(1)).getByPrincipal(any());
         verify(postRepository, times(1)).save(any());
     }
@@ -188,7 +188,7 @@ class PostServiceImplTest {
     @Test
     @DisplayName("Save fail caused no authentication")
     void saveFailCausedByNoAuthentication() {
-        when(roleService.requireLogin(any())).thenThrow(ForbiddenPhotogramException.class);
+        when(authorizationService.requireLogin(any())).thenThrow(ForbiddenPhotogramException.class);
         assertThrows(ForbiddenPhotogramException.class, () -> postService.save(() -> USERNAME, getDefaultPostDto()));
         verify(postRepository, times(0)).save(any());
     }
@@ -196,8 +196,8 @@ class PostServiceImplTest {
     @Test
     @DisplayName("Save fail caused by forbidden access")
     void saveFailCausedByForbiddenAccess() {
-        when(roleService.requireLogin(any())).thenReturn(roleService);
-        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        doThrow(ForbiddenPhotogramException.class).when(authorizationService).accessValidation(any(), any());
         assertThrows(ForbiddenPhotogramException.class, () -> postService.save(() -> USERNAME, getDefaultPostDto()));
         verify(postRepository, times(0)).save(any());
     }
@@ -209,7 +209,7 @@ class PostServiceImplTest {
         var updatePost = getDefaultPost();
         updatePost.setCaption(SECOND_CAPTION);
         var originalPost = getDefaultPost();
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(mapperService.map(any(PostDto.class), any())).thenReturn(updatePost);
         when(postRepository.findById(any())).thenReturn(Optional.of(originalPost));
         when(mapperService.map(any(Post.class), any())).thenReturn(getDefaultPostDto());
@@ -226,8 +226,8 @@ class PostServiceImplTest {
     void updateFailCausedByForbiddenAccess() {
         when(mapperService.map(any(PostDto.class), any())).thenReturn(getDefaultPost());
         when(postRepository.findById(any())).thenReturn(Optional.of(getDefaultPost()));
-        when(roleService.requireLogin(any())).thenReturn(roleService);
-        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        doThrow(ForbiddenPhotogramException.class).when(authorizationService).accessValidation(any(), any());
         assertThrows(ForbiddenPhotogramException.class, () -> postService.update(() -> USERNAME, ID, getDefaultPostDto()));
         verify(postRepository, times(0)).save(any());
     }
@@ -244,13 +244,13 @@ class PostServiceImplTest {
     @DisplayName("Successful delete")
     void deleteSuccessful() {
         when(postRepository.findById(any())).thenReturn(Optional.of(getDefaultPost()));
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
 
         postService.delete(() -> USERNAME, ID);
 
         verify(postRepository, times(1)).findById(any());
-        verify(roleService, times(1)).requireLogin(any());
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
         verify(postRepository, times(1)).delete(any());
     }
 
@@ -266,8 +266,8 @@ class PostServiceImplTest {
     @DisplayName("Delete fail caused by forbidden access")
     void deleteFailCausedByForbiddenAccess() {
         when(postRepository.findById(any())).thenReturn(Optional.of(getDefaultPost()));
-        when(roleService.requireLogin(any())).thenReturn(roleService);
-        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        doThrow(ForbiddenPhotogramException.class).when(authorizationService).accessValidation(any(), any());
         assertThrows(ForbiddenPhotogramException.class, () -> postService.delete(() -> USERNAME, ID));
         verify(postRepository, times(0)).delete(any());
     }
@@ -295,7 +295,7 @@ class PostServiceImplTest {
 
         assertNotNull(postService.react(reactions, () -> USERNAME, ID));
 
-        verify(roleService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).requireLogin(any());
         verify(postRepository, times(1)).save(any());
         verify(userService, times(1)).save(any(), any(), any());
 

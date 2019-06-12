@@ -30,7 +30,8 @@ class PostMapperTest {
         assertEquals(post.getUser().getId(), postDto.getUserId());
         assertEquals(post.getCaption(), postDto.getCaption());
         assertEquals(post.getLocation(), postDto.getLocation());
-        assertEquals(post.getImageId(), postDto.getImageId());
+        assertEquals(post.getImagesCount(), postDto.getImagesCount());
+        assertEquals(post.getImages().size(), postDto.getImages().size());
         assertEquals(post.getLikes(), postDto.getLikesCount());
         assertEquals(post.getCreationDate(), postDto.getCreationDate());
         assertEquals(post.getComments().size(), postDto.getComments().size());
@@ -40,6 +41,7 @@ class PostMapperTest {
         assertEquals(post.getUser().getId(), postDto.getUserId());
         assertEquals(post.getCaption(), postDto.getCaption());
         assertEquals(post.getLocation(), postDto.getLocation());
+        assertEquals(post.getImagesCount(), postDto.getImagesCount());
     }
 
     @Mock

@@ -7,18 +7,25 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static pl.tscript3r.photogram2.Consts.*;
+import static pl.tscript3r.photogram2.domains.RoleTest.*;
 
 @DisplayName("User")
 public class UserTest {
 
     public static User getDefaultUser() {
-        return new User(ID, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
+        var result = new User(ID, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
                 new HashSet<>(), null, CREATION_DATE);
+        result.addRole(getAdminRole());
+        result.addRole(getDefaultRole());
+        result.addRole(getModeratorRole());
+        return result;
     }
 
     public static User getSecondUser() {
-        return new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, SECOND_EMAIL_CONFIRMED,
+        var result = new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, SECOND_EMAIL_CONFIRMED,
                 SECOND_BIO, new HashSet<>(), null, SECOND_CREATION_DATE);
+        result.addRole(getDefaultRole());
+        return result;
     }
 
     @Test

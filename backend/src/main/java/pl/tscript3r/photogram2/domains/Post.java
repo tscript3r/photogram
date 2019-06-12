@@ -3,7 +3,10 @@ package pl.tscript3r.photogram2.domains;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.lang.Nullable;
+import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,52 +29,65 @@ public class Post extends DomainEntity {
     @Column(columnDefinition = "text")
     private String caption;
 
-    @Setter
     @Nullable
     private String location;
 
-    @Nullable
-    private Long imageId;
+    private Integer imagesCount;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinTable(name = "post_images",
+            joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id", referencedColumnName = "id"))
+    private List<Image> images = new ArrayList<>();
 
     /**
-     * Until the imageId is not set the post should not be valid,
-     * and what comes with it - will not be able to find, or even
-     * edit. It just wont exists until the image will be uploaded.
-     * This could be done just with imageId (not null), but in the
-     * future I'm predicting, that there will be more requirements
-     * to have an valid post, that is why I have added this field.
+     * Until the declared images count (on creation) has not been uploaded to the post
+     * post should not be valid. Until the post is not valid it wont be possible to
+     * get it to the view or even to delete it, or edit. Predicting that in the future
+     * there will be more requirements to have an valid post, that is why this field
+     * has been added.
      *
      * TODO: add some thread / schedule to auto remove expired non valid posts
      */
-    @Setter
     private Boolean valid = false;
 
-    @Setter
     @Column(nullable = false)
     private Integer likes = 0;
 
-    @Setter
     @Column(nullable = false)
     private Integer dislikes = 0;
 
-    @Setter
     @CreationTimestamp
     private LocalDateTime creationDate;
 
     Post() {
     }
 
-    public Post(final User user, final String caption, final String location) {
+    public Post(final User user, final String caption, final String location, final Integer imagesCount) {
         this.user = user;
         this.caption = caption;
         this.location = location;
+        this.imagesCount = imagesCount;
     }
 
-    public void setImageId(@Nullable final Long id) {
-        if (id != null && id >= 0) {
-            valid = true;
-            imageId = id;
-        }
+    public void addImageId(@Nullable final Long id) {
+        if (!isValid() && id != null && id >= 0 && images.size() < imagesCount) {
+            images.add(new Image(id));
+            if (isValid())
+                valid = true;
+        } else
+            checkAddedImagesCount();
+    }
+
+    private Boolean isValid() {
+        return images.size() == imagesCount;
+    }
+
+    private void checkAddedImagesCount() {
+        if (images.size() >= imagesCount)
+            throw new IgnoredPhotogramException(
+                    String.format("Declared images count to post id=%s count is already uploaded", getId()));
     }
 
     public void incrementLikes() {

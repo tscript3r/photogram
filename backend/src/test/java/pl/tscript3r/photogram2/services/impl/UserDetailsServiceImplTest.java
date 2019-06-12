@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pl.tscript3r.photogram2.Consts.USERNAME;
-import static pl.tscript3r.photogram2.domains.RoleTest.getDefaultRole;
+import static pl.tscript3r.photogram2.domains.RoleTest.getAdminRole;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 
 @DisplayName("User details service")
@@ -32,11 +32,10 @@ class UserDetailsServiceImplTest {
     @DisplayName("Load user by username")
     void loadUserByUsername() {
         var user = getDefaultUser();
-        user.addRole(getDefaultRole());
         when(userService.getByUsername(any())).thenReturn(user);
         UserDetails userDetails = userDetailsService.loadUserByUsername(USERNAME);
         assertEquals(USERNAME, userDetails.getUsername());
-        assertEquals(userDetails.getAuthorities().iterator().next().getAuthority(), getDefaultRole().getName());
+        assertEquals(userDetails.getAuthorities().iterator().next().getAuthority(), getAdminRole().getName());
         assertEquals(user.getUsername(), userDetails.getUsername());
         assertEquals(user.getPassword(), userDetails.getPassword());
     }

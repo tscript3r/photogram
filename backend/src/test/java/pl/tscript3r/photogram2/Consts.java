@@ -1,5 +1,8 @@
 package pl.tscript3r.photogram2;
 
+import pl.tscript3r.photogram2.api.v1.dtos.ImageDto;
+import pl.tscript3r.photogram2.domains.Image;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -18,7 +21,10 @@ public class Consts {
     public static final LocalDateTime CREATION_DATE = LocalDateTime.now();
     public static final int LIKES = 1;
     public static final int DISLIKES = 1;
-    public static final long IMAGE_ID = 2;
+    public static final int IMAGES_COUNT = 1;
+    public static final Long IMAGE_ID = 1L;
+    public static final Image IMAGE = new Image(IMAGE_ID);
+    public static final ImageDto IMAGE_DTO = new ImageDto(IMAGE_ID);
 
     public static final long SECOND_ID = 2L;
     public static final String SECOND_USERNAME = "second_username";
@@ -33,7 +39,11 @@ public class Consts {
     public static final String SECOND_CAPTION = "second_caption";
     public static final String SECOND_LOCATION = "second_location";
     public static final Long SECOND_IMAGE_ID = 2L;
+    public static final Image SECOND_IMAGE = new Image(SECOND_IMAGE_ID);
+    public static final ImageDto SECOND_IMAGE_DTO = new ImageDto(SECOND_IMAGE_ID);
     public static final Integer SECOND_LIKES = 2;
+
+    public static final Long THIRD_ID = 3L;
 
     private Consts() {
     }

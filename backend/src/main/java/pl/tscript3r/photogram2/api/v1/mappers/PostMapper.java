@@ -3,10 +3,15 @@ package pl.tscript3r.photogram2.api.v1.mappers;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import pl.tscript3r.photogram2.api.v1.dtos.CommentDto;
+import pl.tscript3r.photogram2.api.v1.dtos.ImageDto;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
+import pl.tscript3r.photogram2.domains.Image;
 import pl.tscript3r.photogram2.domains.Post;
 import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.services.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -29,9 +34,16 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
         result.setComments(commentMapper.map(source.getComments(), CommentDto.class));
         result.setCaption(source.getCaption());
         result.setLocation(source.getLocation());
-        result.setImageId(source.getImageId());
+        result.setImagesCount(source.getImagesCount());
+        result.setImages(getImages(source.getImages()));
         result.setLikesCount(source.getLikes());
         result.setCreationDate(source.getCreationDate());
+        return result;
+    }
+
+    private List<ImageDto> getImages(final List<Image> source) {
+        var result = new ArrayList<ImageDto>();
+        source.forEach(image -> result.add(new ImageDto(image.getImageId())));
         return result;
     }
 
@@ -40,7 +52,7 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
         User user = null;
         if (source.getUserId() != null)
             user = userService.getById(source.getUserId());
-        return new Post(user, source.getCaption(), source.getLocation());
+        return new Post(user, source.getCaption(), source.getLocation(), source.getImagesCount());
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.Post;
@@ -14,9 +15,9 @@ import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
 import pl.tscript3r.photogram2.exceptions.InternalErrorPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.PostRepository;
+import pl.tscript3r.photogram2.services.AuthorizationService;
 import pl.tscript3r.photogram2.services.ImageService;
 import pl.tscript3r.photogram2.services.PostService;
-import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
 import javax.validation.constraints.NotNull;
@@ -29,7 +30,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final UserService userService;
-    private final RoleService roleService;
+    private final AuthorizationService authorizationService;
     private final PostRepository postRepository;
     private final ImageService imageService;
     private final MapperService mapperService;
@@ -72,13 +73,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto save(final Principal principal, @NotNull final PostDto postDto) {
-        roleService.requireLogin(principal)
+        authorizationService.requireLogin(principal)
                 .accessValidation(principal, postDto.getUserId());
         var post = mapperService.map(postDto, Post.class);
         if (post.getId() != null)
             post.setId(null);
         checkUserId(principal, post);
-        post.setImageId(imageService.reserveNextImageId(post.getUser().getId()));
         return mapperService.map(postRepository.save(post), PostDto.class);
     }
 
@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService {
     public PostDto update(final Principal principal, @NotNull final Long id, @NotNull final PostDto postDto) {
         var updatedPost = mapperService.map(postDto, Post.class);
         var originalPost = getById(id);
-        roleService.requireLogin(principal)
+        authorizationService.requireLogin(principal)
                 .accessValidation(principal, originalPost.getUser().getId());
         updateValues(originalPost, updatedPost);
         postRepository.save(originalPost);
@@ -106,16 +106,24 @@ public class PostServiceImpl implements PostService {
     @Override
     public void delete(final Principal principal, @NotNull final Long id) {
         var post = getById(id);
-        roleService.requireLogin(principal)
+        authorizationService.requireLogin(principal)
                 .accessValidation(principal, post.getUser().getId());
         postRepository.delete(post);
     }
 
     @Override
     public PostDto react(@NotNull final Reactions reaction, final Principal principal, @NotNull final Long id) {
-        roleService.requireLogin(principal);
+        authorizationService.requireLogin(principal);
         var post = getById(id);
         var reactedByUser = userService.getByPrincipal(principal);
+        doReact(post, reactedByUser, reaction);
+        checkIfAlreadyReactedOppositeAndIfRemove(reaction, reactedByUser, post);
+        post = postRepository.save(post);
+        userService.save(reactedByUser, false, false);
+        return mapperService.map(post, PostDto.class);
+    }
+
+    private void doReact(final Post post, final User reactedByUser, final Reactions reaction) {
         switch (reaction) {
             case LIKE:
                 if (reactedByUser.addLikedPost(post))
@@ -144,10 +152,6 @@ public class PostServiceImpl implements PostService {
             default:
                 throw new InternalErrorPhotogramException("Not recognized reaction=" + reaction.name());
         }
-        checkIfAlreadyReactedOppositeAndIfRemove(reaction, reactedByUser, post);
-        post = postRepository.save(post);
-        userService.save(reactedByUser, false, false);
-        return mapperService.map(post, PostDto.class);
     }
 
     private void checkIfAlreadyReactedOppositeAndIfRemove(final Reactions reaction, final User user, final Post post) {
@@ -165,4 +169,14 @@ public class PostServiceImpl implements PostService {
         throw new IgnoredPhotogramException("Not reacted that way, ignored");
     }
 
+    @Override
+    public PostDto addImage(final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile) {
+        var post = getById(id);
+        authorizationService.requireLogin(principal)
+                .accessValidation(principal, post.getUser().getId());
+
+        // TODO: implement this, and with comes with it - ImageService
+
+        return null;
+    }
 }

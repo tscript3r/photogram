@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.exceptions.BadRequestPhotogramException;
 import pl.tscript3r.photogram2.services.PostService;
@@ -25,12 +26,13 @@ public class PostController {
     static final String UNLIKE_MAPPING = "/unlike";
     static final String DISLIKE_MAPPING = "/dislike";
     static final String UNDISLIKE_MAPPING = "/undislike";
+    static final String UPLOAD_IMAGE_MAPPING = "/upload";
 
     private final PostService postService;
 
     @GetMapping
     public Slice<PostDto> getLatest(Principal principal,
-                                    @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                    @PageableDefault(size = 20, sort = ID_VARIABLE, direction = Sort.Direction.DESC) Pageable pageable,
                                     @RequestParam(value = OWN_PARAM, required = false) Boolean ownPosts,
                                     @RequestParam(value = USERNAME_PARAM, required = false) String username) {
 
@@ -44,8 +46,8 @@ public class PostController {
         return postService.getLatest(pageable);
     }
 
-    @GetMapping("{id}")
-    public PostDto getById(@PathVariable("id") Long id) {
+    @GetMapping(ID_VARIABLE_MAPPING)
+    public PostDto getById(@PathVariable(ID_VARIABLE) Long id) {
         return postService.getByIdDto(id);
     }
 
@@ -63,34 +65,40 @@ public class PostController {
         return postService.save(principal, postDto);
     }
 
-    @PutMapping("{id}")
-    public PostDto update(Principal principal, @PathVariable("id") Long id, @Valid @RequestBody PostDto postDto) {
+    @PutMapping(ID_VARIABLE_MAPPING)
+    public PostDto update(Principal principal, @PathVariable(ID_VARIABLE) Long id, @Valid @RequestBody PostDto postDto) {
         return postService.update(principal, id, postDto);
     }
 
-    @DeleteMapping("{id}")
-    public void delete(Principal principal, @PathVariable("id") Long postId) {
+    @DeleteMapping(ID_VARIABLE_MAPPING)
+    public void delete(Principal principal, @PathVariable(ID_VARIABLE) Long postId) {
         postService.delete(principal, postId);
     }
 
-    @PutMapping("{id}" + LIKE_MAPPING)
-    public PostDto like(Principal principal, @PathVariable("id") Long postId) {
+    @PutMapping(ID_VARIABLE_MAPPING + LIKE_MAPPING)
+    public PostDto like(Principal principal, @PathVariable(ID_VARIABLE) Long postId) {
         return postService.react(PostService.Reactions.LIKE, principal, postId);
     }
 
-    @PutMapping("{id}" + UNLIKE_MAPPING)
-    public PostDto unlike(Principal principal, @PathVariable("id") Long postId) {
+    @PutMapping(ID_VARIABLE_MAPPING + UNLIKE_MAPPING)
+    public PostDto unlike(Principal principal, @PathVariable(ID_VARIABLE) Long postId) {
         return postService.react(PostService.Reactions.UNLIKE, principal, postId);
     }
 
-    @PutMapping("{id}" + DISLIKE_MAPPING)
-    public PostDto dislike(Principal principal, @PathVariable("id") Long postId) {
+    @PutMapping(ID_VARIABLE_MAPPING + DISLIKE_MAPPING)
+    public PostDto dislike(Principal principal, @PathVariable(ID_VARIABLE) Long postId) {
         return postService.react(PostService.Reactions.DISLIKE, principal, postId);
     }
 
-    @PutMapping("{id}" + UNDISLIKE_MAPPING)
-    public PostDto undislike(Principal principal, @PathVariable("id") Long postId) {
+    @PutMapping(ID_VARIABLE_MAPPING + UNDISLIKE_MAPPING)
+    public PostDto undislike(Principal principal, @PathVariable(ID_VARIABLE) Long postId) {
         return postService.react(PostService.Reactions.UNDISLIKE, principal, postId);
+    }
+
+    @PostMapping(ID_VARIABLE_MAPPING + UPLOAD_IMAGE_MAPPING)
+    public PostDto imageUpload(Principal principal, @PathVariable(ID_VARIABLE) Long id,
+                               @RequestParam("file") MultipartFile imageFile) {
+        return postService.addImage(principal, id, imageFile);
     }
 
 }

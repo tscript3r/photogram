@@ -11,7 +11,8 @@ public class PostDtoTest {
         // TODO: Add default comments
         result.setCaption(CAPTION);
         result.setLocation(LOCATION);
-        result.setImageId(IMAGE_ID);
+        result.setImagesCount(1);
+        result.getImages().add(IMAGE_DTO);
         result.setLikesCount(LIKES);
         result.setCreationDate(CREATION_DATE);
         return result;
@@ -24,7 +25,8 @@ public class PostDtoTest {
         // TODO: Add default comments
         result.setCaption(SECOND_CAPTION);
         result.setLocation(SECOND_LOCATION);
-        result.setImageId(SECOND_IMAGE_ID);
+        result.setImagesCount(1);
+        result.getImages().add(SECOND_IMAGE_DTO);
         result.setLikesCount(SECOND_LIKES);
         result.setCreationDate(SECOND_CREATION_DATE);
         return result;

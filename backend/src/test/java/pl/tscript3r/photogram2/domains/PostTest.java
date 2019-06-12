@@ -1,7 +1,11 @@
 package pl.tscript3r.photogram2.domains;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static pl.tscript3r.photogram2.Consts.*;
@@ -11,23 +15,37 @@ import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
 @DisplayName("Post")
 public class PostTest {
 
+    private static final String FIELD_CHANGED_REMOVED_EXCEPTION = "Probably field name has been changed, or removed - " +
+            "exception caused by reflexion";
+
     public static Post getDefaultPost() {
-        var result = new Post(getDefaultUser(), CAPTION, LOCATION);
+        var result = new Post(getDefaultUser(), CAPTION, LOCATION, IMAGES_COUNT);
         result.setId(ID);
-        result.setImageId(IMAGE_ID);
-        result.setLikes(LIKES);
-        result.setDislikes(DISLIKES);
-        result.setCreationDate(CREATION_DATE);
-        result.getComments().add(new Comment(getDefaultUser(), result, CONTENT)); // with getDefaultComment stackOverflow
+        result.addImageId(IMAGE_ID);
+        for (int i = 0; i < LIKES; i++)
+            result.incrementLikes();
+        for (int i = 0; i < DISLIKES; i++)
+            result.incrementDislikes();
+        try {
+            FieldUtils.writeField(result, "creationDate", LocalDateTime.now(), true);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(FIELD_CHANGED_REMOVED_EXCEPTION);
+        }
+        result.getComments().add(new Comment(getDefaultUser(), result, CONTENT));
         return result;
     }
 
     public static Post getSecondPost() {
-        var result = new Post(getSecondUser(), SECOND_CAPTION, SECOND_LOCATION);
+        var result = new Post(getSecondUser(), SECOND_CAPTION, SECOND_LOCATION, IMAGES_COUNT);
         result.setId(SECOND_ID);
-        result.setImageId(SECOND_IMAGE_ID);
-        result.setLikes(SECOND_LIKES);
-        result.setCreationDate(SECOND_CREATION_DATE);
+        result.addImageId(SECOND_IMAGE_ID);
+        for (int i = 0; i < LIKES; i++)
+            result.incrementLikes();
+        try {
+            FieldUtils.writeField(result, "creationDate", LocalDateTime.now(), true);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(FIELD_CHANGED_REMOVED_EXCEPTION);
+        }
         return result;
     }
 
@@ -50,24 +68,24 @@ public class PostTest {
     }
 
     @Test
-    @DisplayName("Setting imageId together with valid as true")
+    @DisplayName("Adding imageId together with valid as true")
     void setImageIdAndValidAsTrue() {
         var post = getPostWithImageIdAsNull();
-        post.setImageId(ID);
-        assertEquals(ID, post.getImageId());
+        post.addImageId(ID);
+        assertEquals(ID, post.getImages().iterator().next().getImageId());
         assertTrue(post.getValid());
     }
 
     private Post getPostWithImageIdAsNull() {
-        return new Post(getDefaultUser(), CAPTION, LOCATION);
+        return new Post(getDefaultUser(), CAPTION, LOCATION, IMAGES_COUNT);
     }
 
     @Test
     @DisplayName("Set null imageId (valid should be as false)")
     void setImageIdWithNullArgument() {
         var post = getPostWithImageIdAsNull();
-        post.setImageId(null);
-        assertNull(post.getImageId());
+        post.addImageId(null);
+        assertTrue(post.getImages().isEmpty());
         assertFalse(post.getValid());
     }
 
@@ -75,8 +93,8 @@ public class PostTest {
     @DisplayName("Set to low value imageId (valid should be as false)")
     void setImageIdWithToLowValueArgument() {
         var post = getPostWithImageIdAsNull();
-        post.setImageId(-1L);
-        assertNull(post.getImageId());
+        post.addImageId(-1L);
+        assertTrue(post.getImages().isEmpty());
         assertFalse(post.getValid());
     }
 
@@ -128,6 +146,13 @@ public class PostTest {
         post.decrementDislikes();
         post.decrementDislikes();
         assertEquals(0, post.getDislikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Add more than expected images")
+    void addToManyImages() {
+        var post = getDefaultPost();
+        assertThrows(IgnoredPhotogramException.class, () -> post.addImageId(SECOND_IMAGE_ID));
     }
 
 }

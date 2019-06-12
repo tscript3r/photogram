@@ -10,6 +10,7 @@ import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
+import pl.tscript3r.photogram2.services.AuthorizationService;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final AuthorizationService authorizationService;
     private final PasswordEncoder passwordEncoder;
     private final MapperService mapperService;
 
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(final Principal principal, final Long id, final UserDto userDto) {
-        roleService.requireLogin(principal)
+        authorizationService.requireLogin(principal)
                 .accessValidation(principal, userDto.getId());
         var existingUser = getById(id);
         updateValuesAndSave(existingUser, userDto);
@@ -122,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(final Principal principal, @NotNull final Long id) {
-        roleService.requireLogin(principal)
+        authorizationService.requireLogin(principal)
                 .accessValidation(principal, id);
         if (!userRepository.existsById(id))
             throw new NotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));

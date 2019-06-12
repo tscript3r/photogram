@@ -167,7 +167,7 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post(POST_MAPPING)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content("{}"))
+                .content("{\"imagesCount\":1}"))
                 .andExpect(status().isCreated());
         verify(postService, times(1)).save(any(), any());
     }

@@ -62,6 +62,8 @@ public class User extends DomainEntity {
             inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
     private Set<Post> dislikedPost = new HashSet<>();
 
+    // TODO: add followed users list & own follow count
+
     @CreationTimestamp
     private LocalDateTime creationDate;
 

@@ -12,6 +12,7 @@ import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
+import pl.tscript3r.photogram2.services.AuthorizationService;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
@@ -41,6 +42,9 @@ class UserServiceImplTest {
     RoleService roleService;
 
     @Mock
+    AuthorizationService authorizationService;
+
+    @Mock
     PasswordEncoder passwordEncoder;
 
     private UserService userService;
@@ -48,7 +52,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         var mapperService = getInstance();
-        userService = new UserServiceImpl(userRepository, roleService, passwordEncoder, mapperService);
+        userService = new UserServiceImpl(userRepository, roleService, authorizationService, passwordEncoder, mapperService);
     }
 
     @Test
@@ -93,7 +97,7 @@ class UserServiceImplTest {
         var userDto = getSecondUserDto();
         var modifiedUser = getDefaultUser();
 
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(userRepository.findById(any())).thenReturn(Optional.of(modifiedUser));
         when(userRepository.save(any())).thenReturn(modifiedUser);
         when(passwordEncoder.encode(any())).thenReturn(SECOND_PASSWORD);
@@ -107,8 +111,8 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).findById(any());
         verify(userRepository, times(1)).save(any());
         verify(passwordEncoder, times(1)).encode(any());
-        verify(roleService, times(1)).requireLogin(any());
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
     }
 
     @Test
@@ -119,7 +123,7 @@ class UserServiceImplTest {
         userDto.setUsername(SECOND_USERNAME);
         Principal principal = () -> USERNAME;
 
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
 
         assertThrows(NotFoundPhotogramException.class, () -> userService.update(principal, ID, userDto));
     }
@@ -127,19 +131,19 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Update DTO without login")
     void updateDtoWithoutLogin() {
-        when(roleService.requireLogin(any())).thenThrow(ForbiddenPhotogramException.class);
+        when(authorizationService.requireLogin(any())).thenThrow(ForbiddenPhotogramException.class);
         assertThrows(ForbiddenPhotogramException.class, () -> userService.update(null, ID, getDefaultUserDto()));
-        verify(roleService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).requireLogin(any());
     }
 
     @Test
     @DisplayName("Update DTO without resource access rights")
     void updateDotWithoutAccessRights() {
-        when(roleService.requireLogin(any())).thenReturn(roleService);
-        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        doThrow(ForbiddenPhotogramException.class).when(authorizationService).accessValidation(any(), any());
         assertThrows(ForbiddenPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
-        verify(roleService, times(1)).requireLogin(any());
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
     }
 
     @Test
@@ -264,40 +268,40 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Delete by ID")
     void delete() {
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(userRepository.existsById(any())).thenReturn(true);
         userService.delete(() -> USERNAME, 1L);
         verify(userRepository, times(1)).deleteById(any());
-        verify(roleService, times(1)).requireLogin(any());
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
     }
 
     @Test
     @DisplayName("Delete by non existing ID")
     void deleteNonExistingId() {
-        when(roleService.requireLogin(any())).thenReturn(roleService);
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(userRepository.existsById(any())).thenReturn(false);
         assertThrows(NotFoundPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
-        verify(roleService, times(1)).requireLogin(any());
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
     }
 
     @Test
     @DisplayName("Delete by ID other user without access rights")
     void deleteWithoutResourceAccessRights() {
-        when(roleService.requireLogin(any())).thenReturn(roleService);
-        doThrow(ForbiddenPhotogramException.class).when(roleService).accessValidation(any(), any());
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        doThrow(ForbiddenPhotogramException.class).when(authorizationService).accessValidation(any(), any());
         assertThrows(ForbiddenPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
-        verify(roleService, times(1)).requireLogin(any());
-        verify(roleService, times(1)).accessValidation(any(), any());
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
     }
 
     @Test
     @DisplayName("Delete without login")
     void deleteWithoutLogin() {
-        doThrow(ForbiddenPhotogramException.class).when(roleService).requireLogin(any());
+        doThrow(ForbiddenPhotogramException.class).when(authorizationService).requireLogin(any());
         assertThrows(ForbiddenPhotogramException.class, () -> userService.delete(() -> USERNAME, 1L));
-        verify(roleService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).requireLogin(any());
     }
 
 }

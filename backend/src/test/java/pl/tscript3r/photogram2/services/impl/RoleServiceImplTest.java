@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.RoleRepository;
+import pl.tscript3r.photogram2.services.UserService;
 
 import java.util.Optional;
 
@@ -16,12 +17,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pl.tscript3r.photogram2.Consts.SECOND_ROLE;
+import static pl.tscript3r.photogram2.domains.RoleTest.getAdminRole;
 import static pl.tscript3r.photogram2.domains.RoleTest.getDefaultRole;
-import static pl.tscript3r.photogram2.domains.RoleTest.getSecondRole;
 
 @DisplayName("Role service")
 @ExtendWith(MockitoExtension.class)
 class RoleServiceImplTest {
+
+    @Mock
+    UserService userService;
 
     @Mock
     RoleRepository roleRepository;
@@ -39,7 +43,7 @@ class RoleServiceImplTest {
     @Test
     @DisplayName("Get existing by firstname")
     void getByName() {
-        when(roleRepository.findByName(any())).thenReturn(Optional.of(getSecondRole()));
+        when(roleRepository.findByName(any())).thenReturn(Optional.of(getAdminRole()));
         assertNotNull(roleService.getByName(SECOND_ROLE));
     }
 
@@ -48,30 +52,6 @@ class RoleServiceImplTest {
     void getNonExistingByName() {
         when(roleRepository.findByName(any())).thenThrow(NotFoundPhotogramException.class);
         assertThrows(NotFoundPhotogramException.class, () -> roleService.getByName(""));
-    }
-
-    @Test
-    void getDefault1() {
-    }
-
-    @Test
-    void getByName1() {
-    }
-
-    @Test
-    void isAdmin() {
-    }
-
-    @Test
-    void isModerator() {
-    }
-
-    @Test
-    void accessValidation() {
-    }
-
-    @Test
-    void requireLogin() {
     }
 
 }
