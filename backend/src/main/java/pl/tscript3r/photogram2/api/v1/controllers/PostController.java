@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
@@ -26,8 +27,9 @@ public class PostController {
     static final String UNLIKE_MAPPING = "/unlike";
     static final String DISLIKE_MAPPING = "/dislike";
     static final String UNDISLIKE_MAPPING = "/undislike";
-    static final String UPLOAD_IMAGE_MAPPING = "/upload";
-
+    private static final String UPLOAD_IMAGE_MAPPING = "/upload";
+    private static final String IMAGE_ID_VARIABLE = "{imageId}";
+    private static final String GET_IMAGE_MAPPING = "/image/";
     private final PostService postService;
 
     @GetMapping
@@ -96,9 +98,16 @@ public class PostController {
     }
 
     @PostMapping(ID_VARIABLE_MAPPING + UPLOAD_IMAGE_MAPPING)
-    public PostDto imageUpload(Principal principal, @PathVariable(ID_VARIABLE) Long id,
-                               @RequestParam("file") MultipartFile imageFile) {
-        return postService.addImage(principal, id, imageFile);
+    public PostDto uploadImage(Principal principal, @PathVariable(ID_VARIABLE) Long id,
+                               @RequestParam("image") MultipartFile imageFile) {
+        return postService.saveImage(principal, id, imageFile);
+    }
+
+    @GetMapping(ID_VARIABLE_MAPPING + GET_IMAGE_MAPPING)
+    public ResponseEntity getImage(Principal principal, @PathVariable(ID_VARIABLE) Long postId,
+                                   @PathVariable(IMAGE_ID_VARIABLE) Long id) {
+        // TODO: implement
+        return null;
     }
 
 }

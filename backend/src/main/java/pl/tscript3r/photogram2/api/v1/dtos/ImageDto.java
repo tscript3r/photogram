@@ -9,8 +9,13 @@ public class ImageDto implements Dto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private final Long imageId;
 
-    public ImageDto(Long imageId) {
+    @Getter
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private final String extension;
+
+    public ImageDto(Long imageId, String extension) {
         this.imageId = imageId;
+        this.extension = extension;
     }
 
 }

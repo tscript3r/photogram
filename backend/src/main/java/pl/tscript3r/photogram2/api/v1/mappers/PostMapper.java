@@ -34,7 +34,7 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
         result.setComments(commentMapper.map(source.getComments(), CommentDto.class));
         result.setCaption(source.getCaption());
         result.setLocation(source.getLocation());
-        result.setImagesCount(source.getImagesCount());
+        result.setVisibility(source.getVisibility());
         result.setImages(getImages(source.getImages()));
         result.setLikesCount(source.getLikes());
         result.setCreationDate(source.getCreationDate());
@@ -43,7 +43,7 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
 
     private List<ImageDto> getImages(final List<Image> source) {
         var result = new ArrayList<ImageDto>();
-        source.forEach(image -> result.add(new ImageDto(image.getImageId())));
+        source.forEach(image -> result.add(new ImageDto(image.getImageId(), image.getExtension())));
         return result;
     }
 
@@ -52,7 +52,7 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
         User user = null;
         if (source.getUserId() != null)
             user = userService.getById(source.getUserId());
-        return new Post(user, source.getCaption(), source.getLocation(), source.getImagesCount());
+        return new Post(user, source.getCaption(), source.getLocation());
     }
 
 }

@@ -132,5 +132,4 @@ class AuthorizationServiceImplTest {
         assertThrows(ForbiddenPhotogramException.class, () -> authorizationService.requireLogin(null));
     }
 
-
 }

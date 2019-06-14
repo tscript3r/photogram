@@ -6,9 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.lang.Nullable;
-import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 public class Post extends DomainEntity {
+
+    private static final int MAX_IMAGES_PER_POST = 10;
 
     @Setter
     @OneToOne
@@ -32,8 +34,6 @@ public class Post extends DomainEntity {
     @Nullable
     private String location;
 
-    private Integer imagesCount;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinTable(name = "post_images",
@@ -42,15 +42,23 @@ public class Post extends DomainEntity {
     private List<Image> images = new ArrayList<>();
 
     /**
-     * Until the declared images count (on creation) has not been uploaded to the post
-     * post should not be valid. Until the post is not valid it wont be possible to
-     * get it to the view or even to delete it, or edit. Predicting that in the future
-     * there will be more requirements to have an valid post, that is why this field
-     * has been added.
+     * Until there no images are uploaded post should not be valid. When the post is
+     * not valid it wont be possible to get it to the view or even to delete it, or edit.
+     * Predicting that in the future there will be more requirements to have an valid post,
+     * that is why this field has been added.
      *
      * TODO: add some thread / schedule to auto remove expired non valid posts
      */
     private Boolean valid = false;
+
+    /**
+     * By creating the post should be private until the upcoming images are not yet
+     * uploaded. Also it gives for the user ability to set his post an visibility
+     * scope
+     */
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility = Visibility.PRIVATE;
 
     @Column(nullable = false)
     private Integer likes = 0;
@@ -64,30 +72,14 @@ public class Post extends DomainEntity {
     Post() {
     }
 
-    public Post(final User user, final String caption, final String location, final Integer imagesCount) {
+    public Post(final User user, final String caption, final String location) {
         this.user = user;
         this.caption = caption;
         this.location = location;
-        this.imagesCount = imagesCount;
     }
 
-    public void addImageId(@Nullable final Long id) {
-        if (!isValid() && id != null && id >= 0 && images.size() < imagesCount) {
-            images.add(new Image(id));
-            if (isValid())
-                valid = true;
-        } else
-            checkAddedImagesCount();
-    }
-
-    private Boolean isValid() {
-        return images.size() == imagesCount;
-    }
-
-    private void checkAddedImagesCount() {
-        if (images.size() >= imagesCount)
-            throw new IgnoredPhotogramException(
-                    String.format("Declared images count to post id=%s count is already uploaded", getId()));
+    public void addImage(@NotNull Image image) {
+        images.add(image);
     }
 
     public void incrementLikes() {

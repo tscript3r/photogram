@@ -28,25 +28,25 @@ VALUES
 
 
 INSERT INTO `POSTS`
-(`caption`, `likes`, `dislikes`, `location`, `creation_date`, `user_id`, `valid`)
+(`caption`, `likes`, `dislikes`, `location`, `creation_date`, `user_id`, `valid`, `visibility`)
 VALUES
-('First post ever', 666, 1, 'Wrocław', CURRENT_TIMESTAMP , 1, true),
-('Warsaw from Heaven', 123, 2, 'Warszawa', CURRENT_TIMESTAMP , 1, true),
-('Just an cat', 1, 3, 'Wrocław', CURRENT_TIMESTAMP , 1, true),
-('Wroclaw from Heaven', 13, 4, 'Warszawa', CURRENT_TIMESTAMP , 2, true),
-('Just an dog', 12, 5, 'Wrocław', CURRENT_TIMESTAMP , 2, true),
-('Gdansk from Heaven', 4, 6, 'Gdansk', CURRENT_TIMESTAMP , 3, true),
-('Just an birth', 11, 7, 'Wrocław', CURRENT_TIMESTAMP , 3, true);
+('First post, and the future prediction for this project', 666, 1, 'Wrocław', CURRENT_TIMESTAMP , 1, true, 'PUBLIC'),
+('Warsaw from Heaven', 123, 2, 'Warszawa', CURRENT_TIMESTAMP , 1, true, 'PRIVATE'),
+('Just an cat', 1, 3, 'Wrocław', CURRENT_TIMESTAMP , 1, true, 'FOLLOWERS'),
+('Wroclaw from Heaven', 13, 4, 'Warszawa', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
+('Just an dog', 12, 5, 'Wrocław', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
+('Gdansk from Heaven', 4, 6, 'Gdansk', CURRENT_TIMESTAMP , 3, true, 'PUBLIC'),
+('Just an birth', 11, 7, 'Wrocław', CURRENT_TIMESTAMP , 3, true, 'PUBLIC');
 
 INSERT INTO `IMAGES`
-(`image_id`)
+(`image_id`, `extension`)
 VALUES
-(1001), (1002), (1003);
+(1000, 'jpg');
 
 INSERT INTO `POST_IMAGES`
 (`post_id`, `image_id`)
 VALUES
-(1, 1), (1, 2), (1, 3);
+(1, 1);
 
 INSERT INTO `COMMENTS` (`content`, `creation_date`, `post_id`, `user_id`)
 VALUES ('First comment ever', CURRENT_TIMESTAMP , 1, 1);

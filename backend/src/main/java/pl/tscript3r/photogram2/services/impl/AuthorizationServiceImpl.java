@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import pl.tscript3r.photogram2.domains.Role;
 import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
-import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.services.AuthorizationService;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
@@ -43,13 +42,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     private Boolean hasRole(final User user, final Role role) {
-        try {
-            return user.getRoles().contains(role);
-        } catch (NotFoundPhotogramException e) {
-            log.error(System.lineSeparator() + role.getName() + " role could not be found in the DB" +
-                    System.lineSeparator(), e);
-            return false;
-        }
+        return user.getRoles().contains(role);
     }
 
     @Override

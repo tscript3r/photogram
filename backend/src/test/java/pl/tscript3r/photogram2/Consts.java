@@ -23,8 +23,9 @@ public class Consts {
     public static final int DISLIKES = 1;
     public static final int IMAGES_COUNT = 1;
     public static final Long IMAGE_ID = 1L;
-    public static final Image IMAGE = new Image(IMAGE_ID);
-    public static final ImageDto IMAGE_DTO = new ImageDto(IMAGE_ID);
+    public static final String IMAGE_EXTENSION = "jpg";
+    public static final Image IMAGE = new Image(IMAGE_ID, IMAGE_EXTENSION);
+    public static final ImageDto IMAGE_DTO = new ImageDto(IMAGE_ID, IMAGE_EXTENSION);
 
     public static final long SECOND_ID = 2L;
     public static final String SECOND_USERNAME = "second_username";
@@ -39,8 +40,9 @@ public class Consts {
     public static final String SECOND_CAPTION = "second_caption";
     public static final String SECOND_LOCATION = "second_location";
     public static final Long SECOND_IMAGE_ID = 2L;
-    public static final Image SECOND_IMAGE = new Image(SECOND_IMAGE_ID);
-    public static final ImageDto SECOND_IMAGE_DTO = new ImageDto(SECOND_IMAGE_ID);
+    public static final String SECOND_IMAGE_EXTENSION = "png";
+    public static final Image SECOND_IMAGE = new Image(SECOND_IMAGE_ID, SECOND_IMAGE_EXTENSION);
+    public static final ImageDto SECOND_IMAGE_DTO = new ImageDto(SECOND_IMAGE_ID, SECOND_IMAGE_EXTENSION);
     public static final Integer SECOND_LIKES = 2;
 
     public static final Long THIRD_ID = 3L;

@@ -3,11 +3,11 @@ package pl.tscript3r.photogram2.domains;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static pl.tscript3r.photogram2.Consts.*;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
@@ -19,9 +19,9 @@ public class PostTest {
             "exception caused by reflexion";
 
     public static Post getDefaultPost() {
-        var result = new Post(getDefaultUser(), CAPTION, LOCATION, IMAGES_COUNT);
+        var result = new Post(getDefaultUser(), CAPTION, LOCATION);
         result.setId(ID);
-        result.addImageId(IMAGE_ID);
+        result.addImage(IMAGE);
         for (int i = 0; i < LIKES; i++)
             result.incrementLikes();
         for (int i = 0; i < DISLIKES; i++)
@@ -36,9 +36,9 @@ public class PostTest {
     }
 
     public static Post getSecondPost() {
-        var result = new Post(getSecondUser(), SECOND_CAPTION, SECOND_LOCATION, IMAGES_COUNT);
+        var result = new Post(getSecondUser(), SECOND_CAPTION, SECOND_LOCATION);
         result.setId(SECOND_ID);
-        result.addImageId(SECOND_IMAGE_ID);
+        result.addImage(SECOND_IMAGE);
         for (int i = 0; i < LIKES; i++)
             result.incrementLikes();
         try {
@@ -65,37 +65,6 @@ public class PostTest {
         var almostSamePost = getDefaultPost();
         almostSamePost.setId(post.getId() + 1L);
         assertNotEquals(post, almostSamePost);
-    }
-
-    @Test
-    @DisplayName("Adding imageId together with valid as true")
-    void setImageIdAndValidAsTrue() {
-        var post = getPostWithImageIdAsNull();
-        post.addImageId(ID);
-        assertEquals(ID, post.getImages().iterator().next().getImageId());
-        assertTrue(post.getValid());
-    }
-
-    private Post getPostWithImageIdAsNull() {
-        return new Post(getDefaultUser(), CAPTION, LOCATION, IMAGES_COUNT);
-    }
-
-    @Test
-    @DisplayName("Set null imageId (valid should be as false)")
-    void setImageIdWithNullArgument() {
-        var post = getPostWithImageIdAsNull();
-        post.addImageId(null);
-        assertTrue(post.getImages().isEmpty());
-        assertFalse(post.getValid());
-    }
-
-    @Test
-    @DisplayName("Set to low value imageId (valid should be as false)")
-    void setImageIdWithToLowValueArgument() {
-        var post = getPostWithImageIdAsNull();
-        post.addImageId(-1L);
-        assertTrue(post.getImages().isEmpty());
-        assertFalse(post.getValid());
     }
 
     @Test
@@ -146,13 +115,6 @@ public class PostTest {
         post.decrementDislikes();
         post.decrementDislikes();
         assertEquals(0, post.getDislikes().intValue());
-    }
-
-    @Test
-    @DisplayName("Add more than expected images")
-    void addToManyImages() {
-        var post = getDefaultPost();
-        assertThrows(IgnoredPhotogramException.class, () -> post.addImageId(SECOND_IMAGE_ID));
     }
 
 }

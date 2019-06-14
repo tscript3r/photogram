@@ -32,6 +32,6 @@ public interface PostService {
 
     PostDto react(@NotNull Reactions reaction, @Nullable final Principal principal, @NotNull final Long id);
 
-    PostDto addImage(@Nullable final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile);
+    PostDto saveImage(@Nullable final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile);
 
 }

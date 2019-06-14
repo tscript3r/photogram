@@ -1,6 +1,7 @@
 package pl.tscript3r.photogram2.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
+import pl.tscript3r.photogram2.domains.Image;
 import pl.tscript3r.photogram2.domains.Post;
 import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.IgnoredPhotogramException;
@@ -34,6 +36,8 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
     private final MapperService mapperService;
+
+    // TODO: refactor to use visibility scopes
 
     @Override
     public Slice<PostDto> getLatest(@NotNull final Pageable pageable) {
@@ -170,13 +174,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto addImage(final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile) {
+    public PostDto saveImage(final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile) {
         var post = getById(id);
         authorizationService.requireLogin(principal)
                 .accessValidation(principal, post.getUser().getId());
-
-        // TODO: implement this, and with comes with it - ImageService
-
-        return null;
+        var image = new Image(imageService.getNextId(post.getId()), getImageExtension(imageFile));
+        post.addImage(image);
+        imageService.save(id, image, imageFile);
+        return mapperService.map(postRepository.save(post), PostDto.class);
     }
+
+    private String getImageExtension(final MultipartFile multipartFile) {
+        return FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+    }
+
 }

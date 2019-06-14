@@ -12,11 +12,19 @@ public class Image extends DomainEntity {
     @Getter
     private Long imageId;
 
+    @Getter
+    private String extension;
+
     Image() {
     }
 
-    public Image(Long imageId) {
+    public Image(Long imageId, String extension) {
         this.imageId = imageId;
+        this.extension = extension;
+    }
+
+    public String getFileName() {
+        return imageId.toString();
     }
 
 }

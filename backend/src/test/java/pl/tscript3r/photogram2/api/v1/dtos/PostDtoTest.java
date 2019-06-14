@@ -1,5 +1,7 @@
 package pl.tscript3r.photogram2.api.v1.dtos;
 
+import pl.tscript3r.photogram2.domains.Visibility;
+
 import static pl.tscript3r.photogram2.Consts.*;
 
 public class PostDtoTest {
@@ -11,7 +13,7 @@ public class PostDtoTest {
         // TODO: Add default comments
         result.setCaption(CAPTION);
         result.setLocation(LOCATION);
-        result.setImagesCount(1);
+        result.setVisibility(Visibility.PUBLIC);
         result.getImages().add(IMAGE_DTO);
         result.setLikesCount(LIKES);
         result.setCreationDate(CREATION_DATE);
@@ -25,7 +27,7 @@ public class PostDtoTest {
         // TODO: Add default comments
         result.setCaption(SECOND_CAPTION);
         result.setLocation(SECOND_LOCATION);
-        result.setImagesCount(1);
+        result.setVisibility(Visibility.PUBLIC);
         result.getImages().add(SECOND_IMAGE_DTO);
         result.setLikesCount(SECOND_LIKES);
         result.setCreationDate(SECOND_CREATION_DATE);

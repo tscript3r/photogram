@@ -1,6 +1,5 @@
 package pl.tscript3r.photogram2.services.impl;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -149,7 +148,6 @@ class PostServiceImplTest {
 
         when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(mapperService.map(any(PostDto.class), any())).thenReturn(processedPost);
-        when(imageService.reserveNextImageId(any())).thenReturn(RandomUtils.nextLong());
         when(postRepository.save(any())).thenReturn(processedPost);
         when(mapperService.map(any(Post.class), any())).thenReturn(getDefaultPostDto());
 
@@ -171,7 +169,6 @@ class PostServiceImplTest {
         when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
         when(mapperService.map(any(PostDto.class), any())).thenReturn(processedPost);
         when(userService.getByPrincipal(any())).thenReturn(getDefaultUser());
-        when(imageService.reserveNextImageId(any())).thenReturn(RandomUtils.nextLong());
         when(postRepository.save(any())).thenReturn(processedPost);
         when(mapperService.map(any(Post.class), any())).thenReturn(getDefaultPostDto());
 
