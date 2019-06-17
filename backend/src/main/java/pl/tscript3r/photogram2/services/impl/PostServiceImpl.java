@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -180,12 +181,18 @@ public class PostServiceImpl implements PostService {
                 .accessValidation(principal, post.getUser().getId());
         var image = new Image(imageService.getNextId(post.getId()), getImageExtension(imageFile));
         post.addImage(image);
-        imageService.save(id, image, imageFile);
+        imageService.savePostImage(id, image, imageFile);
         return mapperService.map(postRepository.save(post), PostDto.class);
     }
 
     private String getImageExtension(final MultipartFile multipartFile) {
         return FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getImage(@NotNull final Long id, @NotNull final Long imageId) {
+        var post = getById(id);
+        return imageService.getPostImage(id, post.getImage(imageId));
     }
 
 }

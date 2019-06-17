@@ -1,6 +1,8 @@
 package pl.tscript3r.photogram2.services;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.domains.User;
 
@@ -35,5 +37,10 @@ public interface UserService {
     UserDto getByEmailDto(@NotNull final String email);
 
     void resetPassword(@NotNull final String email);
+
+    ResponseEntity<byte[]> getAvatar(@NotNull final Long id);
+
+    void saveAvatar(@Nullable final Principal principal, @NotNull final Long id,
+                    @NotNull final MultipartFile multipartFile);
 
 }

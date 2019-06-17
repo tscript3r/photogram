@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.lang.Nullable;
+import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -78,8 +79,16 @@ public class Post extends DomainEntity {
         this.location = location;
     }
 
-    public void addImage(@NotNull Image image) {
+    public void addImage(@NotNull final Image image) {
         images.add(image);
+    }
+
+    public Image getImage(@NotNull final Long imageId) {
+        for (Image image : images)
+            if (image.getImageId().equals(imageId))
+                return image;
+        throw new NotFoundPhotogramException(String.format("Image id=%d has been not found in post id=%d", imageId,
+                getId()));
     }
 
     public void incrementLikes() {

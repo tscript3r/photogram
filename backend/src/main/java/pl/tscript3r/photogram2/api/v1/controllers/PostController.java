@@ -28,8 +28,9 @@ public class PostController {
     static final String DISLIKE_MAPPING = "/dislike";
     static final String UNDISLIKE_MAPPING = "/undislike";
     private static final String UPLOAD_IMAGE_MAPPING = "/upload";
-    private static final String IMAGE_ID_VARIABLE = "{imageId}";
-    private static final String GET_IMAGE_MAPPING = "/image/";
+    private static final String IMAGE_ID_VARIABLE = "imageId";
+    private static final String IMAGE_ID_PATH_VARIABLE = "{" + IMAGE_ID_VARIABLE + "}";
+    private static final String GET_IMAGE_MAPPING = "/images/";
     private final PostService postService;
 
     @GetMapping
@@ -103,11 +104,10 @@ public class PostController {
         return postService.saveImage(principal, id, imageFile);
     }
 
-    @GetMapping(ID_VARIABLE_MAPPING + GET_IMAGE_MAPPING)
-    public ResponseEntity getImage(Principal principal, @PathVariable(ID_VARIABLE) Long postId,
-                                   @PathVariable(IMAGE_ID_VARIABLE) Long id) {
-        // TODO: implement
-        return null;
+    @GetMapping(ID_VARIABLE_MAPPING + GET_IMAGE_MAPPING + IMAGE_ID_PATH_VARIABLE)
+    public ResponseEntity<byte[]> getImage(@PathVariable(ID_VARIABLE) Long id,
+                                           @PathVariable(IMAGE_ID_VARIABLE) Long imageId) {
+        return postService.getImage(id, imageId);
     }
 
 }

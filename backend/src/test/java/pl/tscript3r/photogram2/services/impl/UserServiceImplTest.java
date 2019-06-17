@@ -13,6 +13,7 @@ import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.AuthorizationService;
+import pl.tscript3r.photogram2.services.ImageService;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
@@ -47,12 +48,16 @@ class UserServiceImplTest {
     @Mock
     PasswordEncoder passwordEncoder;
 
+    @Mock
+    ImageService imageService;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         var mapperService = getInstance();
-        userService = new UserServiceImpl(userRepository, roleService, authorizationService, passwordEncoder, mapperService);
+        userService = new UserServiceImpl(userRepository, roleService, authorizationService, passwordEncoder, imageService,
+                mapperService);
     }
 
     @Test

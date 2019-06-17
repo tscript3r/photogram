@@ -1,9 +1,11 @@
 package pl.tscript3r.photogram2.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram2.api.v1.services.MapperService;
 import pl.tscript3r.photogram2.domains.User;
@@ -11,6 +13,7 @@ import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
 import pl.tscript3r.photogram2.services.AuthorizationService;
+import pl.tscript3r.photogram2.services.ImageService;
 import pl.tscript3r.photogram2.services.RoleService;
 import pl.tscript3r.photogram2.services.UserService;
 
@@ -27,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final AuthorizationService authorizationService;
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
     private final MapperService mapperService;
 
     @Override
@@ -127,14 +131,33 @@ public class UserServiceImpl implements UserService {
         authorizationService.requireLogin(principal)
                 .accessValidation(principal, id);
         if (!userRepository.existsById(id))
-            throw new NotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));
+            throw getUserNotFoundException(id);
         else
             userRepository.deleteById(id);
     }
 
-    @Override
-    public void resetPassword(final String email) {
+    private NotFoundPhotogramException getUserNotFoundException(final Long id) {
+        return new NotFoundPhotogramException(String.format("Given user id=%s not exists", id.toString()));
+    }
 
+    @Override
+    public void resetPassword(@NotNull final String email) {
+
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getAvatar(@NotNull final Long id) {
+        getById(id); // <-- checking if the given user id is existing
+        return imageService.getAvatar(id);
+    }
+
+    @Override
+    public void saveAvatar(final Principal principal, @NotNull final Long id,
+                           @NotNull final MultipartFile multipartFile) {
+        authorizationService.requireLogin(principal)
+                .accessValidation(principal, id);
+        getById(id); // <-- checking if the given user id is existing
+        imageService.saveAvatar(id, multipartFile);
     }
 
 }

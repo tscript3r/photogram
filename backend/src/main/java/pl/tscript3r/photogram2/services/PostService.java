@@ -2,6 +2,7 @@ package pl.tscript3r.photogram2.services;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.PostDto;
@@ -33,5 +34,7 @@ public interface PostService {
     PostDto react(@NotNull Reactions reaction, @Nullable final Principal principal, @NotNull final Long id);
 
     PostDto saveImage(@Nullable final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile);
+
+    ResponseEntity<byte[]> getImage(@NotNull final Long id, @NotNull final Long imageId);
 
 }
