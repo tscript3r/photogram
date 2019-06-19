@@ -6,6 +6,10 @@ import javax.validation.constraints.NotNull;
 
 public interface EmailService {
 
-    void sendConfirmationEmail(@NotNull final User user);
+    void createAndSendEmailConfirmation(@NotNull final User user);
+
+    void createEmailConfirmation(@NotNull final User user);
+
+    void updateEmailConfirmation(@NotNull final User user);
 
 }

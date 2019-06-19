@@ -124,7 +124,7 @@ public class PostServiceImpl implements PostService {
         doReact(post, reactedByUser, reaction);
         checkIfAlreadyReactedOppositeAndIfRemove(reaction, reactedByUser, post);
         post = postRepository.save(post);
-        userService.save(reactedByUser, false, false);
+        userService.save(reactedByUser, false, false, false);
         return mapperService.map(post, PostDto.class);
     }
 

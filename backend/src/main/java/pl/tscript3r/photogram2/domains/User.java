@@ -33,8 +33,8 @@ public class User extends DomainEntity {
     private String email;
 
     @Setter
-    @Column(nullable = false)
-    private Boolean emailConfirmed = false;
+    @OneToOne(mappedBy = "user")
+    private EmailConfirmation emailConfirmation;
 
     @Setter
     @Column(columnDefinition = "text")
@@ -79,14 +79,14 @@ public class User extends DomainEntity {
         this.bio = bio;
     }
 
-    public User(Long id, String firstname, String username, String password, String email, Boolean emailConfirmed,
+    public User(Long id, String firstname, String username, String password, String email, EmailConfirmation emailConfirmation,
                 String bio, Set<Role> roles, List<Post> posts, LocalDateTime creationDate) {
         super(id);
         this.firstname = firstname;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.emailConfirmed = emailConfirmed;
+        this.emailConfirmation = emailConfirmation;
         this.bio = bio;
         this.roles = roles;
         this.posts = posts;
@@ -119,6 +119,10 @@ public class User extends DomainEntity {
 
     public Boolean hasDislikedPost(final Post post) {
         return dislikedPost.contains(post);
+    }
+
+    public Boolean isEmailConfirmed() {
+        return emailConfirmation.getConfirmed();
     }
 
 }

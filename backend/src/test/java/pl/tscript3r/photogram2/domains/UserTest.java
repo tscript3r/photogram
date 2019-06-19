@@ -13,7 +13,7 @@ import static pl.tscript3r.photogram2.domains.RoleTest.*;
 public class UserTest {
 
     public static User getDefaultUser() {
-        var result = new User(ID, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
+        var result = new User(ID, NAME, USERNAME, PASSWORD, EMAIL, new EmailConfirmation(), BIO,
                 new HashSet<>(), null, CREATION_DATE);
         result.addRole(getAdminRole());
         result.addRole(getDefaultRole());
@@ -22,7 +22,7 @@ public class UserTest {
     }
 
     public static User getSecondUser() {
-        var result = new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, SECOND_EMAIL_CONFIRMED,
+        var result = new User(SECOND_ID, SECOND_NAME, SECOND_USERNAME, SECOND_PASSWORD, SECOND_EMAIL, new EmailConfirmation(),
                 SECOND_BIO, new HashSet<>(), null, SECOND_CREATION_DATE);
         result.addRole(getDefaultRole());
         return result;
@@ -47,7 +47,7 @@ public class UserTest {
     @Test
     @DisplayName("New user validation")
     void newUser() {
-        var user = new User(null, NAME, USERNAME, PASSWORD, EMAIL, EMAIL_CONFIRMED, BIO,
+        var user = new User(null, NAME, USERNAME, PASSWORD, EMAIL, new EmailConfirmation(), BIO,
                 null, null, CREATION_DATE);
         assertTrue(user.isNew());
         user.setId(ID);

@@ -4,22 +4,30 @@ VALUES
 ('USER'), ('MODERATOR'), ('ADMIN');
 
 INSERT INTO `USERS`
-(`bio`, `email`, `email_confirmed`, `creation_date`, `firstname`, `password`, `username`)
+(`bio`, `email`, `creation_date`, `firstname`, `password`, `username`)
 VALUES
-('Boring biography', 'admin@photogram.com', true, CURRENT_TIMESTAMP, 'Alex',
+('Boring biography', 'admin@photogram.com', CURRENT_TIMESTAMP, 'Alex',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'admin'),
 
-('Photograph', 'photograph@photogram.com', true, CURRENT_TIMESTAMP, 'Andrzej',
+('Photograph', 'photograph@photogram.com', CURRENT_TIMESTAMP, 'Andrzej',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'photograph'),
 
-('Developer', 'developer@photogram.com', true, CURRENT_TIMESTAMP, 'Heniek',
+('Developer', 'developer@photogram.com', CURRENT_TIMESTAMP, 'Heniek',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'heniu666'),
 
-('Gamer', 'gamer@photogram.com', true, CURRENT_TIMESTAMP, 'Mietek',
+('Gamer', 'gamer@photogram.com', CURRENT_TIMESTAMP, 'Mietek',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'gammer1337'),
 
-('Unemployed', 'unemployed@photogram.com', true, CURRENT_TIMESTAMP, 'Zbyszek',
+('Unemployed', 'unemployed@photogram.com', CURRENT_TIMESTAMP, 'Zbyszek',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'poorMan');
+
+INSERT INTO `CONFIRMATIONS`
+(`user_id`, `confirmed`, `creation_date`, `token`)
+VALUES
+(1, true, CURRENT_TIMESTAMP , 'afd0b036625a3aa8b6399dc8c8fff0ff'),
+(2, true, CURRENT_TIMESTAMP , '9c45c2f117613daaad311ff8703ae846'),
+(3, true, CURRENT_TIMESTAMP , '15e0ba0710e43d7faaffc00fed873c88'),
+(4, false, CURRENT_TIMESTAMP , 'bc27b4dbbc0f34f9ae8e4b72f2d51b60');
 
 INSERT INTO `USERS_ROLES`
 (`user_id`, `role_id`)

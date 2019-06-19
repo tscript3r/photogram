@@ -12,10 +12,7 @@ import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
-import pl.tscript3r.photogram2.services.AuthorizationService;
-import pl.tscript3r.photogram2.services.ImageService;
-import pl.tscript3r.photogram2.services.RoleService;
-import pl.tscript3r.photogram2.services.UserService;
+import pl.tscript3r.photogram2.services.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -51,13 +48,16 @@ class UserServiceImplTest {
     @Mock
     ImageService imageService;
 
+    @Mock
+    EmailService emailService;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         var mapperService = getInstance();
         userService = new UserServiceImpl(userRepository, roleService, authorizationService, passwordEncoder, imageService,
-                mapperService);
+                emailService, mapperService);
     }
 
     @Test
@@ -66,7 +66,7 @@ class UserServiceImplTest {
         var user = getDefaultUser();
         when(roleService.getDefault()).thenReturn(getDefaultRole());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
-        userService.save(user, true, true);
+        userService.save(user, true, true, false);
         verify(roleService, times(1)).getDefault();
         verify(passwordEncoder, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
@@ -76,11 +76,13 @@ class UserServiceImplTest {
     @DisplayName("Save domain without pass encode & default role")
     void saveDomainWithoutPassEncodeAndDefaultRole() {
         var user = getDefaultUser();
-        userService.save(user, false, false);
+        userService.save(user, false, false, false);
         verify(roleService, times(0)).getDefault();
         verify(passwordEncoder, times(0)).encode(any());
         verify(userRepository, times(1)).save(any());
     }
+
+    // TODO: test with email confirmation
 
     @Test
     @DisplayName("Save DTO")

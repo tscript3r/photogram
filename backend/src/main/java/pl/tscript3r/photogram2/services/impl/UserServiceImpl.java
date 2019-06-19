@@ -12,10 +12,7 @@ import pl.tscript3r.photogram2.domains.User;
 import pl.tscript3r.photogram2.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram2.repositories.UserRepository;
-import pl.tscript3r.photogram2.services.AuthorizationService;
-import pl.tscript3r.photogram2.services.ImageService;
-import pl.tscript3r.photogram2.services.RoleService;
-import pl.tscript3r.photogram2.services.UserService;
+import pl.tscript3r.photogram2.services.*;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
@@ -31,22 +28,31 @@ public class UserServiceImpl implements UserService {
     private final AuthorizationService authorizationService;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final EmailService emailService;
     private final MapperService mapperService;
 
     @Override
-    public User save(final User user, final Boolean passwordEncode, final Boolean addDefaultRole) {
+    public User save(final User user, final Boolean passwordEncode, final Boolean addDefaultRole,
+                     final Boolean emailConfirmation) {
         if (addDefaultRole)
             user.addRole(roleService.getDefault());
         if (passwordEncode)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        emailConfirmation(user, emailConfirmation);
         return userRepository.save(user);
+    }
+
+    private void emailConfirmation(final User user, final Boolean sendEmailConfirmation) {
+        if (sendEmailConfirmation)
+            emailService.createAndSendEmailConfirmation(user);
+        else
+            emailService.createEmailConfirmation(user);
     }
 
     @Override
     public UserDto save(final UserDto userDto) {
-        // TODO: confirmation mail needs to be send here
         var user = mapperService.map(userDto, User.class);
-        return mapperService.map(save(user, true, true), UserDto.class);
+        return mapperService.map(save(user, true, true, true), UserDto.class);
     }
 
     @Override
@@ -60,12 +66,12 @@ public class UserServiceImpl implements UserService {
 
     private void updateValuesAndSave(final User existingUser, final UserDto userDto) {
         boolean passwordEncode = false;
+        boolean sendEmailConfirmation = false;
 
         if (userDto.getEmail() != null &&
                 !existingUser.getEmail().equalsIgnoreCase(userDto.getEmail())) {
             existingUser.setEmail(userDto.getEmail());
-            existingUser.setEmailConfirmed(false);
-            // TODO: confirmation mail needs to be send here
+            sendEmailConfirmation = true;
         }
         if (userDto.getBio() != null)
             existingUser.setBio(userDto.getBio());
@@ -78,7 +84,15 @@ public class UserServiceImpl implements UserService {
         if (userDto.getUsername() != null)
             existingUser.setUsername(userDto.getUsername());
 
-        save(existingUser, passwordEncode, false);
+        saveUpdated(existingUser, passwordEncode, sendEmailConfirmation);
+    }
+
+    private User saveUpdated(final User user, final Boolean passwordEncode, final Boolean emailConfirmation) {
+        if (passwordEncode)
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (emailConfirmation)
+            emailService.updateEmailConfirmation(user);
+        return userRepository.save(user);
     }
 
     @Override
