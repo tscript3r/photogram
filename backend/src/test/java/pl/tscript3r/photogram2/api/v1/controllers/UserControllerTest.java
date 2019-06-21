@@ -23,13 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram2.Consts.*;
 import static pl.tscript3r.photogram2.api.v1.controllers.MappingsConsts.USER_MAPPING;
+import static pl.tscript3r.photogram2.api.v1.controllers.UserController.AVATAR_MAPPING;
 import static pl.tscript3r.photogram2.api.v1.dtos.UserDtoTest.getDefaultUserDto;
 
 @DisplayName("Users controller")
@@ -348,6 +348,29 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Get avatar")
+    void getAvatar() throws Exception {
+        when(userService.getAvatar(any())).thenReturn(IMAGE_RESPONSE_ENTITY);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/" + ID + AVATAR_MAPPING)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertNotNull(result);
+    }
+
+    @Test
+    @DisplayName("Upload avatar")
+    void postAvatar() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart(USER_MAPPING + "/" + ID + AVATAR_MAPPING)
+                .file(IMAGE_MOCK_MULTIPART_FILE)
+                .accept(MediaType.MULTIPART_FORM_DATA)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).saveAvatar(any(), any(), any());
     }
 
 }

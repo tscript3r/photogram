@@ -311,4 +311,30 @@ class UserServiceImplTest {
         verify(authorizationService, times(1)).requireLogin(any());
     }
 
+    @Test
+    @DisplayName("Get avatar")
+    void getAvatar() {
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(getDefaultUser()));
+        when(imageService.getAvatar(any())).thenReturn(IMAGE_RESPONSE_ENTITY);
+
+        assertNotNull(userService.getAvatar(ID));
+
+        verify(userRepository, times(1)).findById(any());
+        verify(imageService, times(1)).getAvatar(any());
+    }
+
+    @Test
+    @DisplayName("Save avatar")
+    void saveAvatar() {
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(getDefaultUser()));
+
+        userService.saveAvatar(() -> USERNAME, ID, IMAGE_MOCK_MULTIPART_FILE);
+
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
+        verify(userRepository, times(1)).findById(any());
+        verify(imageService, times(1)).saveAvatar(any(), any());
+    }
+
 }

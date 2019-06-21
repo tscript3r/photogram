@@ -84,7 +84,7 @@ public class Post extends DomainEntity {
     }
 
     public Image getImage(@NotNull final Long imageId) {
-        for (Image image : images)
+        for (var image : images)
             if (image.getImageId().equals(imageId))
                 return image;
         throw new NotFoundPhotogramException(String.format("Image id=%d has been not found in post id=%d", imageId,

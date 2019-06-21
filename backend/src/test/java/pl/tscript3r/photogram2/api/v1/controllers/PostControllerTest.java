@@ -28,6 +28,7 @@ import java.security.Principal;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram2.Consts.*;
@@ -357,6 +358,29 @@ class PostControllerTest {
         when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isForbidden());
         verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
+    }
+
+    @Test
+    @DisplayName("Upload image")
+    void postAvatar() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart(POST_MAPPING + "/" + ID + UPLOAD_IMAGE_MAPPING)
+                .file(IMAGE_MOCK_MULTIPART_FILE)
+                .accept(MediaType.MULTIPART_FORM_DATA)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk());
+        verify(postService, times(1)).saveImage(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("Get image")
+    void getAvatar() throws Exception {
+        when(postService.getImage(any(), any())).thenReturn(IMAGE_RESPONSE_ENTITY);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(POST_MAPPING + "/" + ID + GET_IMAGE_MAPPING + ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertNotNull(result);
     }
 
 }

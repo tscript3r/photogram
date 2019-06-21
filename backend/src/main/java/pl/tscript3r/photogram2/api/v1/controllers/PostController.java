@@ -27,10 +27,10 @@ public class PostController {
     static final String UNLIKE_MAPPING = "/unlike";
     static final String DISLIKE_MAPPING = "/dislike";
     static final String UNDISLIKE_MAPPING = "/undislike";
-    private static final String UPLOAD_IMAGE_MAPPING = "/upload";
+    static final String UPLOAD_IMAGE_MAPPING = "/upload";
     private static final String IMAGE_ID_VARIABLE = "imageId";
     private static final String IMAGE_ID_PATH_VARIABLE = "{" + IMAGE_ID_VARIABLE + "}";
-    private static final String GET_IMAGE_MAPPING = "/images/";
+    static final String GET_IMAGE_MAPPING = "/images/";
     private final PostService postService;
 
     @GetMapping

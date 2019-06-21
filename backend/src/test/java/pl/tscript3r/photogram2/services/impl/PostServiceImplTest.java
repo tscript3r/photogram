@@ -384,4 +384,37 @@ class PostServiceImplTest {
         assertFalse(processedUser.hasLikedPost(processedPost));
     }
 
+    @Test
+    @DisplayName("Successful save image")
+    void successfulSaveImage() {
+        var post = getDefaultPost();
+        post.getImages().remove(IMAGE);
+        when(postRepository.findById(any())).thenReturn(Optional.of(post));
+        when(authorizationService.requireLogin(any())).thenReturn(authorizationService);
+        when(imageService.getNextId(any())).thenReturn(IMAGE_ID);
+        when(postRepository.save(any())).thenReturn(post);
+
+        postService.saveImage(() -> USERNAME, ID, IMAGE_MOCK_MULTIPART_FILE);
+
+        verify(authorizationService, times(1)).requireLogin(any());
+        verify(authorizationService, times(1)).accessValidation(any(), any());
+        verify(imageService, times(1)).getNextId(any());
+        assertNotNull(post.getImage(IMAGE_ID));
+        verify(imageService, times(1)).savePostImage(any(), any(), any());
+        verify(postRepository, times(1)).save(any());
+        verify(mapperService, times(1)).map(any(Post.class), any());
+    }
+
+    @Test
+    @DisplayName("Get existing image")
+    void getExistingImage() {
+        when(postRepository.findById(any())).thenReturn(Optional.of(getDefaultPost()));
+        when(imageService.getPostImage(any(), any())).thenReturn(IMAGE_RESPONSE_ENTITY);
+
+        assertNotNull(postService.getImage(ID, IMAGE_ID));
+
+        verify(postRepository, times(1)).findById(any());
+        verify(imageService, times(1)).getPostImage(any(), any());
+    }
+
 }

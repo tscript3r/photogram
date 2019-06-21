@@ -3,12 +3,13 @@ package pl.tscript3r.photogram2.domains;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.tscript3r.photogram2.exceptions.NotFoundPhotogramException;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static pl.tscript3r.photogram2.Consts.*;
+import static pl.tscript3r.photogram2.domains.ImageTest.getDefaultImage;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
 
@@ -115,6 +116,21 @@ public class PostTest {
         post.decrementDislikes();
         post.decrementDislikes();
         assertEquals(0, post.getDislikes().intValue());
+    }
+
+    @Test
+    @DisplayName("Get existing image entity")
+    void getExistingImage() {
+        var post = getDefaultPost();
+        post.addImage(getDefaultImage());
+        assertEquals(getDefaultImage().getImageId(), IMAGE_ID);
+    }
+
+    @Test
+    @DisplayName("Get nonexistent image entity")
+    void getNonExistingImage() {
+        var post = getDefaultPost();
+        assertThrows(NotFoundPhotogramException.class, () -> post.getImage(IMAGE_ID + ID));
     }
 
 }

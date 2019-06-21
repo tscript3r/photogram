@@ -1,5 +1,10 @@
 package pl.tscript3r.photogram2;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import pl.tscript3r.photogram2.api.v1.dtos.ImageDto;
 import pl.tscript3r.photogram2.domains.Image;
 
@@ -26,6 +31,8 @@ public class Consts {
     public static final String IMAGE_EXTENSION = "jpg";
     public static final Image IMAGE = new Image(IMAGE_ID, IMAGE_EXTENSION);
     public static final ImageDto IMAGE_DTO = new ImageDto(IMAGE_ID, IMAGE_EXTENSION);
+    public static final MockMultipartFile IMAGE_MOCK_MULTIPART_FILE = new MockMultipartFile("image", "image.jpg",
+            MediaType.IMAGE_JPEG_VALUE, "image bytes".getBytes());
 
     public static final long SECOND_ID = 2L;
     public static final String SECOND_USERNAME = "second_username";
@@ -46,6 +53,7 @@ public class Consts {
     public static final Integer SECOND_LIKES = 2;
 
     public static final Long THIRD_ID = 3L;
+    public static final ResponseEntity<byte[]> IMAGE_RESPONSE_ENTITY = new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
 
     private Consts() {
     }
