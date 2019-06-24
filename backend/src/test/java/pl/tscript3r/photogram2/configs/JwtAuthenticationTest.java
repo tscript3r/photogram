@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@DisplayName("JWT authentication")
 @ExtendWith(MockitoExtension.class)
 class JwtAuthenticationTest {
 

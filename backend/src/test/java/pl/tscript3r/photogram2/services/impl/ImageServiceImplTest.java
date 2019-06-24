@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.tscript3r.photogram2.services.impl.ImageServiceImpl.BASE_IMAGE_ID;
 import static pl.tscript3r.photogram2.services.impl.ImageServiceImpl.POST_IMAGES_PATH;
 
+@DisplayName("Image service")
 class ImageServiceImplTest {
 
     private ImageServiceImpl imageService;

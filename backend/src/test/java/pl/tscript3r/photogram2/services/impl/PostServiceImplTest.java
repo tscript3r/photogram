@@ -34,6 +34,7 @@ import static pl.tscript3r.photogram2.api.v1.dtos.PostDtoTest.getDefaultPostDto;
 import static pl.tscript3r.photogram2.domains.PostTest.getDefaultPost;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 
+@DisplayName("Post service")
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
 

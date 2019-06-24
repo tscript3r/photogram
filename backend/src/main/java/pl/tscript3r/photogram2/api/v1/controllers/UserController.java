@@ -75,7 +75,6 @@ public class UserController {
                 String errorCode = objectError.getCode();
                 if (!errorCode.equalsIgnoreCase("NotEmpty"))
                     throw new BadRequestPhotogramException("Some of the given values are incorrect");
-                // TODO: probably to refactor?
             }
     }
 

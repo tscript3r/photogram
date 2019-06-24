@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.tscript3r.photogram2.Consts.*;
 
+@DisplayName("Image")
 class ImageTest {
 
     public static Image getDefaultImage() {

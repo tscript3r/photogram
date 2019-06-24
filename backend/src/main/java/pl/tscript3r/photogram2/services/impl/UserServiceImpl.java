@@ -44,9 +44,9 @@ public class UserServiceImpl implements UserService {
 
     private void emailConfirmation(final User user, final Boolean sendEmailConfirmation) {
         if (sendEmailConfirmation)
-            emailService.createAndSendEmailConfirmation(user);
+            emailService.emailConfirmation(user, false, true);
         else
-            emailService.createEmailConfirmation(user);
+            emailService.emailConfirmation(user, true, false);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         if (passwordEncode)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (emailConfirmation)
-            emailService.updateEmailConfirmation(user);
+            emailService.emailConfirmation(user, false, true);
         return userRepository.save(user);
     }
 

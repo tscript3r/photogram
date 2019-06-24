@@ -30,11 +30,6 @@ public class EmailConfirmation extends DomainEntity {
     EmailConfirmation() {
     }
 
-    public EmailConfirmation(User user, UUID token) {
-        this.user = user;
-        this.token = token;
-    }
-
     public EmailConfirmation(User user, UUID token, Boolean confirmed) {
         this.user = user;
         this.token = token;

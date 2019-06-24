@@ -10,7 +10,6 @@ public class PostDtoTest {
         var result = new PostDto();
         result.setId(ID);
         result.setUserId(ID);
-        // TODO: Add default comments
         result.setCaption(CAPTION);
         result.setLocation(LOCATION);
         result.setVisibility(Visibility.PUBLIC);
@@ -24,7 +23,6 @@ public class PostDtoTest {
         var result = new PostDto();
         result.setId(SECOND_ID);
         result.setUserId(SECOND_ID);
-        // TODO: Add default comments
         result.setCaption(SECOND_CAPTION);
         result.setLocation(SECOND_LOCATION);
         result.setVisibility(Visibility.PUBLIC);

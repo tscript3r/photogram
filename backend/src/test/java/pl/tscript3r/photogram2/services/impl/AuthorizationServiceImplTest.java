@@ -18,6 +18,7 @@ import static pl.tscript3r.photogram2.domains.RoleTest.*;
 import static pl.tscript3r.photogram2.domains.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram2.domains.UserTest.getSecondUser;
 
+@DisplayName("Authorization service")
 @ExtendWith(MockitoExtension.class)
 class AuthorizationServiceImplTest {
 

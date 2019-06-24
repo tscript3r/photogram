@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram2.domains.EmailConfirmation;
 import pl.tscript3r.photogram2.domains.User;
-import pl.tscript3r.photogram2.exceptions.InternalErrorPhotogramException;
 import pl.tscript3r.photogram2.repositories.EmailConfirmationRepository;
 import pl.tscript3r.photogram2.services.EmailService;
 
@@ -20,34 +19,32 @@ public class EmailServiceImpl implements EmailService {
     private final EmailConfirmationRepository emailConfirmationRepository;
 
     @Override
-    public void createAndSendEmailConfirmation(@NotNull final User user) {
-        emailConfirmationRepository.save(getEmailConfirmation(user, false));
-        // TODO: push new task to sender
+    public EmailConfirmation emailConfirmation(@NotNull final User user, @NotNull final Boolean markAsConfirmed,
+                                               @NotNull final Boolean sendMail) {
+        var emailConfirmationOptional = emailConfirmationRepository.findByUser(user);
+        emailConfirmationOptional.ifPresent(confirmation -> confirmation.setConfirmed(markAsConfirmed));
+        var emailConfirmation = emailConfirmationOptional.orElse(new EmailConfirmation(user, getUUID(), markAsConfirmed));
+        if (sendMail)
+            send(emailConfirmation);
+        return emailConfirmation;
     }
 
-    private EmailConfirmation getEmailConfirmation(final User user, final Boolean confirmed) {
-        return new EmailConfirmation(user, getUUID(user.getId()));
+    private UUID getUUID() {
+        UUID uuid;
+        do {
+            uuid = UUID.randomUUID();
+        } while (emailConfirmationRepository.existsByToken(uuid));
+        return UUID.randomUUID();
     }
 
-    private UUID getUUID(final Long userId) {
-        return UUID.fromString(userId.toString() + System.currentTimeMillis());
+    private void send(EmailConfirmation emailConfirmation) {
+        // TODO: implement
     }
 
     @Override
-    public void createEmailConfirmation(@NotNull final User user) {
-        emailConfirmationRepository.save(getEmailConfirmation(user, true));
-    }
-
-    @Override
-    public void updateEmailConfirmation(@NotNull final User user) {
-        var emailConfirmation = emailConfirmationRepository.findByUser(user)
-                .orElseThrow(() ->
-                        new InternalErrorPhotogramException(String.format("Email confirmation from userId=%d not found",
-                                user.getId())));
-        emailConfirmation.setConfirmed(false);
-        emailConfirmation.setToken(getUUID(user.getId()));
-        emailConfirmationRepository.save(emailConfirmation);
-        // TODO: push new task to sender
+    public void resendEmailConfirmation(@NotNull final User user) {
+        var emailConfirmation = emailConfirmationRepository.findByUser(user);
+        send(emailConfirmation.orElse(emailConfirmation(user, false, true)));
     }
 
 }
