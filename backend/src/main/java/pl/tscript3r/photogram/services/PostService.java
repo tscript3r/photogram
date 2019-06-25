@@ -1,0 +1,40 @@
+package pl.tscript3r.photogram.services;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
+import pl.tscript3r.photogram.api.v1.dtos.PostDto;
+import pl.tscript3r.photogram.domains.Post;
+
+import javax.validation.constraints.NotNull;
+import java.security.Principal;
+
+public interface PostService {
+
+    enum Reactions {LIKE, UNLIKE, DISLIKE, UNDISLIKE}
+
+    Slice<PostDto> getLatest(@NotNull final Pageable pageable);
+
+    Slice<PostDto> getLatest(@NotNull final String username, @NotNull final Pageable pageable);
+
+    Slice<PostDto> getLatest(@NotNull final Principal principal, @NotNull final Pageable pageable);
+
+    Post getById(@NotNull final Long id);
+
+    PostDto getByIdDto(@NotNull final Long id);
+
+    PostDto save(@Nullable final Principal principal, @NotNull final PostDto postDto);
+
+    PostDto update(@Nullable final Principal principal, @NotNull final Long id, @NotNull final PostDto postDto);
+
+    void delete(@Nullable final Principal principal, @NotNull final Long id);
+
+    PostDto react(@NotNull Reactions reaction, @Nullable final Principal principal, @NotNull final Long id);
+
+    PostDto saveImage(@Nullable final Principal principal, @NotNull final Long id, @NotNull final MultipartFile imageFile);
+
+    ResponseEntity<byte[]> getImage(@NotNull final Long id, @NotNull final Long imageId);
+
+}

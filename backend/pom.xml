@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.tscript3r</groupId>
-    <artifactId>photogram2</artifactId>
+    <artifactId>photogram</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>photogram2</name>
 
