@@ -295,7 +295,7 @@ class PostServiceImplTest {
 
         verify(authorizationService, times(1)).requireLogin(any());
         verify(postRepository, times(1)).save(any());
-        verify(userService, times(1)).save(any(), any(), any(), any());
+        verify(userService, times(1)).update(any());
 
         assertEquals(expectedLikesCount, processedPost.getLikes().intValue());
         assertEquals(expectedDislikesCount, processedPost.getDislikes().intValue());

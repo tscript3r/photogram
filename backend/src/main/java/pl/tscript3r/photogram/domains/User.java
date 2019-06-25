@@ -2,6 +2,7 @@ package pl.tscript3r.photogram.domains;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Getter
 @Entity
 @Table(name = "users")
@@ -33,7 +35,7 @@ public class User extends DomainEntity {
     private String email;
 
     @Setter
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private EmailConfirmation emailConfirmation;
 
     @Setter
@@ -122,6 +124,10 @@ public class User extends DomainEntity {
     }
 
     public Boolean isEmailConfirmed() {
+        if (emailConfirmation == null) {
+            log.error("Email confirmation from user id={} is null", getId());
+            return false;
+        }
         return emailConfirmation.getConfirmed();
     }
 

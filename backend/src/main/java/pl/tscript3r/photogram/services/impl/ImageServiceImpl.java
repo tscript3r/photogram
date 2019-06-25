@@ -83,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
         return loadFile(getPostPath(postId) + getFileName(image), getHeader(image.getExtension()));
     }
 
-    private ResponseEntity<byte[]> loadFile(String filePath, HttpHeaders header) {
+    private ResponseEntity<byte[]> loadFile(final String filePath, final HttpHeaders header) {
         try {
             File imageFile = new File(filePath);
             if (imageFile.exists()) {

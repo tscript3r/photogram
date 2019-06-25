@@ -29,7 +29,7 @@ class UserMapperTest {
     static void compareUserWithUserDto(User user, UserDto userDto) {
         assertEquals(user.getBio(), userDto.getBio());
         assertEquals(user.getEmail(), userDto.getEmail());
-        assertEquals(user.getFirstname(), userDto.getName());
+        assertEquals(user.getFirstname(), userDto.getFirstname());
         assertEquals(user.getPassword(), userDto.getPassword());
         assertEquals(user.getUsername(), userDto.getUsername());
     }

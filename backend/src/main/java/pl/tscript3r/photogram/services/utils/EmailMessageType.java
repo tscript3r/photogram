@@ -22,7 +22,7 @@ public enum EmailMessageType {
     private TemplateEngine templateEngine;
     private String templateFile;
 
-    EmailMessageType(String templateFile) {
+    EmailMessageType(final String templateFile) {
         this.templateFile = templateFile;
     }
 

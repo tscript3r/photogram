@@ -12,12 +12,13 @@ import java.util.List;
 
 public interface UserService {
 
-    User save(@NotNull final User user, @NotNull final Boolean passwordEncode, @NotNull final Boolean addDefaultRole,
-              @NotNull final Boolean emailConfirmation);
+    User save(@NotNull final User user, @NotNull final Boolean passwordEncode, @NotNull final Boolean addDefaultRole);
 
     UserDto save(@NotNull final UserDto user);
 
     UserDto update(@Nullable final Principal principal, @NotNull final Long id, @NotNull final UserDto userDto);
+
+    User update(@NotNull User user);
 
     void delete(@Nullable final Principal principal, @NotNull final Long id);
 

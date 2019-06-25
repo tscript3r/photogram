@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram.api.v1.services.MapperService;
+import pl.tscript3r.photogram.domains.EmailConfirmation;
 import pl.tscript3r.photogram.domains.User;
 import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
@@ -32,27 +33,24 @@ public class UserServiceImpl implements UserService {
     private final MapperService mapperService;
 
     @Override
-    public User save(final User user, final Boolean passwordEncode, final Boolean addDefaultRole,
-                     final Boolean emailConfirmation) {
+    public User save(final User user, final Boolean passwordEncode, final Boolean addDefaultRole) {
         if (addDefaultRole)
             user.addRole(roleService.getDefault());
         if (passwordEncode)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-        emailConfirmation(user, emailConfirmation);
-        return userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        savedUser.setEmailConfirmation(emailConfirmation(savedUser));
+        return savedUser;
     }
 
-    private void emailConfirmation(final User user, final Boolean sendEmailConfirmation) {
-        if (sendEmailConfirmation)
-            emailService.emailConfirmation(user, false, true);
-        else
-            emailService.emailConfirmation(user, true, false);
+    private EmailConfirmation emailConfirmation(final User user) {
+        return emailService.emailConfirmation(user, true);
     }
 
     @Override
     public UserDto save(final UserDto userDto) {
         var user = mapperService.map(userDto, User.class);
-        return mapperService.map(save(user, true, true, true), UserDto.class);
+        return mapperService.map(save(user, true, true), UserDto.class);
     }
 
     @Override
@@ -62,6 +60,11 @@ public class UserServiceImpl implements UserService {
         var existingUser = getById(id);
         updateValuesAndSave(existingUser, userDto);
         return mapperService.map(existingUser, UserDto.class);
+    }
+
+    @Override
+    public User update(@NotNull final User user) {
+        return userRepository.save(user);
     }
 
     private void updateValuesAndSave(final User existingUser, final UserDto userDto) {
@@ -75,8 +78,8 @@ public class UserServiceImpl implements UserService {
         }
         if (userDto.getBio() != null)
             existingUser.setBio(userDto.getBio());
-        if (userDto.getName() != null)
-            existingUser.setFirstname(userDto.getName());
+        if (userDto.getFirstname() != null)
+            existingUser.setFirstname(userDto.getFirstname());
         if (userDto.getPassword() != null) {
             passwordEncode = true;
             existingUser.setPassword(userDto.getPassword());
@@ -91,7 +94,7 @@ public class UserServiceImpl implements UserService {
         if (passwordEncode)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (emailConfirmation)
-            emailService.emailConfirmation(user, false, true);
+            emailService.emailConfirmation(user, true);
         return userRepository.save(user);
     }
 

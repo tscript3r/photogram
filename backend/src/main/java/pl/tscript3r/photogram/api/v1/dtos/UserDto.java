@@ -23,7 +23,7 @@ public class UserDto implements Dto {
 
     @NotEmpty
     @Size(min = 4, max = 16)
-    private String name;
+    private String firstname;
 
     @NotEmpty
     @Size(min = 4, max = 16)

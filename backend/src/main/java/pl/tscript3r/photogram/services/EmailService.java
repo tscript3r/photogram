@@ -7,8 +7,10 @@ import javax.validation.constraints.NotNull;
 
 public interface EmailService {
 
-    EmailConfirmation emailConfirmation(@NotNull final User user, @NotNull final Boolean markAsConfirmed,
-                                        @NotNull final Boolean sendMail);
+    /**
+     * When send mail is set as false the email will be set as confirmed
+     */
+    EmailConfirmation emailConfirmation(@NotNull final User user, @NotNull final Boolean sendMail);
 
     void resendEmailConfirmation(@NotNull final User user);
 

@@ -33,6 +33,13 @@ public class Consts {
     public static final ImageDto IMAGE_DTO = new ImageDto(IMAGE_ID, IMAGE_EXTENSION);
     public static final MockMultipartFile IMAGE_MOCK_MULTIPART_FILE = new MockMultipartFile("image", "image.jpg",
             MediaType.IMAGE_JPEG_VALUE, "image bytes".getBytes());
+    public static final String EMAIL_HOST = "smtp.mail.test";
+    public static final String EMAIL_PASSWORD = "password";
+    public static final String EMAIL_USERNAME = "username";
+    public static final String EMAIL_SEND_TO = "sendTo@mail.com";
+    public static final String EMAIL_SUBJECT = "subject";
+    public static final Object FIRSTNAME_VARIABLE = "FirstnameVariable";
+    public static final String EMAIL_CONFIRMATION_URL = "https://www.photogram.com/confirm?token=%s";
 
     public static final long SECOND_ID = 2L;
     public static final String SECOND_USERNAME = "second_username";

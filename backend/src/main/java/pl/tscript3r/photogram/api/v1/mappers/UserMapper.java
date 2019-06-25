@@ -23,7 +23,7 @@ public class UserMapper extends AbstractMapper<User, UserDto> implements Collect
 
     @Override
     protected User secondToFirst(final UserDto source) {
-        return new User(source.getName(), source.getUsername(), source.getPassword(), source.getEmail(), source.getBio());
+        return new User(source.getFirstname(), source.getUsername(), source.getPassword(), source.getEmail(), source.getBio());
     }
 
 }

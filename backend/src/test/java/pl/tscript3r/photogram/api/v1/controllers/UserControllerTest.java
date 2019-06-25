@@ -40,7 +40,7 @@ class UserControllerTest {
     private static final String EMAIL_KEY = "email";
     private static final String PASSWORD_KEY = "password";
     private static final String USERNAME_KEY = "username";
-    private static final String NAME_KEY = "name";
+    private static final String FIRSTNAME_KEY = "firstname";
     private static final String ID_KEY = "id";
 
     @Autowired
@@ -68,7 +68,7 @@ class UserControllerTest {
         UserDto expected = inputUsers.iterator().next();
         UserDto actual = outputUsers.iterator().next();
         assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getFirstname(), actual.getFirstname());
         assertEquals(expected.getUsername(), actual.getUsername());
         assertNull(actual.getPassword());
         assertEquals(expected.getEmail(), actual.getEmail());
@@ -186,7 +186,7 @@ class UserControllerTest {
         Map<String, String> values = new HashMap<>();
         values.put(USERNAME_KEY, USERNAME);
         values.put(PASSWORD_KEY, PASSWORD);
-        values.put(NAME_KEY, NAME);
+        values.put(FIRSTNAME_KEY, NAME);
         values.put(EMAIL_KEY, EMAIL);
         values.put("bio", BIO);
         return values;
@@ -265,7 +265,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Add invalid (to short firstname) DTO")
     void addInvalidDtoWithoutToShortName() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(NAME_KEY, "123")); // min 4
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(FIRSTNAME_KEY, "123")); // min 4
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
@@ -273,14 +273,14 @@ class UserControllerTest {
     @DisplayName("Add invalid (to long firstname) DTO")
     void addInvalidDtoWithoutToLongName() throws Exception {
         performPostMockMvc(false, status().isBadRequest(),
-                getValuesMapForJson(NAME_KEY, "1234567890_123456")); // max 16, is 17
+                getValuesMapForJson(FIRSTNAME_KEY, "1234567890_123456")); // max 16, is 17
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (without firstname) DTO")
     void addInvalidDtoWithoutName() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(NAME_KEY));
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(FIRSTNAME_KEY));
         verify(userService, times(0)).save(any(UserDto.class));
     }
 

@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram.api.v1.dtos.UserDto;
+import pl.tscript3r.photogram.domains.EmailConfirmation;
 import pl.tscript3r.photogram.domains.User;
 import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
@@ -17,6 +18,7 @@ import pl.tscript3r.photogram.services.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,7 +68,8 @@ class UserServiceImplTest {
         var user = getDefaultUser();
         when(roleService.getDefault()).thenReturn(getDefaultRole());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
-        userService.save(user, true, true, false);
+        when(userRepository.save(any())).thenReturn(user);
+        userService.save(user, true, true);
         verify(roleService, times(1)).getDefault();
         verify(passwordEncoder, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
@@ -76,13 +79,17 @@ class UserServiceImplTest {
     @DisplayName("Save domain without pass encode & default role")
     void saveDomainWithoutPassEncodeAndDefaultRole() {
         var user = getDefaultUser();
-        userService.save(user, false, false, false);
+        when(emailService.emailConfirmation(any(), any()))
+                .thenReturn(new EmailConfirmation(user, UUID.randomUUID(), false));
+        when(userRepository.save(any())).thenReturn(user);
+
+        userService.save(user, false, false);
+
         verify(roleService, times(0)).getDefault();
         verify(passwordEncoder, times(0)).encode(any());
         verify(userRepository, times(1)).save(any());
+        verify(emailService, times(1)).emailConfirmation(any(), any());
     }
-
-    // TODO: test with email confirmation
 
     @Test
     @DisplayName("Save DTO")
@@ -112,7 +119,7 @@ class UserServiceImplTest {
         var modifiedUserDto = userService.update(principal, ID, userDto);
         assertEquals(SECOND_EMAIL, modifiedUserDto.getEmail());
         assertEquals(SECOND_BIO, modifiedUserDto.getBio());
-        assertEquals(SECOND_NAME, modifiedUserDto.getName());
+        assertEquals(SECOND_NAME, modifiedUserDto.getFirstname());
         assertEquals(SECOND_PASSWORD, modifiedUserDto.getPassword());
         assertEquals(SECOND_USERNAME, modifiedUserDto.getUsername());
         verify(userRepository, times(1)).findById(any());
@@ -126,7 +133,7 @@ class UserServiceImplTest {
     @DisplayName("Update DTO without id")
     void updateDtoWithoutEmailAndId() {
         var userDto = new UserDto();
-        userDto.setName(SECOND_NAME);
+        userDto.setFirstname(SECOND_NAME);
         userDto.setUsername(SECOND_USERNAME);
         Principal principal = () -> USERNAME;
 
