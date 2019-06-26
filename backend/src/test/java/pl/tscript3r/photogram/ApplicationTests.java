@@ -8,8 +8,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DisplayName("Photogram IT")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Photogram2Application.class)
-class Photogram2ApplicationTests {
+@SpringBootTest(classes = Application.class)
+class ApplicationTests {
 
     @Test
     void contextLoads() {

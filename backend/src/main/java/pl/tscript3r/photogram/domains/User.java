@@ -16,6 +16,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "users")
+@Cacheable
 public class User extends DomainEntity {
 
     @Setter

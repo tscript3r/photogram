@@ -3,6 +3,7 @@ package pl.tscript3r.photogram.domains;
 
 import lombok.Getter;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @Table(name = "roles")
+@Cacheable
 public class Role extends DomainEntity {
 
     @Column(nullable = false, unique = true)

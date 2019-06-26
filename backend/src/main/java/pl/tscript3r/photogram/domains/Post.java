@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "posts")
+@Cacheable
 public class Post extends DomainEntity {
 
     private static final int MAX_IMAGES_PER_POST = 10;
@@ -47,8 +48,6 @@ public class Post extends DomainEntity {
      * not valid it wont be possible to get it to the view or even to delete it, or edit.
      * Predicting that in the future there will be more requirements to have an valid post,
      * that is why this field has been added.
-     *
-     * TODO: add some thread / schedule to auto remove expired non valid posts
      */
     private Boolean valid = false;
 

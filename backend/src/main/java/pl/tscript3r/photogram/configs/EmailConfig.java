@@ -22,6 +22,7 @@ public class EmailConfig {
     private String password;
     private String confirmationUrl;
     private String confirmationTitle;
+    private Integer senderThreadPool;
 
     @Bean
     public JavaMailSender getJavaMailSender() {
@@ -42,7 +43,7 @@ public class EmailConfig {
 
     @Bean
     public ExecutorService getEmailSenderExecutor() {
-        return Executors.newFixedThreadPool(10);
+        return Executors.newFixedThreadPool(senderThreadPool);
     }
 
 }

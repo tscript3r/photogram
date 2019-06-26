@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "confirmations")
+@Cacheable
 public class EmailConfirmation extends DomainEntity {
 
     @OneToOne

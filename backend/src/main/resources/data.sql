@@ -45,7 +45,7 @@ VALUES
 ('Wroclaw from Heaven', 13, 4, 'Warszawa', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
 ('Just an dog', 12, 5, 'Wrocław', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
 ('Gdansk from Heaven', 4, 6, 'Gdansk', CURRENT_TIMESTAMP , 3, true, 'PUBLIC'),
-('Just an birth', 11, 7, 'Wrocław', CURRENT_TIMESTAMP , 3, true, 'PUBLIC');
+('Just an birth', 11, 7, 'Wrocław', '2019-06-24 13:42:09.446186', 3, false, 'PUBLIC');
 
 INSERT INTO `IMAGES`
 (`image_id`, `extension`)
