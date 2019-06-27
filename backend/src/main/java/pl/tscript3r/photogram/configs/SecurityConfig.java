@@ -10,14 +10,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.POST_MAPPING;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.USER_MAPPING;
+import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] PUBLIC_MATCHERS = {USER_MAPPING + "/login", USER_MAPPING + "/**", POST_MAPPING + "/**", "/image/**",
+    private static final String[] PUBLIC_MATCHERS = {LOGIN_MAPPING, USER_MAPPING + "/**", POST_MAPPING + "/**", "/image/**",
             "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/h2-console/**"};
 
     private final UserDetailsService userDetailsService;

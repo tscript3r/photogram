@@ -91,7 +91,7 @@ public class ImageServiceImpl implements ImageService {
                 return new ResponseEntity<>(imageBytes, header, HttpStatus.OK);
             } else
                 throw new NotFoundPhotogramException(String.format("Image could not be found [path=%s]", filePath));
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new InternalErrorPhotogramException(String.format("Image could not be read [path=%s]: ", filePath), e);
         }
     }

@@ -155,7 +155,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Add valid DTO")
     void addValidUserDto() throws Exception {
-        performPostMockMvc(false, status().isCreated(), getValuesMapForJson());
+        performPostMockMvc(false, status().isCreated(), getValuesMapFromJson());
         verify(userService, times(1)).save(any(UserDto.class));
     }
 
@@ -182,7 +182,7 @@ class UserControllerTest {
                 .andExpect(matcher);
     }
 
-    private Map<String, String> getValuesMapForJson() {
+    private Map<String, String> getValuesMapFromJson() {
         Map<String, String> values = new HashMap<>();
         values.put(USERNAME_KEY, USERNAME);
         values.put(PASSWORD_KEY, PASSWORD);
@@ -195,12 +195,12 @@ class UserControllerTest {
     @Test
     @DisplayName("Add invalid (to short password) DTO")
     void addInvalidPasswordShortDto() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(PASSWORD_KEY, "12345")); // min 6
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(PASSWORD_KEY, "12345")); // min 6
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
-    private Map<String, String> getValuesMapForJson(String editedKey, String newValue) {
-        var result = getValuesMapForJson();
+    private Map<String, String> getValuesMapFromJson(String editedKey, String newValue) {
+        var result = getValuesMapFromJson();
         result.put(editedKey, newValue);
         return result;
     }
@@ -209,19 +209,19 @@ class UserControllerTest {
     @DisplayName("Add invalid (to long password) DTO")
     void addInvalidPasswordLongDto() throws Exception {
         performPostMockMvc(false, status().isBadRequest(),
-                getValuesMapForJson(PASSWORD_KEY, "1234567890_1234567890_1234567890_")); // max 32, is 33
+                getValuesMapFromJson(PASSWORD_KEY, "1234567890_1234567890_1234567890_")); // max 32, is 33
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (without password) DTO")
     void addInvalidDtoWithoutPassword() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(PASSWORD_KEY));
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(PASSWORD_KEY));
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
-    private Map<String, String> getValuesMapForJson(String withoutKey) {
-        var result = getValuesMapForJson();
+    private Map<String, String> getValuesMapFromJson(String withoutKey) {
+        var result = getValuesMapFromJson();
         result.remove(withoutKey);
         return result;
     }
@@ -229,21 +229,21 @@ class UserControllerTest {
     @Test
     @DisplayName("Add invalid (email) DTO")
     void addInvalidEmailDto() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(EMAIL_KEY, "invalidEmail.com"));
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(EMAIL_KEY, "invalidEmail.com"));
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (without email) DTO")
     void addInvalidDtoWithoutEmail() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(EMAIL_KEY));
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(EMAIL_KEY));
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (to short username) DTO")
     void addInvalidDtoWithoutToShortUsername() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(USERNAME_KEY, "123")); // min 4
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(USERNAME_KEY, "123")); // min 4
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
@@ -251,21 +251,21 @@ class UserControllerTest {
     @DisplayName("Add invalid (to long username) DTO")
     void addInvalidDtoWithoutToLongUsername() throws Exception {
         performPostMockMvc(false, status().isBadRequest(),
-                getValuesMapForJson(USERNAME_KEY, "1234567890_123456")); // max 16, is 17
+                getValuesMapFromJson(USERNAME_KEY, "1234567890_123456")); // max 16, is 17
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (without username) DTO")
     void addInvalidDtoWithoutUsername() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(USERNAME_KEY));
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(USERNAME_KEY));
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (to short firstname) DTO")
     void addInvalidDtoWithoutToShortName() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(FIRSTNAME_KEY, "123")); // min 4
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(FIRSTNAME_KEY, "123")); // min 4
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
@@ -273,21 +273,21 @@ class UserControllerTest {
     @DisplayName("Add invalid (to long firstname) DTO")
     void addInvalidDtoWithoutToLongName() throws Exception {
         performPostMockMvc(false, status().isBadRequest(),
-                getValuesMapForJson(FIRSTNAME_KEY, "1234567890_123456")); // max 16, is 17
+                getValuesMapFromJson(FIRSTNAME_KEY, "1234567890_123456")); // max 16, is 17
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Add invalid (without firstname) DTO")
     void addInvalidDtoWithoutName() throws Exception {
-        performPostMockMvc(false, status().isBadRequest(), getValuesMapForJson(FIRSTNAME_KEY));
+        performPostMockMvc(false, status().isBadRequest(), getValuesMapFromJson(FIRSTNAME_KEY));
         verify(userService, times(0)).save(any(UserDto.class));
     }
 
     @Test
     @DisplayName("Update all-in-once valid fields")
     void updateValidFields() throws Exception {
-        var valuesMapForJson = getValuesMapForJson();
+        var valuesMapForJson = getValuesMapFromJson();
         valuesMapForJson.put(ID_KEY, ID.toString());
         valuesMapForJson.put("bio", BIO);
         performPutMockMvc(true, status().isOk(), valuesMapForJson);
@@ -305,18 +305,9 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Update fail caused by lack of id & email")
-    void updateWithoutEmailAndIdFields() throws Exception {
-        var valuesMapForJson = getValuesMapForJson();
-        valuesMapForJson.remove(EMAIL_KEY);
-        performPutMockMvc(true, status().isBadRequest(), valuesMapForJson);
-        verify(userService, times(0)).update(any(), any(), any(UserDto.class));
-    }
-
-    @Test
     @DisplayName("Update fail caused by to short value")
     void updateFailCausedByToShortValue() throws Exception {
-        var valuesMapForJson = getValuesMapForJson();
+        var valuesMapForJson = getValuesMapFromJson();
         valuesMapForJson.put(USERNAME_KEY, "123"); // to short username
         performPutMockMvc(true, status().isBadRequest(), valuesMapForJson);
         verify(userService, times(0)).update(any(), any(), any(UserDto.class));
@@ -325,7 +316,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Update fail caused by to not valid email")
     void updateFailCausedByWrongEmailValue() throws Exception {
-        var valuesMapForJson = getValuesMapForJson();
+        var valuesMapForJson = getValuesMapFromJson();
         valuesMapForJson.put(EMAIL_KEY, "invalidEmail");
         performPutMockMvc(true, status().isBadRequest(), valuesMapForJson);
         verify(userService, times(0)).update(any(), any(), any(UserDto.class));

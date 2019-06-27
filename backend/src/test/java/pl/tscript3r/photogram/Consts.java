@@ -16,6 +16,7 @@ public class Consts {
     public static final Long ID = 1L;
     public static final String USERNAME = "username";
     public static final String NAME = "name";
+    public static final String FIRSTNAME = "firstname";
     public static final String CAPTION = "caption";
     public static final String LOCATION = "location";
     public static final String CONTENT = "content";
@@ -46,7 +47,7 @@ public class Consts {
     public static final String SECOND_CONTENT = "second_content";
     public static final String SECOND_NAME = "second_name";
     public static final String SECOND_PASSWORD = "second_password";
-    public static final String SECOND_EMAIL = "second_email";
+    public static final String SECOND_EMAIL = "second_email@email.com";
     public static final Boolean SECOND_EMAIL_CONFIRMED = false;
     public static final String SECOND_BIO = "second_bio";
     public static final LocalDateTime SECOND_CREATION_DATE = LocalDateTime.now(ZoneId.of("Brazil/East"));
@@ -61,6 +62,7 @@ public class Consts {
 
     public static final Long THIRD_ID = 3L;
     public static final ResponseEntity<byte[]> IMAGE_RESPONSE_ENTITY = new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
+    public static final String SECOND_FIRSTNAME = "secondFirstname";
 
     private Consts() {
     }

@@ -24,13 +24,20 @@ import static pl.tscript3r.photogram.domains.UserTest.getSecondUser;
 
 @DisplayName("User mapper")
 @ExtendWith(MockitoExtension.class)
-class UserMapperTest {
+public class UserMapperTest {
 
-    static void compareUserWithUserDto(User user, UserDto userDto) {
+    public static void compareUserWithUserDto(User user, UserDto userDto) {
         assertEquals(user.getBio(), userDto.getBio());
         assertEquals(user.getEmail(), userDto.getEmail());
         assertEquals(user.getFirstname(), userDto.getFirstname());
         assertEquals(user.getPassword(), userDto.getPassword());
+        assertEquals(user.getUsername(), userDto.getUsername());
+    }
+
+    public static void compareUserDtoWithUser(UserDto userDto, User user) {
+        assertEquals(user.getBio(), userDto.getBio());
+        assertEquals(user.getEmail(), userDto.getEmail());
+        assertEquals(user.getFirstname(), userDto.getFirstname());
         assertEquals(user.getUsername(), userDto.getUsername());
     }
 

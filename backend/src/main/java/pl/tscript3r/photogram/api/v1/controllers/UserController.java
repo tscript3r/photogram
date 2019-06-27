@@ -22,7 +22,7 @@ import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private static final String FIND_MAPPING = "find";
+    public static final String FIND_MAPPING = "find";
     public static final String PASSWORD_RESET_MAPPING = "reset";
     public static final String AVATAR_MAPPING = "/avatar";
     private final UserService userService;
@@ -38,9 +38,9 @@ public class UserController {
     }
 
     @GetMapping(FIND_MAPPING)
-    public UserDto findBy(@RequestParam(value = USERNAME_PARAM, required = false) String username,
-                          @RequestParam(value = EMAIL_PARAM, required = false) String email,
-                          @RequestParam(value = ID_PARAM, required = false) Long id) {
+    public UserDto getBy(@RequestParam(value = USERNAME_PARAM, required = false) String username,
+                         @RequestParam(value = EMAIL_PARAM, required = false) String email,
+                         @RequestParam(value = ID_PARAM, required = false) Long id) {
         if (isSet(username))
             return userService.getByUsernameDto(username);
         if (isSet(email))
@@ -64,11 +64,11 @@ public class UserController {
     public UserDto update(Principal principal, @PathVariable("id") Long id, @Valid @RequestBody UserDto userDto,
                           BindingResult bindingResult) {
         checkUpdateValidationErrors(bindingResult);
-        checkIdAndEmail(userDto);
         return userService.update(principal, id, userDto);
     }
 
     private void checkUpdateValidationErrors(final BindingResult bindingResult) {
+        // in this case NotEmpty constrain can be ignored, because the client does not have to send all values
         var objectErrors = bindingResult.getAllErrors();
         for (ObjectError objectError : objectErrors)
             if (objectError.getCode() != null) {
@@ -76,11 +76,6 @@ public class UserController {
                 if (!errorCode.equalsIgnoreCase("NotEmpty"))
                     throw new BadRequestPhotogramException("Some of the given values are incorrect");
             }
-    }
-
-    private void checkIdAndEmail(final UserDto userDto) {
-        if (userDto.getId() == null && userDto.getEmail() == null)
-            throw new BadRequestPhotogramException("Specify id or/and email");
     }
 
     @DeleteMapping(ID_VARIABLE_MAPPING)

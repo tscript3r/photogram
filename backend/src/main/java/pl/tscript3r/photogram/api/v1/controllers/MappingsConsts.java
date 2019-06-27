@@ -5,6 +5,7 @@ public class MappingsConsts {
     private static final String BASE_MAPPING = "/api/v1";
 
     public static final String USER_MAPPING = BASE_MAPPING + "/users";
+    public static final String LOGIN_MAPPING = USER_MAPPING + "/login";
     public static final String POST_MAPPING = BASE_MAPPING + "/posts";
     public static final String COMMENT_MAPPING = POST_MAPPING + "/{postId}/comments";
 

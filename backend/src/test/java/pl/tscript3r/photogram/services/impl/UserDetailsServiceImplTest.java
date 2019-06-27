@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
 import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.services.UserService;
 
@@ -44,7 +45,7 @@ class UserDetailsServiceImplTest {
     @DisplayName("Load non existing user by username")
     void loadNonExistingUserByUsername() {
         when(userService.getByUsername(any())).thenThrow(NotFoundPhotogramException.class);
-        assertThrows(NotFoundPhotogramException.class, () -> userDetailsService.loadUserByUsername(USERNAME));
+        assertThrows(ForbiddenPhotogramException.class, () -> userDetailsService.loadUserByUsername(USERNAME));
     }
 
 }

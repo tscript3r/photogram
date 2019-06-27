@@ -15,6 +15,7 @@ public class UserTest {
     public static User getDefaultUser() {
         var result = new User(ID, NAME, USERNAME, PASSWORD, EMAIL, new EmailConfirmation(), BIO,
                 new HashSet<>(), null, CREATION_DATE);
+        result.getEmailConfirmation().setConfirmed(true);
         result.addRole(getAdminRole());
         result.addRole(getDefaultRole());
         result.addRole(getModeratorRole());

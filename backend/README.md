@@ -1,4 +1,4 @@
-# Photogram - backend [![CircleCI](https://circleci.com/gh/tscript3r/pet-clinic.svg?style=svg)](https://circleci.com/gh/tscript3r/pet-clinic)
+# Photogram - backend [![CircleCI](https://circleci.com/gh/tscript3r/photogram.svg?style=svg)](https://circleci.com/gh/tscript3r/photogram)
 
 ### Table of Contents
 *    [General info](#general-info)

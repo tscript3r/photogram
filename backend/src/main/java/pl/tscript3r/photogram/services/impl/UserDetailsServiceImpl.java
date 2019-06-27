@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.tscript3r.photogram.domains.Role;
 import pl.tscript3r.photogram.domains.User;
+import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
+import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.services.UserService;
 
 import java.util.ArrayList;
@@ -26,7 +28,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) {
-        User user = userService.getByUsername(username);
+        User user;
+        try {
+            user = userService.getByUsername(username);
+            if( !user.isEmailConfirmed())
+                throw new ForbiddenPhotogramException("Email needs to be confirmed");
+        } catch(NotFoundPhotogramException e) {
+            throw new ForbiddenPhotogramException("Bad credentials");
+        }
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         Set<Role> userRoles = user.getRoles();
         userRoles.forEach(userRole ->

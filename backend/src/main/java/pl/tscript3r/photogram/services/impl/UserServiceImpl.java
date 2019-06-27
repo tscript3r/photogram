@@ -1,6 +1,7 @@
 package pl.tscript3r.photogram.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(final Principal principal, final Long id, final UserDto userDto) {
         authorizationService.requireLogin(principal)
-                .accessValidation(principal, userDto.getId());
+                .accessValidation(principal, id);
         var existingUser = getById(id);
         updateValuesAndSave(existingUser, userDto);
         return mapperService.map(existingUser, UserDto.class);
