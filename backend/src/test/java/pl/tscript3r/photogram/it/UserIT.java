@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.integrations;
+package pl.tscript3r.photogram.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -11,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.web.header.Header;
-import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,10 +31,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
 import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.UserController.AVATAR_MAPPING;
-import static pl.tscript3r.photogram.api.v1.controllers.UserController.FIND_MAPPING;
+import static pl.tscript3r.photogram.api.v1.controllers.UserController.*;
 import static pl.tscript3r.photogram.api.v1.mappers.UserMapperTest.compareUserDtoWithUser;
-import static pl.tscript3r.photogram.api.v1.mappers.UserMapperTest.compareUserWithUserDto;
 
 
 @ExtendWith(SpringExtension.class)
@@ -363,6 +359,17 @@ class UserIT {
                 .andExpect(status().isForbidden());
 
         verify(imageService, times(0)).saveAvatar(any(), any());
+    }
+
+    @Test
+    @DisplayName("Confirm email with token")
+    void confirmEmail() throws Exception {
+        registerNewUser();
+        var emailConfirmation = emailConfirmationRepository.findByUser(userRepository.findById(addedUserId).get()).get();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_MAPPING + "/" + EMAIL_CONFIRMATION_MAPPING + "?" +
+                TOKEN_PARAM + "=" + emailConfirmation.getToken().toString().replace("-", "").toUpperCase())
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
     }
 
 }

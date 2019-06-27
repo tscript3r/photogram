@@ -9,10 +9,12 @@ import org.thymeleaf.context.Context;
 import pl.tscript3r.photogram.configs.EmailConfig;
 import pl.tscript3r.photogram.domains.EmailConfirmation;
 import pl.tscript3r.photogram.domains.User;
+import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.repositories.EmailConfirmationRepository;
 import pl.tscript3r.photogram.services.EmailService;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +32,7 @@ public class EmailServiceImpl implements EmailService, DisposableBean {
     private final EmailConfirmationRepository emailConfirmationRepository;
 
     @Override
-    public EmailConfirmation emailConfirmation(@NotNull final User user, @NotNull final Boolean sendMail) {
+    public EmailConfirmation createEmailConfirmation(@NotNull final User user, @NotNull final Boolean sendMail) {
         var emailConfirmationOptional = emailConfirmationRepository.findByUser(user);
         emailConfirmationOptional.ifPresent(confirmation -> confirmation.setConfirmed(!sendMail));
         var emailConfirmation = emailConfirmationOptional.orElse(new EmailConfirmation(user, getUUID(), !sendMail));
@@ -70,7 +72,18 @@ public class EmailServiceImpl implements EmailService, DisposableBean {
     @Override
     public void resendEmailConfirmation(@NotNull final User user) {
         var emailConfirmation = emailConfirmationRepository.findByUser(user);
-        send(emailConfirmation.orElse(emailConfirmation(user, true)));
+        send(emailConfirmation.orElse(createEmailConfirmation(user, true)));
+    }
+
+    @Override
+    public void setEmailConfirmed(@NotNull final String token) {
+        var emailConfirmation = emailConfirmationRepository.findByToken(new UUID(
+                new BigInteger(token.substring(0, 16), 16).longValue(),
+                new BigInteger(token.substring(16), 16).longValue()))
+                .orElseThrow(() ->
+                    new NotFoundPhotogramException(String.format("Token=%s not found", token)));
+        emailConfirmation.setConfirmed(true);
+        emailConfirmationRepository.save(emailConfirmation);
     }
 
     @Override

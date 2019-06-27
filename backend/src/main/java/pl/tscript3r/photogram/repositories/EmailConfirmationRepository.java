@@ -13,4 +13,6 @@ public interface EmailConfirmationRepository extends CrudRepository<EmailConfirm
 
     Boolean existsByToken(UUID token);
 
+    Optional<EmailConfirmation> findByToken(UUID token);
+
 }

@@ -45,4 +45,6 @@ public interface UserService {
     void saveAvatar(@Nullable final Principal principal, @NotNull final Long id,
                     @NotNull final MultipartFile multipartFile);
 
+    void confirmEmail(@NotNull final String token);
+
 }

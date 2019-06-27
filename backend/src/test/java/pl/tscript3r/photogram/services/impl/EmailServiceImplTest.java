@@ -1,5 +1,6 @@
 package pl.tscript3r.photogram.services.impl;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,13 +12,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import pl.tscript3r.photogram.configs.EmailConfig;
 import pl.tscript3r.photogram.domains.EmailConfirmation;
+import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.repositories.EmailConfirmationRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static pl.tscript3r.photogram.Consts.*;
@@ -74,7 +76,7 @@ class EmailServiceImplTest {
         });
         when(emailConfirmationRepository.existsByToken(any())).thenReturn(false);
 
-        assertEquals(!sendMail, emailService.emailConfirmation(getDefaultUser(), sendMail).getConfirmed());
+        assertEquals(!sendMail, emailService.createEmailConfirmation(getDefaultUser(), sendMail).getConfirmed());
 
         verify(emailConfirmationRepository, times(1)).findByUser(any());
         verify(emailConfirmationRepository, times(1)).save(any());
@@ -101,7 +103,7 @@ class EmailServiceImplTest {
         });
         when(emailConfirmationRepository.existsByToken(any())).thenReturn(false);
 
-        assertEquals(false, emailService.emailConfirmation(getDefaultUser(), true).getConfirmed());
+        assertEquals(false, emailService.createEmailConfirmation(getDefaultUser(), true).getConfirmed());
 
         verify(emailConfirmationRepository, times(1)).findByUser(any());
         verify(emailConfirmationRepository, times(1)).save(any());
@@ -119,7 +121,7 @@ class EmailServiceImplTest {
         });
         doReturn(true).doReturn(false).when(emailConfirmationRepository).existsByToken(any());
 
-        emailService.emailConfirmation(getDefaultUser(), true);
+        emailService.createEmailConfirmation(getDefaultUser(), true);
 
         verify(emailConfirmationRepository, times(2)).existsByToken(any());
     }
@@ -139,7 +141,7 @@ class EmailServiceImplTest {
             return null;
         }).when(executorService).execute(any());
 
-        emailService.emailConfirmation(getDefaultUser(), true);
+        emailService.createEmailConfirmation(getDefaultUser(), true);
 
         verify(javaMailSender, times(1)).send(any(MimeMessagePreparator.class));
     }
@@ -184,6 +186,27 @@ class EmailServiceImplTest {
 
         verify(executorService, times(1)).shutdown();
         verify(executorService, times(1)).shutdownNow();
+    }
+
+    @Test
+    @DisplayName("Set email confirmed")
+    void setEmailConfirmed() {
+        var emailConfirmation = getDefaultEmailConfirmation();
+        emailConfirmation.setConfirmed(false);
+        when(emailConfirmationRepository.findByToken(any())).thenReturn(Optional.of(emailConfirmation));
+
+        emailService.setEmailConfirmed(RandomStringUtils.randomNumeric(32));
+
+        verify(emailConfirmationRepository, times(1)).save(any());
+        assertTrue(emailConfirmation.getConfirmed());
+    }
+
+    @Test
+    @DisplayName("Set email confirmed with non existing token")
+    void setEmailConfirmedWithNonExistingToken() {
+        when(emailConfirmationRepository.findByToken(any())).thenReturn(Optional.empty());
+        assertThrows(NotFoundPhotogramException.class, () ->
+                emailService.setEmailConfirmed(RandomStringUtils.randomNumeric(32)));
     }
 
 }

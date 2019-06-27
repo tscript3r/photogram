@@ -1,5 +1,6 @@
 package pl.tscript3r.photogram.services.impl;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -79,7 +80,7 @@ class UserServiceImplTest {
     @DisplayName("Save domain without pass encode & default role")
     void saveDomainWithoutPassEncodeAndDefaultRole() {
         var user = getDefaultUser();
-        when(emailService.emailConfirmation(any(), any()))
+        when(emailService.createEmailConfirmation(any(), any()))
                 .thenReturn(new EmailConfirmation(user, UUID.randomUUID(), false));
         when(userRepository.save(any())).thenReturn(user);
 
@@ -88,7 +89,7 @@ class UserServiceImplTest {
         verify(roleService, times(0)).getDefault();
         verify(passwordEncoder, times(0)).encode(any());
         verify(userRepository, times(1)).save(any());
-        verify(emailService, times(1)).emailConfirmation(any(), any());
+        verify(emailService, times(1)).createEmailConfirmation(any(), any());
     }
 
     @Test
@@ -342,6 +343,13 @@ class UserServiceImplTest {
         verify(authorizationService, times(1)).accessValidation(any(), any());
         verify(userRepository, times(1)).findById(any());
         verify(imageService, times(1)).saveAvatar(any(), any());
+    }
+
+    @Test
+    @DisplayName("Confirm email")
+    void confirmEmail() {
+        userService.confirmEmail(RandomStringUtils.randomNumeric(32));
+        verify(emailService, times(1)).setEmailConfirmed(any());
     }
 
 }

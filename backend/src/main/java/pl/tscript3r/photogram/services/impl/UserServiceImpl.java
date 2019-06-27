@@ -1,7 +1,6 @@
 package pl.tscript3r.photogram.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private EmailConfirmation emailConfirmation(final User user) {
-        return emailService.emailConfirmation(user, true);
+        return emailService.createEmailConfirmation(user, true);
     }
 
     @Override
@@ -95,7 +94,7 @@ public class UserServiceImpl implements UserService {
         if (passwordEncode)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (emailConfirmation)
-            emailService.emailConfirmation(user, true);
+            emailService.createEmailConfirmation(user, true);
         return userRepository.save(user);
     }
 
@@ -178,4 +177,8 @@ public class UserServiceImpl implements UserService {
         imageService.saveAvatar(id, multipartFile);
     }
 
+    @Override
+    public void confirmEmail(@NotNull final String token) {
+        emailService.setEmailConfirmed(token);
+    }
 }

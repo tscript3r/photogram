@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.tscript3r.photogram.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram.exceptions.BadRequestPhotogramException;
 import pl.tscript3r.photogram.services.UserService;
+import pl.tscript3r.photogram.validators.UUID;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -25,6 +26,8 @@ public class UserController {
     public static final String FIND_MAPPING = "find";
     public static final String PASSWORD_RESET_MAPPING = "reset";
     public static final String AVATAR_MAPPING = "/avatar";
+    public static final String EMAIL_CONFIRMATION_MAPPING = "/confirm_email";
+    public static final String TOKEN_PARAM = "token";
     private final UserService userService;
 
     @GetMapping
@@ -97,6 +100,11 @@ public class UserController {
     public void uploadAvatar(Principal principal, @PathVariable(ID_VARIABLE) Long id,
                              @RequestParam("image") MultipartFile imageFile) {
         userService.saveAvatar(principal, id, imageFile);
+    }
+
+    @PutMapping(EMAIL_CONFIRMATION_MAPPING)
+    public void confirmEmail(@RequestParam(value = TOKEN_PARAM) @Valid @UUID String token) {
+        userService.confirmEmail(token);
     }
 
 }

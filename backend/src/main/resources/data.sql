@@ -28,7 +28,7 @@ VALUES
 (2, true, CURRENT_TIMESTAMP , '9c45c2f117613daaad311ff8703ae846'),
 (3, true, CURRENT_TIMESTAMP , '15e0ba0710e43d7faaffc00fed873c88'),
 (4, false, CURRENT_TIMESTAMP , 'bc27b4dbbc0f34f9ae8e4b72f2d51b60'),
-(5, true, CURRENT_TIMESTAMP , 'bc27b4dbbc0f34f9ae8e4b72f2d51b60');
+(5, true, CURRENT_TIMESTAMP , 'bc27b4dbbc0f34f9ae8e4b72f2d51b66');
 
 INSERT INTO `USERS_ROLES`
 (`user_id`, `role_id`)
