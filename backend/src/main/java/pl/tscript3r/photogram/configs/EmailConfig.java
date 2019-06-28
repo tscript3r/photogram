@@ -21,7 +21,9 @@ public class EmailConfig {
     private String username;
     private String password;
     private String confirmationUrl;
+    private String passwordResetTitle;
     private String confirmationTitle;
+
     private Integer senderThreadPool;
 
     @Bean

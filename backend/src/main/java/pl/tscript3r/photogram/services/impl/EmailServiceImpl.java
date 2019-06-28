@@ -12,6 +12,7 @@ import pl.tscript3r.photogram.domains.User;
 import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.repositories.EmailConfirmationRepository;
 import pl.tscript3r.photogram.services.EmailService;
+import pl.tscript3r.photogram.services.utils.EmailMessageType;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
@@ -20,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static pl.tscript3r.photogram.services.utils.EmailMessageType.EMAIL_CONFIRMATION;
+import static pl.tscript3r.photogram.services.utils.EmailMessageType.PASSWORD_RESET;
 
 @Service
 @Transactional
@@ -51,22 +53,25 @@ public class EmailServiceImpl implements EmailService, DisposableBean {
     }
 
     private void send(final EmailConfirmation emailConfirmation) {
-        emailSenderExecutor.execute(getRunnableSender(emailConfirmation));
+        var email = emailConfirmation.getUser().getEmail();
+        var runnable = getRunnableSender(EMAIL_CONFIRMATION, email, emailConfig.getConfirmationTitle(),
+                getEmailConfirmationContext(emailConfirmation));
+        emailSenderExecutor.execute(runnable);
     }
 
-    private Runnable getRunnableSender(final EmailConfirmation emailConfirmation) {
-        return () -> {
-            User user = emailConfirmation.getUser();
-            Context context = new Context();
-            context.setVariable("firstname", user.getFirstname());
-            context.setVariable("confirmationUrl",
-                    String.format(emailConfig.getConfirmationUrl(),
-                            emailConfirmation.getToken()));
-            emailSender.send(EMAIL_CONFIRMATION.getPreparedMimeMessage(
-                    user.getEmail(),
-                    emailConfig.getConfirmationTitle(),
-                    context));
-        };
+    private Context getEmailConfirmationContext(final EmailConfirmation emailConfirmation) {
+        User user = emailConfirmation.getUser();
+        Context context = new Context();
+        context.setVariable("firstname", user.getFirstname());
+        context.setVariable("confirmationUrl",
+                String.format(emailConfig.getConfirmationUrl(),
+                        emailConfirmation.getToken()));
+        return context;
+    }
+
+    private Runnable getRunnableSender(final EmailMessageType emailMessageType, final String sendTo, final String title,
+                                       final Context context) {
+        return () -> emailSender.send(emailMessageType.getPreparedMimeMessage(sendTo, title, context));
     }
 
     @Override
@@ -84,6 +89,21 @@ public class EmailServiceImpl implements EmailService, DisposableBean {
                     new NotFoundPhotogramException(String.format("Token=%s not found", token)));
         emailConfirmation.setConfirmed(true);
         emailConfirmationRepository.save(emailConfirmation);
+    }
+
+    @Override
+    public void sendNewPassword(@NotNull final User user, @NotNull final String newPassword) {
+        var email = user.getEmail();
+        var runnable = getRunnableSender(PASSWORD_RESET, email, emailConfig.getPasswordResetTitle(),
+                getNewPasswordContext(user.getFirstname(), newPassword));
+        emailSenderExecutor.execute(runnable);
+    }
+
+    private Context getNewPasswordContext(final String firstname, final String newPassword) {
+        var context = new Context();
+        context.setVariable("firstname", firstname);
+        context.setVariable("password", newPassword);
+        return context;
     }
 
     @Override

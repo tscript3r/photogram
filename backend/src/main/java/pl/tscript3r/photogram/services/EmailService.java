@@ -16,4 +16,6 @@ public interface EmailService {
 
     void setEmailConfirmed(@NotNull final String token);
 
+    void sendNewPassword(@NotNull final User user, @NotNull final String newPassword);
+
 }

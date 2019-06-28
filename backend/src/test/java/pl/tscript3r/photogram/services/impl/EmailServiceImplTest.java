@@ -57,6 +57,7 @@ class EmailServiceImplTest {
         emailConfig.setUsername(EMAIL_USERNAME);
         emailConfig.setConfirmationTitle(EMAIL_SUBJECT);
         emailConfig.setConfirmationUrl(EMAIL_CONFIRMATION_URL);
+        emailConfig.setPasswordResetTitle(EMAIL_SUBJECT);
         emailConfig.setPort(666);
 
         emailService = new EmailServiceImpl(executorService, emailConfig, javaMailSender, emailConfirmationRepository);
@@ -207,6 +208,15 @@ class EmailServiceImplTest {
         when(emailConfirmationRepository.findByToken(any())).thenReturn(Optional.empty());
         assertThrows(NotFoundPhotogramException.class, () ->
                 emailService.setEmailConfirmed(RandomStringUtils.randomNumeric(32)));
+    }
+
+    @Test
+    @DisplayName("Send new password")
+    void sendNewPassword() {
+        var user = getDefaultUser();
+        emailService.sendNewPassword(user, SECOND_PASSWORD);
+
+        verify(executorService, times(1)).execute(any());
     }
 
 }

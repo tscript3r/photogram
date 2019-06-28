@@ -1,6 +1,7 @@
 package pl.tscript3r.photogram.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -159,7 +160,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPassword(@NotNull final String email) {
-
+        var user = userRepository.findByEmail(email).orElseThrow(() ->
+                new NotFoundPhotogramException(String.format("Given email=%s not found", email)));
+        var newPassword = RandomStringUtils.randomAlphanumeric(8);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        emailService.sendNewPassword(user, newPassword);
     }
 
     @Override

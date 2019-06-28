@@ -38,9 +38,10 @@ import static pl.tscript3r.photogram.api.v1.mappers.UserMapperTest.compareUserDt
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserIT {
+public class UserIT {
 
-    public static final String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION = "Authorization";
+
     @Autowired
     MockMvc mockMvc;
 
@@ -92,7 +93,7 @@ class UserIT {
         verify(senderExecutorService, times(1)).execute(any()); // confirmation mail send
     }
 
-    private UserDto registerUserPostRequest() throws Exception {
+    UserDto registerUserPostRequest() throws Exception {
         var userDto = jsonToUserDto(mockMvc.perform(post(USER_MAPPING)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content("{\n" +
@@ -127,7 +128,16 @@ class UserIT {
     @Test
     @DisplayName("Email confirmation")
     void confirmEmailByToken() throws Exception {
-        // TODO: implement, endpoint is not implemented yet
+        registerUserPostRequest();
+        var emailConfirmation = emailConfirmationRepository.findByUser(userRepository.findById(addedUserId).get()).get();
+        assertFalse(emailConfirmation.getConfirmed());
+        var token = emailConfirmation.getToken().toString().replace("-", "");
+        mockMvc.perform(put(USER_MAPPING + "/" + EMAIL_CONFIRMATION_MAPPING + "?" +
+                TOKEN_PARAM + "=" + token)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+        emailConfirmation = emailConfirmationRepository.findByUser(userRepository.findById(addedUserId).get()).get();
+        assertTrue(emailConfirmation.getConfirmed());
     }
 
     @Test
@@ -135,7 +145,6 @@ class UserIT {
     void loginAsNewUserWithEmailConfirmed() throws Exception {
         registerUserPostRequest();
         setEmailConfirmedOnNewUser(USERNAME);
-
 
         mockMvc.perform(get(USER_MAPPING)
                 .header(AUTHORIZATION, loginAsNewUser(USERNAME, PASSWORD)))

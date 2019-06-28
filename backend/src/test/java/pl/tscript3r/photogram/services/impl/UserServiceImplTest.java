@@ -352,4 +352,27 @@ class UserServiceImplTest {
         verify(emailService, times(1)).setEmailConfirmed(any());
     }
 
+    @Test
+    @DisplayName("Reset password")
+    void resetPassword() {
+        var user = getDefaultUser();
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        when(passwordEncoder.encode(any())).thenReturn(SECOND_PASSWORD);
+
+        userService.resetPassword(EMAIL);
+
+        assertEquals(SECOND_PASSWORD, user.getPassword());
+        verify(userRepository, times(1)).findByEmail(any());
+        verify(passwordEncoder, times(1)).encode(any());
+        verify(userRepository, times(1)).save(any());
+        verify(emailService, times(1)).sendNewPassword(any(), any());
+    }
+
+    @Test
+    @DisplayName("Reset password (email not found)")
+    void resetPasswordEmailNotFound() {
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        assertThrows(NotFoundPhotogramException.class, () -> userService.resetPassword(any()));
+    }
+
 }

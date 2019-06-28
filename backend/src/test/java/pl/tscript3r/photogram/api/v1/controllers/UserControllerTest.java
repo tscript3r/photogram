@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
+import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.EMAIL_PARAM;
 import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.USER_MAPPING;
 import static pl.tscript3r.photogram.api.v1.controllers.UserController.*;
 import static pl.tscript3r.photogram.api.v1.dtos.UserDtoTest.getDefaultUserDto;
@@ -374,6 +375,17 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
         verify(userService, times(1)).confirmEmail(any());
+    }
+
+    @Test
+    @DisplayName("Password reset")
+    void passwordReset() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_MAPPING + PASSWORD_RESET_MAPPING + "?" +
+                EMAIL_PARAM + "=" + EMAIL)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).resetPassword(any());
     }
 
 }

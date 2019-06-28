@@ -24,7 +24,7 @@ import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
 public class UserController {
 
     public static final String FIND_MAPPING = "find";
-    public static final String PASSWORD_RESET_MAPPING = "reset";
+    static final String PASSWORD_RESET_MAPPING = "/reset_password";
     public static final String AVATAR_MAPPING = "/avatar";
     public static final String EMAIL_CONFIRMATION_MAPPING = "/confirm_email";
     public static final String TOKEN_PARAM = "token";
@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping(FIND_MAPPING)
     public UserDto getBy(@RequestParam(value = USERNAME_PARAM, required = false) String username,
-                         @RequestParam(value = EMAIL_PARAM, required = false) String email,
+                         @RequestParam(value = MappingsConsts.EMAIL_PARAM, required = false) String email,
                          @RequestParam(value = ID_PARAM, required = false) Long id) {
         if (isSet(username))
             return userService.getByUsernameDto(username);
@@ -86,8 +86,8 @@ public class UserController {
         userService.delete(principal, id);
     }
 
-    @GetMapping(PASSWORD_RESET_MAPPING)
-    public void resetPassword(@RequestParam(value = "email") String email) {
+    @PutMapping(PASSWORD_RESET_MAPPING)
+    public void passwordReset(@RequestParam(value = EMAIL_PARAM) String email) {
         userService.resetPassword(email);
     }
 
