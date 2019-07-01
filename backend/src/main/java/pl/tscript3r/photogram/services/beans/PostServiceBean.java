@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PostServiceImpl implements PostService {
+public class PostServiceBean implements PostService {
 
     private final UserService userService;
     private final AuthorizationService authorizationService;

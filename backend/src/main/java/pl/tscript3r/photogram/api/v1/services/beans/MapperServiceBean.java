@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.api.v1.services.impl;
+package pl.tscript3r.photogram.api.v1.services.beans;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -15,7 +15,7 @@ import java.util.*;
 
 @Lazy
 @Service
-public class MapperServiceImpl implements MapperService, ApplicationContextAware {
+public class MapperServiceBean implements MapperService, ApplicationContextAware {
 
     private final Set<Mapper> mappers = new HashSet<>();
 

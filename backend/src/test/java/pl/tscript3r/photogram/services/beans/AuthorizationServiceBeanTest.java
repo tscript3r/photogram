@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static pl.tscript3r.photogram.domains.UserTest.getSecondUser;
 
 @DisplayName("Authorization service")
 @ExtendWith(MockitoExtension.class)
-class AuthorizationServiceImplTest {
+class AuthorizationServiceBeanTest {
 
     @Mock
     RoleService roleService;
@@ -28,13 +28,13 @@ class AuthorizationServiceImplTest {
     @Mock
     UserService userService;
 
-    private AuthorizationServiceImpl authorizationService;
+    private AuthorizationServiceBean authorizationService;
 
     @BeforeEach
     void init() {
         doReturn(getModeratorRole()).when(roleService).getByName(MODERATOR_ROLE_NAME);
         doReturn(getAdminRole()).when(roleService).getByName(ADMIN_ROLE_NAME);
-        authorizationService = new AuthorizationServiceImpl(userService, roleService);
+        authorizationService = new AuthorizationServiceBean(userService, roleService);
     }
 
     @Test

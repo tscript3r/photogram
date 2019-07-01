@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.api.v1.services.impl;
+package pl.tscript3r.photogram.api.v1.services.beans;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,11 +26,11 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("Mapper service")
 @ExtendWith(MockitoExtension.class)
-public class MapperServiceImplTest {
+public class MapperServiceBeanTest {
 
     public static MapperService getInstance() {
         ApplicationContext applicationContext = mock(ApplicationContext.class);
-        MapperServiceImpl result = new MapperServiceImpl();
+        MapperServiceBean result = new MapperServiceBean();
         var beanMap = new HashMap<String, Mapper>();
         RoleMapper roleMapper = new RoleMapper();
         beanMap.put("userMapper", new UserMapper(roleMapper));
@@ -50,11 +50,11 @@ public class MapperServiceImplTest {
     @Mock
     CollectionMapper collectionMapper;
 
-    private MapperServiceImpl mapperService;
+    private MapperServiceBean mapperService;
 
     @BeforeEach
     void setUp() {
-        mapperService = new MapperServiceImpl();
+        mapperService = new MapperServiceBean();
         HashMap<String, Object> mappers = new HashMap<>();
         mappers.put("mapper", mapper);
         mappers.put("collectionMapper", collectionMapper);

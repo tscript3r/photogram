@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import static pl.tscript3r.photogram.domains.UserTest.getDefaultUser;
 
 @DisplayName("Post service")
 @ExtendWith(MockitoExtension.class)
-class PostServiceImplTest {
+class PostServiceBeanTest {
 
     @Mock
     UserService userService;
@@ -60,7 +60,7 @@ class PostServiceImplTest {
     AuthorizationService authorizationService;
 
     @InjectMocks
-    PostServiceImpl postService;
+    PostServiceBean postService;
 
     @Test
     @DisplayName("Get latest with default pageable")

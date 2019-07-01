@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -13,19 +13,19 @@ import pl.tscript3r.photogram.services.UserService;
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
 
-import static pl.tscript3r.photogram.services.impl.RoleServiceImpl.ADMIN_ROLE;
-import static pl.tscript3r.photogram.services.impl.RoleServiceImpl.MODERATOR_ROLE;
+import static pl.tscript3r.photogram.services.beans.RoleServiceBean.ADMIN_ROLE;
+import static pl.tscript3r.photogram.services.beans.RoleServiceBean.MODERATOR_ROLE;
 
 @Slf4j
 @Service
-public class AuthorizationServiceImpl implements AuthorizationService {
+public class AuthorizationServiceBean implements AuthorizationService {
 
     private final Role adminRole;
     private final Role moderatorRole;
     private final UserService userService;
 
     @Lazy
-    public AuthorizationServiceImpl(UserService userService, RoleService roleService) {
+    public AuthorizationServiceBean(UserService userService, RoleService roleService) {
         adminRole = roleService.getByName(ADMIN_ROLE);
         moderatorRole = roleService.getByName(MODERATOR_ROLE);
         this.userService = userService;

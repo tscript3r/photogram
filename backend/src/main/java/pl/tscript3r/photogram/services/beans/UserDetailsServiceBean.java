@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -22,7 +22,7 @@ import java.util.Set;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceBean implements UserDetailsService {
 
     private final UserService userService;
 

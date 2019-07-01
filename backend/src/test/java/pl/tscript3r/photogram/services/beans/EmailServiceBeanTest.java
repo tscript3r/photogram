@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,12 +27,13 @@ import static pl.tscript3r.photogram.domains.UserTest.getDefaultUser;
 
 @DisplayName("Email service")
 @ExtendWith(MockitoExtension.class)
-class EmailServiceImplTest {
+public
+class EmailServiceBeanTest {
 
     private static final Long ID = 1L;
     private static final UUID DEFAULT_UUID = UUID.randomUUID();
 
-    private static EmailConfirmation getDefaultEmailConfirmation() {
+    public static EmailConfirmation getDefaultEmailConfirmation() {
         var emailConfirmation = new EmailConfirmation(getDefaultUser(), DEFAULT_UUID, true);
         emailConfirmation.setId(ID);
         return emailConfirmation;
@@ -47,7 +48,7 @@ class EmailServiceImplTest {
     @Mock
     EmailConfirmationRepository emailConfirmationRepository;
 
-    private EmailServiceImpl emailService;
+    private EmailServiceBean emailService;
 
     @BeforeEach
     void setUp() {
@@ -60,7 +61,7 @@ class EmailServiceImplTest {
         emailConfig.setPasswordResetTitle(EMAIL_SUBJECT);
         emailConfig.setPort(666);
 
-        emailService = new EmailServiceImpl(executorService, emailConfig, javaMailSender, emailConfirmationRepository);
+        emailService = new EmailServiceBean(executorService, emailConfig, javaMailSender, emailConfirmationRepository);
     }
 
     @Test

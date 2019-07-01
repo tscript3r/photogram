@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceBean implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;

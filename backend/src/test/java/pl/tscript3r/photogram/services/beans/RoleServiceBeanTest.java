@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import static pl.tscript3r.photogram.domains.RoleTest.getDefaultRole;
 
 @DisplayName("Role service")
 @ExtendWith(MockitoExtension.class)
-class RoleServiceImplTest {
+class RoleServiceBeanTest {
 
     @Mock
     UserService userService;
@@ -31,7 +31,7 @@ class RoleServiceImplTest {
     RoleRepository roleRepository;
 
     @InjectMocks
-    RoleServiceImpl roleService;
+    RoleServiceBean roleService;
 
     @Test
     @DisplayName("Get default role")

@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,14 +27,14 @@ import static org.mockito.Mockito.*;
 import static pl.tscript3r.photogram.Consts.*;
 import static pl.tscript3r.photogram.api.v1.dtos.UserDtoTest.getDefaultUserDto;
 import static pl.tscript3r.photogram.api.v1.dtos.UserDtoTest.getSecondUserDto;
-import static pl.tscript3r.photogram.api.v1.services.impl.MapperServiceImplTest.getInstance;
+import static pl.tscript3r.photogram.api.v1.services.beans.MapperServiceBeanTest.getInstance;
 import static pl.tscript3r.photogram.domains.RoleTest.getDefaultRole;
 import static pl.tscript3r.photogram.domains.UserTest.getDefaultUser;
 import static pl.tscript3r.photogram.domains.UserTest.getSecondUser;
 
 @DisplayName("User service")
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceBeanTest {
 
     @Mock
     UserRepository userRepository;
@@ -59,7 +59,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         var mapperService = getInstance();
-        userService = new UserServiceImpl(userRepository, roleService, authorizationService, passwordEncoder, imageService,
+        userService = new UserServiceBean(userRepository, roleService, authorizationService, passwordEncoder, imageService,
                 emailService, mapperService);
     }
 

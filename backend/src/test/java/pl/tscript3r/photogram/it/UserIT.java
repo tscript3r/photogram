@@ -26,7 +26,8 @@ import java.util.concurrent.ExecutorService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
@@ -40,7 +41,7 @@ import static pl.tscript3r.photogram.api.v1.mappers.UserMapperTest.compareUserDt
 @AutoConfigureMockMvc
 public class UserIT {
 
-    private static final String AUTHORIZATION = "Authorization";
+    static final String AUTHORIZATION = "Authorization";
 
     @Autowired
     MockMvc mockMvc;

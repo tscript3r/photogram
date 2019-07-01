@@ -1,17 +1,17 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Image service")
-class ImageServiceImplTest {
+class ImageServiceBeanTest {
 
-    private ImageServiceImpl imageService;
+    private ImageServiceBean imageService;
 
     @BeforeEach
     void init() {
-        imageService = new ImageServiceImpl();
+        imageService = new ImageServiceBean();
     }
 
     @Test

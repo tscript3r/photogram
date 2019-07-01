@@ -23,14 +23,14 @@ import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
 @RequiredArgsConstructor
 public class PostController {
 
-    static final String LIKE_MAPPING = "/like";
-    static final String UNLIKE_MAPPING = "/unlike";
+    public static final String LIKE_MAPPING = "/like";
+    public static final String UNLIKE_MAPPING = "/unlike";
     static final String DISLIKE_MAPPING = "/dislike";
     static final String UNDISLIKE_MAPPING = "/undislike";
     static final String UPLOAD_IMAGE_MAPPING = "/upload";
     private static final String IMAGE_ID_VARIABLE = "imageId";
     private static final String IMAGE_ID_PATH_VARIABLE = "{" + IMAGE_ID_VARIABLE + "}";
-    static final String GET_IMAGE_MAPPING = "/images/";
+    public static final String GET_IMAGE_MAPPING = "/images/";
     private final PostService postService;
 
     @GetMapping

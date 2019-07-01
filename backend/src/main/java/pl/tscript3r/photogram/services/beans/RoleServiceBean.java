@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @Service
 @Transactional
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceBean implements RoleService {
 
     public static final String DEFAULT_USER_ROLE = "USER";
     public static final String ADMIN_ROLE = "ADMIN";
@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Lazy
-    public RoleServiceImpl(UserService userService, RoleRepository roleRepository) {
+    public RoleServiceBean(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
     }

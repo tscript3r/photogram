@@ -37,6 +37,7 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
         result.setVisibility(source.getVisibility());
         result.setImages(getImages(source.getImages()));
         result.setLikesCount(source.getLikes());
+        result.setDislikesCount(source.getDislikes());
         result.setCreationDate(source.getCreationDate());
         return result;
     }

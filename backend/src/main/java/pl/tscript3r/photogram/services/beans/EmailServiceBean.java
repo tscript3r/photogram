@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.DisposableBean;
@@ -26,7 +26,7 @@ import static pl.tscript3r.photogram.services.utils.EmailMessageType.PASSWORD_RE
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService, DisposableBean {
+public class EmailServiceBean implements EmailService, DisposableBean {
 
     private final ExecutorService emailSenderExecutor;
     private final EmailConfig emailConfig;

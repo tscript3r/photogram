@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.*;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class ImageServiceImpl implements ImageService {
+public class ImageServiceBean implements ImageService {
 
     static final Long BASE_IMAGE_ID = 1000L;
 

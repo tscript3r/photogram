@@ -1,4 +1,4 @@
-package pl.tscript3r.photogram.services.impl;
+package pl.tscript3r.photogram.services.beans;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,13 +21,13 @@ import static pl.tscript3r.photogram.domains.UserTest.getDefaultUser;
 
 @DisplayName("User details service")
 @ExtendWith(MockitoExtension.class)
-class UserDetailsServiceImplTest {
+class UserDetailsServiceBeanTest {
 
     @Mock
     UserService userService;
 
     @InjectMocks
-    UserDetailsServiceImpl userDetailsService;
+    UserDetailsServiceBean userDetailsService;
 
     @Test
     @DisplayName("Load user by username")

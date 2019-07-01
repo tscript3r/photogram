@@ -36,6 +36,9 @@ public class PostDto implements Dto {
     private Integer likesCount;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer dislikesCount;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
 
     private Visibility visibility;
