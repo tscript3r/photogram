@@ -17,5 +17,8 @@ public interface CommentService {
     CommentDto update(@Nullable final Principal principal, @NotNull final Long commentId,
                       @NotNull final CommentDto commentDto);
 
+    CommentDto add(@Nullable final Principal principal, @NotNull final Long postId, @NotNull final CommentDto commentDto);
+
+    void delete(@Nullable final Principal principal, @NotNull final Long id);
 
 }

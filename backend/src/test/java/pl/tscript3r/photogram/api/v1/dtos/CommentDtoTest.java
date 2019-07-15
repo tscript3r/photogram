@@ -10,4 +10,8 @@ public class CommentDtoTest {
         return new CommentDto(ID, ID, USERNAME, ID, CONTENT, LocalDateTime.now());
     }
 
+    public static CommentDto getSecondCommentDto() {
+        return new CommentDto(SECOND_ID, SECOND_ID, USERNAME, SECOND_ID, CONTENT, LocalDateTime.now());
+    }
+
 }
