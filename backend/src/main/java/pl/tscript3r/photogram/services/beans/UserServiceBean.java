@@ -2,6 +2,8 @@ package pl.tscript3r.photogram.services.beans;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -185,6 +187,27 @@ public class UserServiceBean implements UserService {
 
     @Override
     public void confirmEmail(@NotNull final String token) {
-        emailService.setEmailConfirmed(token);
+
     }
+
+    @Override
+    public Slice<UserDto> getFollowers(@NotNull final Long id, @NotNull final Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Slice<UserDto> getFollows(@NotNull final Long id, @NotNull final Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public void follow(@NotNull final Long id, @NotNull final Long followUserId) {
+
+    }
+
+    @Override
+    public void unfollow(@NotNull final Long id, @NotNull final Long unfollowUserId) {
+
+    }
+
 }
