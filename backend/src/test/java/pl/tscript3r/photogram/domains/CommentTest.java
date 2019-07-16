@@ -16,14 +16,18 @@ public
 class CommentTest {
 
     public static Comment getDefaultComment() {
-        var result = new Comment(getDefaultUser(), getDefaultPost(), CONTENT);
+        var result = new Comment(CONTENT);
         result.setId(ID);
+        result.setUser(getDefaultUser());
+        result.setPost(getDefaultPost());
         return result;
     }
 
     static Comment getSecondComment() {
-        var result = new Comment(getSecondUser(), getSecondPost(), SECOND_CONTENT);
+        var result = new Comment(SECOND_CONTENT);
         result.setId(SECOND_ID);
+        result.setUser(getSecondUser());
+        result.setPost(getSecondPost());
         return result;
     }
 

@@ -32,7 +32,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDto add(Principal principal, @PathVariable(ID_POST_VARIABLE) Long postId,
                           @Valid @RequestBody CommentDto commentDto) {
-        return commentService.add(principal, postId, commentDto);
+        return commentService.save(principal, postId, commentDto);
     }
 
     @PutMapping((ID_VARIABLE_MAPPING))

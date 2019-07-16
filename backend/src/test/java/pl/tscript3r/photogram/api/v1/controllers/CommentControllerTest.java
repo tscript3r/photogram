@@ -98,7 +98,7 @@ class CommentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content("{\"content\":\"test\"}"))
                 .andExpect(status().isCreated());
-        verify(commentService, times(1)).add(any(), any(), any());
+        verify(commentService, times(1)).save(any(), any(), any());
     }
 
     @Test
@@ -109,7 +109,7 @@ class CommentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content("{}"))
                 .andExpect(status().isBadRequest());
-        verify(commentService, times(0)).add(any(), any(), any());
+        verify(commentService, times(0)).save(any(), any(), any());
     }
 
     @Test

@@ -12,6 +12,7 @@ import pl.tscript3r.photogram.services.UserService;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
+import java.util.Optional;
 
 import static pl.tscript3r.photogram.services.beans.RoleServiceBean.ADMIN_ROLE;
 import static pl.tscript3r.photogram.services.beans.RoleServiceBean.MODERATOR_ROLE;
@@ -46,16 +47,17 @@ public class AuthorizationServiceBean implements AuthorizationService {
     }
 
     @Override
-    public void accessValidation(final Principal principal, final Long resourcesUserId) {
+    public Optional<User> accessValidation(final Principal principal, final Long resourcesUserId) {
         // Assumption: admin & moderator roles should be able to do any CRUD operations for any user
         // in case of spring security allowing to get some resource without login then it should be allowed,
         // in case when resourcesUserId is not specified it means that user is doing something with his own
         // resource, which of course should be allowed.
         if (resourcesUserId == null || principal == null)
-            return;
+            return Optional.empty();
         User user = userService.getByPrincipal(principal);
         if (!(isResourceOwner(user, resourcesUserId) || isAdmin(user) || isModerator(user)))
             throwForbiddenException();
+        return Optional.of(user);
     }
 
     private boolean isResourceOwner(final User user, final long resourcesUserId) {

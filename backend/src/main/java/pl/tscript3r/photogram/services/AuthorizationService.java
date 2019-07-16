@@ -5,6 +5,7 @@ import pl.tscript3r.photogram.domains.User;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
+import java.util.Optional;
 
 public interface AuthorizationService {
 
@@ -12,7 +13,7 @@ public interface AuthorizationService {
 
     Boolean isModerator(@NotNull final User user);
 
-    void accessValidation(@Nullable final Principal principal, @Nullable final Long resourcesUserId);
+    Optional<User> accessValidation(@Nullable final Principal principal, @Nullable final Long resourcesUserId);
 
     AuthorizationService requireLogin(@Nullable final Principal principal);
 
