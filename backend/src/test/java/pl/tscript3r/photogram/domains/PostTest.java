@@ -32,7 +32,12 @@ public class PostTest {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(FIELD_CHANGED_REMOVED_EXCEPTION);
         }
-        result.getComments().add(new Comment(getDefaultUser(), result, CONTENT));
+
+        var comment = new Comment(CONTENT);
+        comment.setUser(getDefaultUser());
+        comment.setPost(result);
+
+        result.getComments().add(comment);
         return result;
     }
 

@@ -1,26 +1,16 @@
 package pl.tscript3r.photogram.api.v1.mappers;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import pl.tscript3r.photogram.api.v1.dtos.CommentDto;
 import pl.tscript3r.photogram.domains.Comment;
-import pl.tscript3r.photogram.services.PostService;
-import pl.tscript3r.photogram.services.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static pl.tscript3r.photogram.api.v1.dtos.CommentDtoTest.getDefaultCommentDto;
 import static pl.tscript3r.photogram.domains.CommentTest.getDefaultComment;
-import static pl.tscript3r.photogram.domains.PostTest.getDefaultPost;
-import static pl.tscript3r.photogram.domains.UserTest.getDefaultUser;
 
 @DisplayName("Comment mapper")
-@ExtendWith(MockitoExtension.class)
 class CommentMapperTest {
 
     static void compareCommentWithCommentDto(Comment comment, CommentDto commentDto) {
@@ -41,14 +31,12 @@ class CommentMapperTest {
 
     }
 
-    @Mock
-    UserService userService;
+    private CommentMapper commentMapper;
 
-    @Mock
-    PostService postService;
-
-    @InjectMocks
-    CommentMapper commentMapper;
+    @BeforeEach
+    void setUp() {
+        commentMapper = new CommentMapper();
+    }
 
     @Test
     @DisplayName("Comment to CommentDto map validation")
@@ -60,8 +48,6 @@ class CommentMapperTest {
     @Test
     @DisplayName("CommentDto to Comment map validation")
     void secondToFirst() {
-        when(userService.getById(any())).thenReturn(getDefaultUser());
-        when(postService.getById(any())).thenReturn(getDefaultPost());
         var commentResult = commentMapper.secondToFirst(getDefaultCommentDto());
         compareCommentDtoWithComment(getDefaultCommentDto(), commentResult);
     }

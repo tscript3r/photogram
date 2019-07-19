@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -25,6 +26,8 @@ public class CommentDto implements Dto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long postId;
+
+    @NotEmpty
     private String content;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
