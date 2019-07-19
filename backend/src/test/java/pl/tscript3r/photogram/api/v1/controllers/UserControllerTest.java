@@ -388,4 +388,42 @@ class UserControllerTest {
         verify(userService, times(1)).resetPassword(any());
     }
 
+    @Test
+    @DisplayName("Get followers")
+    void getFollowers() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/" + ID + FOLLOWERS_MAPPING)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).getFollowers(any(), any());
+    }
+
+    @Test
+    @DisplayName("Get follows")
+    void getFollows() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_MAPPING + "/" + ID + FOLLOWS_MAPPING)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).getFollows(any(), any());
+    }
+
+    @Test
+    @DisplayName("Follow")
+    void follow() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_MAPPING + FOLLOW_MAPPING + "/" + ID))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).follow(any(), any());
+    }
+
+    @Test
+    @DisplayName("Unfollow")
+    void unfollow() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_MAPPING + UNFOLLOW_MAPPING + "/" + ID))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).unfollow(any(), any());
+    }
+
 }

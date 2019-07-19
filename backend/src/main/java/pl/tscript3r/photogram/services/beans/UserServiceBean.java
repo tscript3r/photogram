@@ -14,6 +14,7 @@ import pl.tscript3r.photogram.api.v1.services.MapperService;
 import pl.tscript3r.photogram.domains.EmailConfirmation;
 import pl.tscript3r.photogram.domains.User;
 import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
+import pl.tscript3r.photogram.exceptions.IgnoredPhotogramException;
 import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.repositories.UserRepository;
 import pl.tscript3r.photogram.services.*;
@@ -192,22 +193,40 @@ public class UserServiceBean implements UserService {
 
     @Override
     public Slice<UserDto> getFollowers(@NotNull final Long id, @NotNull final Pageable pageable) {
-        return null;
+        return userRepository.findByFollowed(getById(id), pageable)
+                .map(user -> mapperService.map(user, UserDto.class));
     }
 
     @Override
     public Slice<UserDto> getFollows(@NotNull final Long id, @NotNull final Pageable pageable) {
-        return null;
+        return userRepository.findByFollows(getById(id), pageable)
+                .map(user -> mapperService.map(user, UserDto.class));
     }
 
     @Override
-    public void follow(@NotNull final Long id, @NotNull final Long followUserId) {
-
+    public void follow(final Principal principal, @NotNull final Long followUserId) {
+        var user = getByPrincipal(principal);
+        var followUser = getById(followUserId);
+        if (!user.isFollowing(followUser)) {
+            followUser.addFolledBy(user);
+            user.follow(followUser);
+            userRepository.save(user);
+            userRepository.save(followUser);
+        } else
+            throw new IgnoredPhotogramException(String.format("Already following user id=%d, ignored", followUserId));
     }
 
     @Override
-    public void unfollow(@NotNull final Long id, @NotNull final Long unfollowUserId) {
-
+    public void unfollow(final Principal principal, @NotNull final Long unfollowUserId) {
+        var user = getByPrincipal(principal);
+        var unfollowUser = getById(unfollowUserId);
+        if (user.isFollowing(unfollowUser)) {
+            user.unfollow(unfollowUser);
+            unfollowUser.removeFolledBy(user);
+            userRepository.save(user);
+            userRepository.save(unfollowUser);
+        } else
+            throw new IgnoredPhotogramException(String.format("Did not follow user id=%d, ignored", unfollowUserId));
     }
 
 }

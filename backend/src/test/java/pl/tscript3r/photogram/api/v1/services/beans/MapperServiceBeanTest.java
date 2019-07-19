@@ -32,7 +32,7 @@ public class MapperServiceBeanTest {
         ApplicationContext applicationContext = mock(ApplicationContext.class);
         MapperServiceBean result = new MapperServiceBean();
         var beanMap = new HashMap<String, Mapper>();
-        RoleMapper roleMapper = new RoleMapper();
+        var roleMapper = new RoleMapper();
         beanMap.put("userMapper", new UserMapper(roleMapper));
         beanMap.put("roleMapper", new RoleMapper());
         when(applicationContext.getBeansOfType(Mapper.class)).thenReturn(beanMap);

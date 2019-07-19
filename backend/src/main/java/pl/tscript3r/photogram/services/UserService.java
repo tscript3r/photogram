@@ -53,7 +53,7 @@ public interface UserService {
 
     Slice<UserDto> getFollows(@NotNull final Long id, @NotNull final Pageable pageable);
 
-    void follow(@NotNull final Long id, @NotNull final Long followUserId);
+    void follow(@Nullable final Principal principal, @NotNull final Long followUserId);
 
-    void unfollow(@NotNull final Long id, @NotNull final Long unfollowUserId);
+    void unfollow(@Nullable final Principal principal, @NotNull final Long unfollowUserId);
 }

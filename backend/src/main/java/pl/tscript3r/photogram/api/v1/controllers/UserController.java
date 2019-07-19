@@ -31,10 +31,10 @@ public class UserController {
     static final String PASSWORD_RESET_MAPPING = "/reset_password";
     public static final String AVATAR_MAPPING = "/avatar";
     public static final String EMAIL_CONFIRMATION_MAPPING = "/confirm_email";
-    private final String FOLLOWERS_MAPPING = "/followers";
-    private final String FOLLOWS_MAPPING = "/follows";
-    private final String FOLLOW_MAPPING = "/follow";
-    private final String UNFOLLOW_MAPPING = "/unfollow";
+    static final String FOLLOWERS_MAPPING = "/followers";
+    static final String FOLLOWS_MAPPING = "/follows";
+    static final String FOLLOW_MAPPING = "/follow";
+    static final String UNFOLLOW_MAPPING = "/unfollow";
     public static final String TOKEN_PARAM = "token";
     private final UserService userService;
 
@@ -127,14 +127,14 @@ public class UserController {
         return userService.getFollows(id, pageable);
     }
 
-    @PutMapping(ID_VARIABLE_MAPPING + FOLLOW_MAPPING + "/{followUserId}")
-    public void follow(@PathVariable(ID_VARIABLE) Long id, @PathVariable("followUserId") Long followUserId) {
-        userService.follow(id, followUserId);
+    @PutMapping(FOLLOW_MAPPING + "/" + ID_VARIABLE_MAPPING)
+    public void follow(Principal principal, @PathVariable(ID_VARIABLE) Long followUserId) {
+        userService.follow(principal, followUserId);
     }
 
-    @PutMapping(ID_VARIABLE_MAPPING + UNFOLLOW_MAPPING + "/{followUserId}")
-    public void unfollow(@PathVariable(ID_VARIABLE) Long id, @PathVariable("followUserId") Long unfollowUserId) {
-        userService.unfollow(id, unfollowUserId);
+    @PutMapping(UNFOLLOW_MAPPING + "/" + ID_VARIABLE_MAPPING)
+    public void unfollow(Principal principal, @PathVariable(ID_VARIABLE) Long unfollowUserId) {
+        userService.unfollow(principal, unfollowUserId);
     }
 
 }

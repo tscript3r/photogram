@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ import pl.tscript3r.photogram.services.UserService;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
-import java.util.List;
 
 @Service
 @Transactional
@@ -42,11 +40,8 @@ public class PostServiceBean implements PostService {
 
     @Override
     public Slice<PostDto> getLatest(@NotNull final Pageable pageable) {
-        return getDtoSliceOf(postRepository.findAllByValidIsTrue(pageable).getContent());
-    }
-
-    private Slice<PostDto> getDtoSliceOf(final List<Post> posts) {
-        return new SliceImpl<>(mapperService.map(posts, PostDto.class));
+        return postRepository.findAllByValidIsTrue(pageable)
+                .map(post -> mapperService.map(post, PostDto.class));
     }
 
     @Override
@@ -56,7 +51,8 @@ public class PostServiceBean implements PostService {
     }
 
     private Slice<PostDto> getLatestDtosFromUser(final User user, final Pageable pageable) {
-        return getDtoSliceOf(postRepository.findByUserIdAndValidIsTrue(user.getId(), pageable).getContent());
+        return postRepository.findByUserIdAndValidIsTrue(user.getId(), pageable)
+                .map(post -> mapperService.map(post, PostDto.class));
     }
 
     @Override

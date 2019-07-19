@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Slice<User> findByFollowed(User user, Pageable pageable);
 
+    Slice<User> findByFollows(User user, Pageable pageable);
+
 }
