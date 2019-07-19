@@ -1,5 +1,7 @@
 package pl.tscript3r.photogram.services;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,4 +49,11 @@ public interface UserService {
 
     void confirmEmail(@NotNull final String token);
 
+    Slice<UserDto> getFollowers(@NotNull final Long id, @NotNull final Pageable pageable);
+
+    Slice<UserDto> getFollows(@NotNull final Long id, @NotNull final Pageable pageable);
+
+    void follow(@Nullable final Principal principal, @NotNull final Long followUserId);
+
+    void unfollow(@Nullable final Principal principal, @NotNull final Long unfollowUserId);
 }

@@ -1,6 +1,10 @@
 package pl.tscript3r.photogram.api.v1.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,6 +31,10 @@ public class UserController {
     static final String PASSWORD_RESET_MAPPING = "/reset_password";
     public static final String AVATAR_MAPPING = "/avatar";
     public static final String EMAIL_CONFIRMATION_MAPPING = "/confirm_email";
+    static final String FOLLOWERS_MAPPING = "/followers";
+    static final String FOLLOWS_MAPPING = "/follows";
+    static final String FOLLOW_MAPPING = "/follow";
+    static final String UNFOLLOW_MAPPING = "/unfollow";
     public static final String TOKEN_PARAM = "token";
     private final UserService userService;
 
@@ -42,7 +50,7 @@ public class UserController {
 
     @GetMapping(FIND_MAPPING)
     public UserDto getBy(@RequestParam(value = USERNAME_PARAM, required = false) String username,
-                         @RequestParam(value = MappingsConsts.EMAIL_PARAM, required = false) String email,
+                         @RequestParam(value = EMAIL_PARAM, required = false) String email,
                          @RequestParam(value = ID_PARAM, required = false) Long id) {
         if (isSet(username))
             return userService.getByUsernameDto(username);
@@ -105,6 +113,28 @@ public class UserController {
     @PutMapping(EMAIL_CONFIRMATION_MAPPING)
     public void confirmEmail(@RequestParam(value = TOKEN_PARAM) @Valid @UUID String token) {
         userService.confirmEmail(token);
+    }
+
+    @GetMapping(ID_VARIABLE_MAPPING + FOLLOWERS_MAPPING)
+    public Slice<UserDto> getFollowers(@PathVariable Long id, @PageableDefault(size = 5, sort = ID_VARIABLE,
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        return userService.getFollowers(id, pageable);
+    }
+
+    @GetMapping(ID_VARIABLE_MAPPING + FOLLOWS_MAPPING)
+    public Slice<UserDto> getFollows(@PathVariable Long id, @PageableDefault(size = 30, sort = ID_VARIABLE,
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        return userService.getFollows(id, pageable);
+    }
+
+    @PutMapping(FOLLOW_MAPPING + "/" + ID_VARIABLE_MAPPING)
+    public void follow(Principal principal, @PathVariable(ID_VARIABLE) Long followUserId) {
+        userService.follow(principal, followUserId);
+    }
+
+    @PutMapping(UNFOLLOW_MAPPING + "/" + ID_VARIABLE_MAPPING)
+    public void unfollow(Principal principal, @PathVariable(ID_VARIABLE) Long unfollowUserId) {
+        userService.unfollow(principal, unfollowUserId);
     }
 
 }

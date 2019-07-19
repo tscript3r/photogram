@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.*;
 import static pl.tscript3r.photogram.Consts.*;
 import static pl.tscript3r.photogram.api.v1.dtos.PostDtoTest.getDefaultPostDto;
@@ -66,11 +65,11 @@ class PostServiceBeanTest {
     @DisplayName("Get latest with default pageable")
     void getLatest() {
         when(postRepository.findAllByValidIsTrue(any())).thenReturn(getDomainSlice());
-        when(mapperService.map(anyCollection(), any())).thenReturn(getDtoList());
+        when(mapperService.map(any(DataStructure.class), any())).thenReturn(getDefaultPostDto());
         var result = postService.getLatest(pageable);
         assertEquals(1, result.getContent().size());
         verify(postRepository, times(1)).findAllByValidIsTrue(any());
-        verify(mapperService, times(1)).map(anyCollection(), any());
+        verify(mapperService, times(1)).map(any(DataStructure.class), any());
     }
 
     private Slice<Post> getDomainSlice() {
@@ -86,12 +85,12 @@ class PostServiceBeanTest {
     void getLatestFromUser() {
         when(userService.getByUsername(any())).thenReturn(getDefaultUser());
         when(postRepository.findByUserIdAndValidIsTrue(any(), any())).thenReturn(getDomainSlice());
-        when(mapperService.map(anyCollection(), any())).thenReturn(getDtoList());
+        when(mapperService.map(any(DataStructure.class), any())).thenReturn(getDefaultPostDto());
         var result = postService.getLatest(USERNAME, pageable);
         assertEquals(1, result.getContent().size());
         verify(userService, times(1)).getByUsername(any());
         verify(postRepository, times(1)).findByUserIdAndValidIsTrue(any(), any());
-        verify(mapperService, times(1)).map(anyCollection(), any());
+        verify(mapperService, times(1)).map(any(DataStructure.class), any());
     }
 
     @Test
@@ -99,12 +98,12 @@ class PostServiceBeanTest {
     void getLatestFromPrincipal() {
         when(userService.getByPrincipal(any())).thenReturn(getDefaultUser());
         when(postRepository.findByUserIdAndValidIsTrue(any(), any())).thenReturn(getDomainSlice());
-        when(mapperService.map(anyCollection(), any())).thenReturn(getDtoList());
+        when(mapperService.map(any(DataStructure.class), any())).thenReturn(getDefaultPostDto());
         var result = postService.getLatest(() -> USERNAME, pageable);
         assertEquals(1, result.getContent().size());
         verify(userService, times(1)).getByPrincipal(any());
         verify(postRepository, times(1)).findByUserIdAndValidIsTrue(any(), any());
-        verify(mapperService, times(1)).map(anyCollection(), any());
+        verify(mapperService, times(1)).map(any(DataStructure.class), any());
     }
 
     @Test

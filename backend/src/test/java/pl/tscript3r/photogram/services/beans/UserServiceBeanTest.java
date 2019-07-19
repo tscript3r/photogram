@@ -7,17 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.tscript3r.photogram.api.v1.dtos.UserDto;
 import pl.tscript3r.photogram.domains.EmailConfirmation;
 import pl.tscript3r.photogram.domains.User;
 import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
+import pl.tscript3r.photogram.exceptions.IgnoredPhotogramException;
 import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
 import pl.tscript3r.photogram.repositories.UserRepository;
 import pl.tscript3r.photogram.services.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,6 +57,9 @@ class UserServiceBeanTest {
 
     @Mock
     EmailService emailService;
+
+    @Mock
+    Pageable pageable;
 
     private UserService userService;
 
@@ -373,6 +380,81 @@ class UserServiceBeanTest {
     void resetPasswordEmailNotFound() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         assertThrows(NotFoundPhotogramException.class, () -> userService.resetPassword(any()));
+    }
+
+    @Test
+    @DisplayName("Follow")
+    void follow() {
+        var user = getDefaultUser();
+        var followUser = getSecondUser();
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any())).thenReturn(Optional.of(followUser));
+
+        userService.follow(() -> USERNAME, ID);
+
+        verify(userRepository, times(2)).save(any());
+        assertTrue(user.isFollowing(followUser));
+    }
+
+    @Test
+    @DisplayName("Follow already followed")
+    void followFollowed() {
+        var user = getDefaultUser();
+        var followUser = getSecondUser();
+        user.follow(followUser);
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any())).thenReturn(Optional.of(followUser));
+
+        assertThrows(IgnoredPhotogramException.class, () -> userService.follow(() -> USERNAME, ID));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("Unfollow")
+    void unfollow() {
+        var user = getDefaultUser();
+        var unfollowUser = getSecondUser();
+        user.follow(unfollowUser);
+
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any())).thenReturn(Optional.of(unfollowUser));
+
+        userService.unfollow(() -> USERNAME, ID);
+
+        verify(userRepository, times(2)).save(any());
+        assertFalse(user.isFollowing(unfollowUser));
+    }
+
+    @Test
+    @DisplayName("Unfollow unfollowed")
+    void unfollowUnfollowed() {
+        var user = getDefaultUser();
+        var unfollowUser = getSecondUser();
+
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any())).thenReturn(Optional.of(unfollowUser));
+
+        assertThrows(IgnoredPhotogramException.class, () -> userService.unfollow(() -> USERNAME, ID));
+
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("Get followers")
+    void getFollowers() {
+        when(userRepository.findById(any())).thenReturn(Optional.of(getDefaultUser()));
+        when(userRepository.findByFollowed(any(), any())).thenReturn(new SliceImpl<>(Collections.emptyList()));
+
+        assertNotNull(userService.getFollowers(ID, pageable));
+    }
+
+    @Test
+    @DisplayName("Get follows")
+    void getFollows() {
+        when(userRepository.findById(any())).thenReturn(Optional.of(getDefaultUser()));
+        when(userRepository.findByFollows(any(), any())).thenReturn(new SliceImpl<>(Collections.emptyList()));
+
+        assertNotNull(userService.getFollows(ID, pageable));
     }
 
 }

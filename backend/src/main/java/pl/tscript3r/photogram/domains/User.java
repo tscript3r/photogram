@@ -65,7 +65,11 @@ public class User extends DomainEntity {
             inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
     private Set<Post> dislikedPost = new HashSet<>();
 
-    // TODO: add followed users list & own follow count
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<User> follows = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<User> followed = new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime creationDate;
@@ -130,6 +134,26 @@ public class User extends DomainEntity {
             return false;
         }
         return emailConfirmation.getConfirmed();
+    }
+
+    public Boolean isFollowing(final User user) {
+        return follows.contains(user);
+    }
+
+    public void follow(final User user) {
+        follows.add(user);
+    }
+
+    public void unfollow(final User user) {
+        follows.remove(user);
+    }
+
+    public void addFolledBy(final User user) {
+        followed.add(user);
+    }
+
+    public void removeFolledBy(final User user) {
+        followed.remove(user);
     }
 
 }
