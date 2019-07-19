@@ -187,7 +187,7 @@ public class UserServiceBean implements UserService {
 
     @Override
     public void confirmEmail(@NotNull final String token) {
-
+        emailService.setEmailConfirmed(token);
     }
 
     @Override
