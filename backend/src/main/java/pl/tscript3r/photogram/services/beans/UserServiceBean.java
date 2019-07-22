@@ -208,7 +208,7 @@ public class UserServiceBean implements UserService {
         var user = getByPrincipal(principal);
         var followUser = getById(followUserId);
         if (!user.isFollowing(followUser)) {
-            followUser.addFolledBy(user);
+            followUser.addFollowedBy(user);
             user.follow(followUser);
             userRepository.save(user);
             userRepository.save(followUser);
@@ -222,7 +222,7 @@ public class UserServiceBean implements UserService {
         var unfollowUser = getById(unfollowUserId);
         if (user.isFollowing(unfollowUser)) {
             user.unfollow(unfollowUser);
-            unfollowUser.removeFolledBy(user);
+            unfollowUser.removeFollowedBy(user);
             userRepository.save(user);
             userRepository.save(unfollowUser);
         } else

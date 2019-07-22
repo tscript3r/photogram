@@ -148,11 +148,11 @@ public class User extends DomainEntity {
         follows.remove(user);
     }
 
-    public void addFolledBy(final User user) {
+    public void addFollowedBy(final User user) {
         followed.add(user);
     }
 
-    public void removeFolledBy(final User user) {
+    public void removeFollowedBy(final User user) {
         followed.remove(user);
     }
 
