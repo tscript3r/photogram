@@ -38,18 +38,18 @@ java -jar target/*.jar
 ### Endpoints
 | Method | URI | Login required | Description |
 | --- | --- | --- | --- | 
-| POST | api/v1/users/login | no | Authentication, returns JWT token
 | GET | api/v1/users | yes | Returns all added users
 | POST | api/v1/users | no | Adds new user 
-| PUT | api/v1/users/confirm_email?token= | no | Confirms new added email
-| PUT | api/v1/users/reset_password?email= | no | Resets, and sends new password
+| POST | api/v1/users/login | no | Authenticates, returns JWT token
+| PUT | api/v1/users/confirm_email?token | no | Confirms new added email
+| PUT | api/v1/users/reset_password?email | no | Resets, and sends new password via email
 | GET | api/v1/users/{id}/avatar | yes | Returns users avatar
 | POST | api/v1/users/{id}/avatar | yes | Replaces users avatar with uploaded image
-| GET | api/v1/users/find?username= | yes | Searches for user with given username
-| GET | api/v1/users/find?email= | yes | Searches for user with given email
-| GET | api/v1/users/find?username= | yes | Searches for user with given username
-| GET | api/v1/users/find?id= | yes | Searches for user with given id
-| GET | api/v1/users/{id}/follows | yes| Returns followed users from given user id (pageable)
+| GET | api/v1/users/find?username | yes | Searches for user with given username
+| GET | api/v1/users/find?email | yes | Searches for user with given email
+| GET | api/v1/users/find?username | yes | Searches for user with given username
+| GET | api/v1/users/find?id | yes | Searches for user with given id
+| GET | api/v1/users/{id}/follows | yes| Returns followed users by given user id (pageable)
 | GET | api/v1/users/{id}/followers | yes | Returns followers from given user (pageable)
 | GET | api/v1/posts | yes | Returns recent posts (pageable)
 | POST | api/v1/posts | yes | Adds new post
