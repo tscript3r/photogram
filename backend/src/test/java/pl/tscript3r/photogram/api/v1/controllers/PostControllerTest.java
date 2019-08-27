@@ -16,12 +16,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.tscript3r.photogram.api.v1.dtos.PostDto;
-import pl.tscript3r.photogram.api.v1.dtos.PostDtoList;
-import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
-import pl.tscript3r.photogram.exceptions.IgnoredPhotogramException;
-import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
-import pl.tscript3r.photogram.services.PostService;
+import pl.tscript3r.photogram.infrastructure.exception.ForbiddenPhotogramException;
+import pl.tscript3r.photogram.infrastructure.exception.IgnoredPhotogramException;
+import pl.tscript3r.photogram.infrastructure.exception.NotFoundPhotogramException;
+import pl.tscript3r.photogram.post.PostService;
+import pl.tscript3r.photogram.post.Reactions;
+import pl.tscript3r.photogram.post.api.v1.PostController;
+import pl.tscript3r.photogram.post.api.v1.PostDto;
+import pl.tscript3r.photogram.post.api.v1.PostDtoList;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -32,10 +34,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.PostController.*;
 import static pl.tscript3r.photogram.api.v1.dtos.PostDtoTest.getDefaultPostDto;
 import static pl.tscript3r.photogram.api.v1.dtos.PostDtoTest.getSecondPostDto;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.*;
+import static pl.tscript3r.photogram.post.api.v1.PostController.*;
 
 @DisplayName("Post controller")
 @WebMvcTest(PostController.class)
@@ -233,7 +235,7 @@ class PostControllerTest {
     @DisplayName("Like existing post")
     void likeExistingPost() throws Exception {
         mockMvcPerform(LIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.LIKE), any(), any());
     }
 
     private void mockMvcPerform(String mappingSuffix, ResultMatcher expectedResult) throws Exception {
@@ -248,7 +250,7 @@ class PostControllerTest {
     void likePreviousLikedPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(LIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.LIKE), any(), any());
     }
 
     @Test
@@ -256,7 +258,7 @@ class PostControllerTest {
     void likeUnexistingPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(LIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.LIKE), any(), any());
     }
 
     @Test
@@ -264,14 +266,14 @@ class PostControllerTest {
     void likeWithoutPrincipal() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(LIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).react(eq(PostService.Reactions.LIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.LIKE), any(), any());
     }
 
     @Test
     @DisplayName("Unlike existing previous liked post")
     void unlikeExistingPreviousLikedPost() throws Exception {
         mockMvcPerform(UNLIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNLIKE), any(), any());
     }
 
     @Test
@@ -279,7 +281,7 @@ class PostControllerTest {
     void unlikeExistingNonLikedPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(UNLIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNLIKE), any(), any());
     }
 
     @Test
@@ -287,7 +289,7 @@ class PostControllerTest {
     void unlikeNonExistingPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(UNLIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNLIKE), any(), any());
     }
 
     @Test
@@ -295,14 +297,14 @@ class PostControllerTest {
     void unlikeWithoutPrincipal() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(UNLIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Dislike existing post")
     void dislikeExistingPost() throws Exception {
         mockMvcPerform(DISLIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.DISLIKE), any(), any());
     }
 
     @Test
@@ -310,7 +312,7 @@ class PostControllerTest {
     void dislikePreviousDislikedPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(DISLIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.DISLIKE), any(), any());
     }
 
     @Test
@@ -318,7 +320,7 @@ class PostControllerTest {
     void dislikeUnexistingPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(DISLIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.DISLIKE), any(), any());
     }
 
     @Test
@@ -326,14 +328,14 @@ class PostControllerTest {
     void dislikeWithoutPrincipal() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(DISLIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).react(eq(PostService.Reactions.DISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.DISLIKE), any(), any());
     }
 
     @Test
     @DisplayName("Undislike existing previous liked post")
     void undislikeExistingPreviousLikedPost() throws Exception {
         mockMvcPerform(UNDISLIKE_MAPPING, status().isOk());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNDISLIKE), any(), any());
     }
 
     @Test
@@ -341,7 +343,7 @@ class PostControllerTest {
     void undislikeExistingNonLikedPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(IgnoredPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isContinue());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNDISLIKE), any(), any());
     }
 
     @Test
@@ -349,7 +351,7 @@ class PostControllerTest {
     void undislikeNonExistingPost() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(NotFoundPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isNotFound());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNDISLIKE), any(), any());
     }
 
     @Test
@@ -357,7 +359,7 @@ class PostControllerTest {
     void undislikeWithoutPrincipal() throws Exception {
         when(postService.react(any(), any(), any())).thenThrow(ForbiddenPhotogramException.class);
         mockMvcPerform(UNDISLIKE_MAPPING, status().isForbidden());
-        verify(postService, times(1)).react(eq(PostService.Reactions.UNDISLIKE), any(), any());
+        verify(postService, times(1)).react(eq(Reactions.UNDISLIKE), any(), any());
     }
 
     @Test

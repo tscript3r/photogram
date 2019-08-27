@@ -15,9 +15,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.tscript3r.photogram.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
-import pl.tscript3r.photogram.services.UserService;
+import pl.tscript3r.photogram.infrastructure.exception.NotFoundPhotogramException;
+import pl.tscript3r.photogram.user.UserService;
+import pl.tscript3r.photogram.user.api.v1.UserController;
+import pl.tscript3r.photogram.user.api.v1.UserDto;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,10 +30,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.EMAIL_PARAM;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.USER_MAPPING;
-import static pl.tscript3r.photogram.api.v1.controllers.UserController.*;
 import static pl.tscript3r.photogram.api.v1.dtos.UserDtoTest.getDefaultUserDto;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.EMAIL_PARAM;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.USER_MAPPING;
+import static pl.tscript3r.photogram.user.api.v1.UserController.*;
 
 @DisplayName("Users controller")
 @WebMvcTest(UserController.class)

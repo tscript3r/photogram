@@ -1,6 +1,7 @@
 package pl.tscript3r.photogram.api.v1.dtos;
 
-import pl.tscript3r.photogram.domains.Visibility;
+import pl.tscript3r.photogram.post.Visibility;
+import pl.tscript3r.photogram.post.api.v1.PostDto;
 
 import static pl.tscript3r.photogram.Consts.*;
 

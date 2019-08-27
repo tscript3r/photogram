@@ -3,7 +3,9 @@ package pl.tscript3r.photogram.domains;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
+import pl.tscript3r.photogram.infrastructure.exception.NotFoundPhotogramException;
+import pl.tscript3r.photogram.post.Post;
+import pl.tscript3r.photogram.post.comment.Comment;
 
 import java.time.LocalDateTime;
 

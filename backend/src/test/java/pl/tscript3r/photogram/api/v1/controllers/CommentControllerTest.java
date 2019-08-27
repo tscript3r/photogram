@@ -15,10 +15,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.tscript3r.photogram.api.v1.dtos.CommentDto;
-import pl.tscript3r.photogram.api.v1.dtos.CommentDtoList;
-import pl.tscript3r.photogram.exceptions.NotFoundPhotogramException;
-import pl.tscript3r.photogram.services.CommentService;
+import pl.tscript3r.photogram.infrastructure.exception.NotFoundPhotogramException;
+import pl.tscript3r.photogram.post.comment.CommentService;
+import pl.tscript3r.photogram.post.comment.api.v1.CommentController;
+import pl.tscript3r.photogram.post.comment.api.v1.CommentDto;
+import pl.tscript3r.photogram.post.comment.api.v1.CommentDtoList;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.COMMENT_MAPPING;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.ID_POST_VARIABLE_MAPPING;
 import static pl.tscript3r.photogram.api.v1.dtos.CommentDtoTest.getDefaultCommentDto;
 import static pl.tscript3r.photogram.api.v1.dtos.CommentDtoTest.getSecondCommentDto;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.COMMENT_MAPPING;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.ID_POST_VARIABLE_MAPPING;
 
 @DisplayName("Comment controller")
 @WebMvcTest(CommentController.class)
@@ -138,7 +139,7 @@ class CommentControllerTest {
     }
 
     @Test
-    @DisplayName("Delete")
+    @DisplayName("Should delete existing comment when ")
     void delete() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete(COMMENT_MAPPING.replace(ID_POST_VARIABLE_MAPPING, "1") + "/1")
                 .contentType(MediaType.APPLICATION_JSON)

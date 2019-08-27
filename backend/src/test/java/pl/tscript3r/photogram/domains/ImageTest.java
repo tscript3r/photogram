@@ -2,6 +2,7 @@ package pl.tscript3r.photogram.domains;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.tscript3r.photogram.post.image.Image;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.tscript3r.photogram.Consts.*;

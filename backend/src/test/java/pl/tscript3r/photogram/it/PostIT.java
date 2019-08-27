@@ -15,20 +15,20 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
-import pl.tscript3r.photogram.api.v1.dtos.PostDto;
-import pl.tscript3r.photogram.domains.Visibility;
-import pl.tscript3r.photogram.services.ImageService;
-import pl.tscript3r.photogram.services.PostService;
+import pl.tscript3r.photogram.post.Reactions;
+import pl.tscript3r.photogram.post.Visibility;
+import pl.tscript3r.photogram.post.api.v1.PostDto;
+import pl.tscript3r.photogram.post.image.ImageService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.POST_MAPPING;
-import static pl.tscript3r.photogram.api.v1.controllers.PostController.LIKE_MAPPING;
-import static pl.tscript3r.photogram.api.v1.controllers.PostController.UNLIKE_MAPPING;
-import static pl.tscript3r.photogram.services.PostService.Reactions.LIKE;
-import static pl.tscript3r.photogram.services.PostService.Reactions.UNLIKE;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.POST_MAPPING;
+import static pl.tscript3r.photogram.post.Reactions.LIKE;
+import static pl.tscript3r.photogram.post.Reactions.UNLIKE;
+import static pl.tscript3r.photogram.post.api.v1.PostController.LIKE_MAPPING;
+import static pl.tscript3r.photogram.post.api.v1.PostController.UNLIKE_MAPPING;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -126,7 +126,7 @@ public class PostIT {
         assertEquals(1, react(addPostWithJson("{}").getId(), true, LIKE_MAPPING, LIKE, status().isOk()));
     }
 
-    private int react(Long postId, Boolean mapResults, String suffixMapping, PostService.Reactions returnByReaction,
+    private int react(Long postId, Boolean mapResults, String suffixMapping, Reactions returnByReaction,
                       ResultMatcher expectedStatus)
             throws Exception {
 

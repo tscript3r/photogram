@@ -8,14 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
-import pl.tscript3r.photogram.api.v1.dtos.Dto;
-import pl.tscript3r.photogram.api.v1.mappers.CollectionMapper;
-import pl.tscript3r.photogram.api.v1.mappers.Mapper;
-import pl.tscript3r.photogram.api.v1.mappers.RoleMapper;
-import pl.tscript3r.photogram.api.v1.mappers.UserMapper;
-import pl.tscript3r.photogram.api.v1.services.MapperService;
-import pl.tscript3r.photogram.domains.DataStructure;
-import pl.tscript3r.photogram.exceptions.InternalErrorPhotogramException;
+import pl.tscript3r.photogram.infrastructure.exception.InternalErrorPhotogramException;
+import pl.tscript3r.photogram.infrastructure.mapper.*;
+import pl.tscript3r.photogram.user.api.v1.UserMapper;
+import pl.tscript3r.photogram.user.role.RoleMapper;
 
 import java.util.*;
 

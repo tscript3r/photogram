@@ -4,7 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.TemplateEngine;
-import pl.tscript3r.photogram.configs.EmailConfig;
+import pl.tscript3r.photogram.infrastructure.configuration.EmailConfig;
+import pl.tscript3r.photogram.user.email.EmailMessageType;
 
 import static pl.tscript3r.photogram.Consts.*;
 

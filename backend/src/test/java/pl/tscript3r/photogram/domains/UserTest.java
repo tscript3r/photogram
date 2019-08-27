@@ -2,6 +2,8 @@ package pl.tscript3r.photogram.domains;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.tscript3r.photogram.user.User;
+import pl.tscript3r.photogram.user.email.EmailConfirmation;
 
 import java.util.HashSet;
 

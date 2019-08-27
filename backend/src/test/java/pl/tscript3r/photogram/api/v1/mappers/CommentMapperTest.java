@@ -3,8 +3,9 @@ package pl.tscript3r.photogram.api.v1.mappers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.tscript3r.photogram.api.v1.dtos.CommentDto;
-import pl.tscript3r.photogram.domains.Comment;
+import pl.tscript3r.photogram.post.comment.Comment;
+import pl.tscript3r.photogram.post.comment.api.v1.CommentDto;
+import pl.tscript3r.photogram.post.comment.api.v1.CommentMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.tscript3r.photogram.api.v1.dtos.CommentDtoTest.getDefaultCommentDto;

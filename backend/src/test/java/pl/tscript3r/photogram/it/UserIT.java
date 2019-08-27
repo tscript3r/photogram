@@ -14,12 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.tscript3r.photogram.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram.api.v1.services.MapperService;
-import pl.tscript3r.photogram.repositories.EmailConfirmationRepository;
-import pl.tscript3r.photogram.repositories.UserRepository;
-import pl.tscript3r.photogram.services.ImageService;
-import pl.tscript3r.photogram.services.UserService;
+import pl.tscript3r.photogram.infrastructure.mapper.MapperService;
+import pl.tscript3r.photogram.post.image.ImageService;
+import pl.tscript3r.photogram.user.UserRepository;
+import pl.tscript3r.photogram.user.UserService;
+import pl.tscript3r.photogram.user.api.v1.UserDto;
+import pl.tscript3r.photogram.user.email.EmailConfirmationRepository;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -31,9 +31,9 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.tscript3r.photogram.Consts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.MappingsConsts.*;
-import static pl.tscript3r.photogram.api.v1.controllers.UserController.*;
 import static pl.tscript3r.photogram.api.v1.mappers.UserMapperTest.compareUserDtoWithUser;
+import static pl.tscript3r.photogram.infrastructure.MappingsConsts.*;
+import static pl.tscript3r.photogram.user.api.v1.UserController.*;
 
 
 @ExtendWith(SpringExtension.class)
@@ -104,7 +104,10 @@ public class UserIT {
                         "\t\"email\": \"" + EMAIL + "\",\n" +
                         "\t\"bio\": \"" + BIO + "\"\n" +
                         "}"))
-                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString());
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString());
         addedUserId = userDto.getId();
         return userDto;
     }

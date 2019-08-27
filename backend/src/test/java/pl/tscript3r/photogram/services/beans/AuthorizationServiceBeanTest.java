@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.tscript3r.photogram.exceptions.ForbiddenPhotogramException;
-import pl.tscript3r.photogram.services.RoleService;
-import pl.tscript3r.photogram.services.UserService;
+import pl.tscript3r.photogram.infrastructure.exception.ForbiddenPhotogramException;
+import pl.tscript3r.photogram.user.AuthorizationService;
+import pl.tscript3r.photogram.user.UserService;
+import pl.tscript3r.photogram.user.role.RoleService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,13 +29,13 @@ class AuthorizationServiceBeanTest {
     @Mock
     UserService userService;
 
-    private AuthorizationServiceBean authorizationService;
+    AuthorizationService authorizationService;
 
     @BeforeEach
     void init() {
         doReturn(getModeratorRole()).when(roleService).getByName(MODERATOR_ROLE_NAME);
         doReturn(getAdminRole()).when(roleService).getByName(ADMIN_ROLE_NAME);
-        authorizationService = new AuthorizationServiceBean(userService, roleService);
+        authorizationService = new AuthorizationService(userService, roleService);
     }
 
     @Test

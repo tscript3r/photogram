@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.tscript3r.photogram.api.v1.dtos.UserDto;
-import pl.tscript3r.photogram.domains.User;
-import pl.tscript3r.photogram.exceptions.InternalErrorPhotogramException;
+import pl.tscript3r.photogram.infrastructure.exception.InternalErrorPhotogramException;
+import pl.tscript3r.photogram.user.User;
+import pl.tscript3r.photogram.user.api.v1.UserDto;
+import pl.tscript3r.photogram.user.api.v1.UserMapper;
+import pl.tscript3r.photogram.user.role.RoleMapper;
 
 import java.util.*;
 

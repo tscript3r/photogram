@@ -6,7 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.tscript3r.photogram.repositories.PostRepository;
+import pl.tscript3r.photogram.post.ExpiredNonValidPostRemoveSchedule;
+import pl.tscript3r.photogram.post.PostRepository;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

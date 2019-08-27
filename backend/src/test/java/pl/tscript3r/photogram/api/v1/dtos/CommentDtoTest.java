@@ -1,5 +1,7 @@
 package pl.tscript3r.photogram.api.v1.dtos;
 
+import pl.tscript3r.photogram.post.comment.api.v1.CommentDto;
+
 import java.time.LocalDateTime;
 
 import static pl.tscript3r.photogram.Consts.*;

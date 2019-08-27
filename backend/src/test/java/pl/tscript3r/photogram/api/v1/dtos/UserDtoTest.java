@@ -1,5 +1,7 @@
 package pl.tscript3r.photogram.api.v1.dtos;
 
+import pl.tscript3r.photogram.user.api.v1.UserDto;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 

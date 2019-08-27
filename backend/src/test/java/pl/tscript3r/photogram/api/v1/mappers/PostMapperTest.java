@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.tscript3r.photogram.api.v1.dtos.PostDto;
-import pl.tscript3r.photogram.domains.Post;
-import pl.tscript3r.photogram.services.UserService;
+import pl.tscript3r.photogram.post.Post;
+import pl.tscript3r.photogram.post.api.v1.PostDto;
+import pl.tscript3r.photogram.post.api.v1.PostMapper;
+import pl.tscript3r.photogram.post.comment.api.v1.CommentMapper;
+import pl.tscript3r.photogram.user.UserService;
 
 import java.util.Collections;
 

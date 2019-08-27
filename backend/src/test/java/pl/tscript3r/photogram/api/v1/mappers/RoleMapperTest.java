@@ -3,8 +3,9 @@ package pl.tscript3r.photogram.api.v1.mappers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.tscript3r.photogram.api.v1.dtos.RoleDto;
-import pl.tscript3r.photogram.domains.Role;
+import pl.tscript3r.photogram.user.api.v1.RoleDto;
+import pl.tscript3r.photogram.user.role.Role;
+import pl.tscript3r.photogram.user.role.RoleMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

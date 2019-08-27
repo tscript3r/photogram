@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import pl.tscript3r.photogram.api.v1.dtos.ImageDto;
-import pl.tscript3r.photogram.domains.Image;
+import pl.tscript3r.photogram.post.image.Image;
+import pl.tscript3r.photogram.post.image.api.v1.ImageDto;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
