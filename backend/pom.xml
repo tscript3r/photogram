@@ -15,6 +15,7 @@
 
     <properties>
         <java.version>11</java.version>
+        <docker.image.prefix>springio</docker.image.prefix>
     </properties>
 
     <dependencies>
@@ -147,6 +148,20 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <configuration>
+                    <to>
+                        <image>tscript3r/photogram</image>
+                        <auth>
+                            <username>tscript3r</username>
+                            <password></password>
+                        </auth>
+                    </to>
+                </configuration>
             </plugin>
         </plugins>
     </build>
