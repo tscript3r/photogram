@@ -103,7 +103,7 @@ public class ImageService {
 
     private MediaType getMediaType(final String imageExtension) {
         // TODO: refactor
-        return MediaType.IMAGE_JPEG;
+        return MediaType.IMAGE_PNG;
     }
 
     public ResponseEntity<byte[]> getAvatar(@NotNull final Long userId) {

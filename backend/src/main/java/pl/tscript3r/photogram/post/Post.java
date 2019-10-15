@@ -53,6 +53,7 @@ public class Post extends AbstractEntity {
      * Predicting that in the future there will be more requirements to have an valid post,
      * that is why this field has been added.
      */
+    @Setter
     private Boolean valid = false;
 
     /**

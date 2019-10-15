@@ -23,6 +23,8 @@ public class PostDto implements Dto {
 
     private Long userId;
 
+    private String username;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<CommentDto> comments = new ArrayList<>();
 
@@ -35,6 +37,10 @@ public class PostDto implements Dto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<ImageDto> images = new ArrayList<>();
 
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer postCount;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer likesCount;
 
@@ -43,6 +49,12 @@ public class PostDto implements Dto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Boolean liked;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Boolean disliked;
 
     private Visibility visibility;
 

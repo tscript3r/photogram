@@ -35,7 +35,11 @@ public class PostService {
 
     public Slice<PostDto> getLatest(@NotNull final Pageable pageable) {
         return postRepository.findAllByValidIsTrue(pageable)
-                .map(post -> mapperService.map(post, PostDto.class));
+                .map(post -> {
+                    var postDto = mapperService.map(post, PostDto.class);
+                    postDto.setUsername(post.getUser().getUsername());
+                    return postDto;
+                });
     }
 
     public Slice<PostDto> getLatest(@NotNull final String username, @NotNull final Pageable pageable) {
@@ -162,6 +166,7 @@ public class PostService {
                 .accessValidation(principal, post.getUser().getId());
         var image = new Image(imageService.getNextId(post.getId()), getImageExtension(imageFile));
         post.addImage(image);
+        post.setValid(true);
         imageService.savePostImage(id, image, imageFile);
         return mapperService.map(postRepository.save(post), PostDto.class);
     }

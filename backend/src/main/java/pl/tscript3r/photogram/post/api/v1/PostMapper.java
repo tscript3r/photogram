@@ -1,6 +1,9 @@
 package pl.tscript3r.photogram.post.api.v1;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import pl.tscript3r.photogram.infrastructure.mapper.AbstractMapper;
 import pl.tscript3r.photogram.infrastructure.mapper.CollectionMapper;
@@ -41,7 +44,34 @@ public class PostMapper extends AbstractMapper<Post, PostDto> implements Collect
         result.setLikesCount(source.getLikes());
         result.setDislikesCount(source.getDislikes());
         result.setCreationDate(source.getCreationDate());
+        result.setUsername(source.getUser().getUsername());
+        result.setPostCount(source.getUser().getPosts().size());
+        setLikedAndDislikedByCurrentUser(source, result);
         return result;
+    }
+
+    private void setLikedAndDislikedByCurrentUser(final Post post, final PostDto postDto) {
+        var user = getLoggedUser();
+        if (user != null) {
+            postDto.setLiked(user.hasLikedPost(post));
+            postDto.setDisliked(user.hasDislikedPost(post));
+        }
+    }
+
+    private User getLoggedUser() {
+        String username = getUsername();
+        if (!username.isEmpty())
+            return userService.getByUsername(username);
+        else
+            return null;
+    }
+
+    private String getUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken) && authentication != null)
+            return authentication.getName();
+        else
+            return "";
     }
 
     private List<ImageDto> getImages(final List<Image> source) {
