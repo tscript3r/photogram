@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,6 +53,8 @@ public class JwtAuthentication extends UsernamePasswordAuthenticationFilter {
         user.getAuthorities()
                 .forEach(authority ->
                         roles.add(authority.getAuthority()));
+
+        response.setStatus(HttpStatus.NO_CONTENT.value());
 
         String jwtToken = JWT.create()
                 .withIssuer("Photogram")
