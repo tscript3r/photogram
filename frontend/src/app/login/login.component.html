@@ -1,0 +1,24 @@
+<app-navbar></app-navbar>
+
+<!-- form -->
+<div class="container justify-content-center align-items-center">
+  <div class="form-wrapper text-center">
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm.value)" class="form-signin">
+      <h2 class="h3 mb-3 font-weight-normal">Log In</h2>
+      <div class="form-group">
+        <input type="text" class="form-control" name="username" placeholder="Username" required ngModel #usernameInput="ngModel" />
+        <span class="help-block" *ngIf="usernameInput.invalid && usernameInput.touched">Please enter a username</span>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" name="password" placeholder="Password" required ngModel
+          #passwordInput="ngModel" />
+        <span class="help-block" *ngIf="passwordInput.invalid && passwordInput.touched">Please enter a password.</span>
+      </div>
+      <button [disabled]="loginForm.invalid" class="btn btn-lg btn-primary btn-block" type="submit">
+        Sign in
+      </button>
+    </form>
+    <small><a routerLink="/resetpassword">Forgot password?</a></small><br />
+    <small><a routerLink="/signup">Need an account?</a></small>
+  </div>
+</div>

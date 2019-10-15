@@ -1,0 +1,12 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div *ngFor="let alert of alerts" class="text-center">
+  <div class="alert alert-{{ alert.type }}" role="alert">
+    <span class="close" id="dismissAlert" data-dismiss="alert"></span>
+    {{ alert.text }}
+  </div>
+</div>
+<router-outlet></router-outlet>

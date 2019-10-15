@@ -1,0 +1,45 @@
+<app-navbar></app-navbar>
+
+<!-- form -->
+<div class="container justify-content-center align-items-center">
+    <div class="form-wrapper text-center">
+        <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm.value)" class="form-signin">
+            <h2 class="h3 mb-3 font-weight-normal">Sign Up</h2>
+            <div class="form-group">
+                <input type="text" class="form-control" name="firstname" placeholder="Firstname" required ngModel #nameInput="ngModel">
+                <span class="help-block" *ngIf="nameInput.invalid && nameInput.touched">Please enter your full name.</span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="username" placeholder="Username" required ngModel
+                    #usernameInput="ngModel">
+                <span class="help-block" *ngIf="usernameInput.invalid && usernameInput.touched">Please enter a
+                    username.</span>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" name="password" placeholder="Password" required ngModel
+                    #passwordInput="ngModel">
+                <span class="help-block" *ngIf="passwordInput.invalid && passwordInput.touched">Please enter a
+                    password.</span>
+                <span class="help-block" *ngIf="passwordInput.touched && passwordInput.value.length < 6 && passwordInput.value.length > 0">
+                    Password is to short, needs to be atleast 6 chars long</span>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm password" required ngModel
+                    #confirmPasswordInput="ngModel">
+                <span class="help-block" *ngIf="confirmPasswordInput.invalid && confirmPasswordInput.value.length > 0 && 
+                    confirmPasswordInput.touched">Please confirm your password.</span>
+                <span class="help-block" *ngIf="passwordInput.value != confirmPasswordInput.value">Password do not match</span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" name="email" placeholder="Email" email required ngModel
+                    #emailInput="ngModel">
+                <span class="help-block" *ngIf="emailInput.invalid && emailInput.touched">Please enter a valid email
+                    address.</span>
+            </div>
+            <button [disabled]="registerForm.invalid" class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+        </form>
+        <small><a routerLink="/login">Have an Account? Log in</a></small>
+    </div>
+
+</div>
