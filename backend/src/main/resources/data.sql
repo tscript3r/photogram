@@ -6,20 +6,20 @@ VALUES
 INSERT INTO `USERS`
 (`bio`, `email`, `creation_date`, `firstname`, `password`, `username`)
 VALUES
-('Boring biography', 'admin@photogram.com', CURRENT_TIMESTAMP, 'Alex',
+('Software developer', 'admin@photogram.com', CURRENT_TIMESTAMP, 'Alex',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'admin'),
 
-('Photograph', 'photograph@photogram.com', CURRENT_TIMESTAMP, 'Andrzej',
+('Professional photographer', 'peter@photogram.com', CURRENT_TIMESTAMP, 'Peter',
 '$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'photograph'),
 
-('Developer', 'developer@photogram.com', CURRENT_TIMESTAMP, 'Heniek',
-'$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'heniu666'),
+('500+ receiver', 'andrew@photogram.com', CURRENT_TIMESTAMP, 'Andrew',
+'$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'andreW'),
 
-('Gamer', 'gamer@photogram.com', CURRENT_TIMESTAMP, 'Mietek',
-'$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'gammer1337'),
+('Model', 'charlotte@photogram.com', CURRENT_TIMESTAMP, 'Charlotte',
+'$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'baker'),
 
-('Unemployed', 'unemployed@photogram.com', CURRENT_TIMESTAMP, 'Zbyszek',
-'$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'poorMan');
+('Your nightmare', 'ava@photogram.com', CURRENT_TIMESTAMP, 'Ava',
+'$2a$10$Q2YP0GJki3D/.yKIqFs54.aHnVhpuLvHB.YftUaiQ3733lWZnwZea', 'ava');
 
 INSERT INTO `CONFIRMATIONS`
 (`user_id`, `confirmed`, `creation_date`, `token`)
@@ -39,23 +39,28 @@ VALUES
 INSERT INTO `POSTS`
 (`caption`, `likes`, `dislikes`, `location`, `creation_date`, `user_id`, `valid`, `visibility`)
 VALUES
-('First post, and the future prediction for this project', 666, 1, 'Wrocław', CURRENT_TIMESTAMP , 1, true, 'PUBLIC'),
-('Warsaw from Heaven', 123, 2, 'Warszawa', CURRENT_TIMESTAMP , 1, true, 'PRIVATE'),
-('Just an cat', 1, 3, 'Wrocław', CURRENT_TIMESTAMP , 1, true, 'FOLLOWERS'),
-('Wroclaw from Heaven', 13, 4, 'Warszawa', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
-('Just an dog', 12, 5, 'Wrocław', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
-('Gdansk from Heaven', 4, 6, 'Gdansk', CURRENT_TIMESTAMP , 3, true, 'PUBLIC'),
+('Found at photograms.org', 666, 1, 'Wrocław', CURRENT_TIMESTAMP , 1, true, 'PUBLIC'),
+('Found at photograms.org', 123, 2, 'Warszawa', CURRENT_TIMESTAMP , 1, true, 'PRIVATE'),
+('Found at photograms.org', 1, 3, 'Olesno', CURRENT_TIMESTAMP , 1, true, 'FOLLOWERS'),
+('Found at photograms.org', 13, 4, 'Gdańsk', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
+('Found at photograms.org', 12, 5, 'Kluczbork', CURRENT_TIMESTAMP , 2, true, 'PUBLIC'),
+('Found at photograms.org', 4, 6, 'Opole', CURRENT_TIMESTAMP , 3, true, 'PUBLIC'),
 ('Just an birth', 11, 7, 'Wrocław', '2019-06-24 13:42:09.446186', 3, false, 'PUBLIC');
 
 INSERT INTO `IMAGES`
 (`image_id`, `extension`)
 VALUES
+(1000, 'jpg'),
+(1000, 'jpg'),
+(1000, 'jpg'),
+(1000, 'jpg'),
+(1000, 'jpg'),
 (1000, 'jpg');
 
 INSERT INTO `POST_IMAGES`
 (`post_id`, `image_id`)
 VALUES
-(1, 1);
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6);
 
 INSERT INTO `COMMENTS` (`content`, `creation_date`, `post_id`, `user_id`)
 VALUES ('First comment ever', CURRENT_TIMESTAMP , 1, 1);
