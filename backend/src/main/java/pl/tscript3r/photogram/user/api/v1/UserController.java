@@ -34,6 +34,7 @@ public class UserController {
     public static final String FOLLOW_MAPPING = "/follow";
     public static final String UNFOLLOW_MAPPING = "/unfollow";
     public static final String TOKEN_PARAM = "token";
+    private static final String CONTAINING_MAPPING = "containing";
     private final UserService userService;
 
     @GetMapping
@@ -57,6 +58,11 @@ public class UserController {
         if (id != null)
             return userService.getByIdDto(id);
         throw new BadRequestPhotogramException("Bad request - specify any of: id / email / username");
+    }
+
+    @GetMapping(CONTAINING_MAPPING)
+    public Slice<UserDto> getContaining(@RequestParam(value = USERNAME_PARAM) String username, Pageable pageable) {
+        return userService.getContaining(username, pageable);
     }
 
     private Boolean isSet(final String username) {

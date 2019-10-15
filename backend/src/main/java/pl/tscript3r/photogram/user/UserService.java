@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.tscript3r.photogram.infrastructure.exception.BadRequestPhotogramException;
 import pl.tscript3r.photogram.infrastructure.exception.ForbiddenPhotogramException;
 import pl.tscript3r.photogram.infrastructure.exception.IgnoredPhotogramException;
 import pl.tscript3r.photogram.infrastructure.exception.NotFoundPhotogramException;
@@ -51,6 +52,8 @@ public class UserService {
     }
 
     public UserDto save(final UserDto userDto) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent())
+            throw new BadRequestPhotogramException("Email already exists");
         var user = mapperService.map(userDto, User.class);
         return mapperService.map(save(user, true, true), UserDto.class);
     }
@@ -133,6 +136,11 @@ public class UserService {
 
     public UserDto getByEmailDto(final String email) {
         return mapperService.map(getByEmail(email), UserDto.class);
+    }
+
+    public Slice<UserDto> getContaining(@NotNull final String username, @NotNull final Pageable pageable) {
+        return userRepository.findByUsernameContainingIgnoreCase(username, pageable)
+                .map(user -> mapperService.map(user, UserDto.class));
     }
 
     public void delete(final Principal principal, @NotNull final Long id) {

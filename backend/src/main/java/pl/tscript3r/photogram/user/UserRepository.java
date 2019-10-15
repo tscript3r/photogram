@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Slice<User> findByFollows(User user, Pageable pageable);
 
+    Slice<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
+
 }
