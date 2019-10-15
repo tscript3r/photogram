@@ -162,7 +162,7 @@ public class UserIT {
                         "\t\"username\": \"" + username + "\",\n" +
                         "\t\"password\": \"" + password + "\"\n" +
                         "}"))
-                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
                 .andReturn();
         return mvcResult.getResponse().getHeader(AUTHORIZATION);
     }

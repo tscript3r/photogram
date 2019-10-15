@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pl.tscript3r.photogram.user.User;
 import pl.tscript3r.photogram.user.email.EmailConfirmation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +17,7 @@ public class UserTest {
 
     public static User getDefaultUser() {
         var result = new User(ID, NAME, USERNAME, PASSWORD, EMAIL, new EmailConfirmation(), BIO,
-                new HashSet<>(), null, CREATION_DATE);
+                new HashSet<>(), new ArrayList<>(), CREATION_DATE);
         result.getEmailConfirmation().setConfirmed(true);
         result.addRole(getAdminRole());
         result.addRole(getDefaultRole());
