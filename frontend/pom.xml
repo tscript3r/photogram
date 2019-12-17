@@ -4,12 +4,67 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>pl.tscript3r.photogram</groupId>
+    <groupId>pl.tscript3r</groupId>
     <artifactId>photogram</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>frontend</artifactId>
-  <name>frontend</name>
+  <packaging>pom</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.7.6</version>
+
+        <configuration>
+          <nodeVersion>v12.13.0</nodeVersion>
+          <npmVersion>6.12.0</npmVersion>
+          <workingDirectory>src/main/web/</workingDirectory>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>npm run build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>prod</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run-script build</arguments>
+            </configuration>
+            <phase>generate-resources</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
 
 </project>
