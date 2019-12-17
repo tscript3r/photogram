@@ -71,171 +71,207 @@ java -jar target/*.jar
 
 #### Project tree
 ```
-+---main
-|   +---java
-|   |   \---pl
-|   |       \---tscript3r
-|   |           \---photogram
-|   |               |   Application.java
-|   |               |   
-|   |               +---api
-|   |               |   \---v1
-|   |               |       +---controllers
-|   |               |       |       CommentController.java
-|   |               |       |       MappingsConsts.java
-|   |               |       |       PostController.java
-|   |               |       |       UserController.java
-|   |               |       |       
-|   |               |       +---dtos
-|   |               |       |       CommentDto.java
-|   |               |       |       CommentDtoList.java
-|   |               |       |       Dto.java
-|   |               |       |       ImageDto.java
-|   |               |       |       LoginUserDto.java
-|   |               |       |       PostDto.java
-|   |               |       |       PostDtoList.java
-|   |               |       |       RoleDto.java
-|   |               |       |       UserDto.java
-|   |               |       |       
-|   |               |       +---mappers
-|   |               |       |       AbstractMapper.java
-|   |               |       |       CollectionMapper.java
-|   |               |       |       CommentMapper.java
-|   |               |       |       Mapper.java
-|   |               |       |       PostMapper.java
-|   |               |       |       RoleMapper.java
-|   |               |       |       UserMapper.java
-|   |               |       |       
-|   |               |       \---services
-|   |               |           |   MapperService.java
-|   |               |           |   
-|   |               |           \---beans
-|   |               |                   MapperServiceBean.java
-|   |               |                   
-|   |               +---configs
-|   |               |       EmailConfig.java
-|   |               |       JwtAuthentication.java
-|   |               |       JwtAuthorization.java
-|   |               |       SecurityConfig.java
-|   |               |       SecurityConstants.java
-|   |               |       
-|   |               +---domains
-|   |               |       Comment.java
-|   |               |       DataStructure.java
-|   |               |       DomainEntity.java
-|   |               |       EmailConfirmation.java
-|   |               |       Image.java
-|   |               |       Post.java
-|   |               |       Role.java
-|   |               |       User.java
-|   |               |       Visibility.java
-|   |               |       
-|   |               +---exceptions
-|   |               |       BadRequestPhotogramException.java
-|   |               |       ForbiddenPhotogramException.java
-|   |               |       IgnoredPhotogramException.java
-|   |               |       InternalErrorPhotogramException.java
-|   |               |       NotFoundPhotogramException.java
-|   |               |       PhotogramException.java
-|   |               |       
-|   |               +---repositories
-|   |               |       CommentRepository.java
-|   |               |       EmailConfirmationRepository.java
-|   |               |       PostRepository.java
-|   |               |       RoleRepository.java
-|   |               |       UserRepository.java
-|   |               |       
-|   |               +---services
-|   |               |   |   AuthorizationService.java
-|   |               |   |   CommentService.java
-|   |               |   |   EmailService.java
-|   |               |   |   ImageService.java
-|   |               |   |   PostService.java
-|   |               |   |   RoleService.java
-|   |               |   |   UserService.java
-|   |               |   |   VisibilityFilterService.java
-|   |               |   |   
-|   |               |   +---beans
-|   |               |   |       AuthorizationServiceBean.java
-|   |               |   |       CommentServiceBean.java
-|   |               |   |       EmailServiceBean.java
-|   |               |   |       ImageServiceBean.java
-|   |               |   |       PostServiceBean.java
-|   |               |   |       RoleServiceBean.java
-|   |               |   |       UserDetailsServiceBean.java
-|   |               |   |       UserServiceBean.java
-|   |               |   |       
-|   |               |   \---utils
-|   |               |           EmailMessageType.java
-|   |               |           ExpiredNonValidPostRemoveSchedule.java
-|   |               |           
-|   |               \---validators
-|   |                       UUID.java
-|   |                       
-|   \---resources
-|       |   application.properties
-|       |   data.sql
-
-|       +---templates
-|       |       EmailConfirmationTemplate.html
-|       |       PasswordResetTemplate.html
-|                   
-\---test
-    \---java
-        \---pl
-            \---tscript3r
-                \---photogram
-                    |   ApplicationTests.java
-                    |   Consts.java
-                    |   
-                    +---api
-                    |   \---v1
-                    |       +---controllers
-                    |       |       CommentControllerTest.java
-                    |       |       PostControllerTest.java
-                    |       |       UserControllerTest.java
-                    |       |       
-                    |       +---dtos
-                    |       |       CommentDtoTest.java
-                    |       |       PostDtoTest.java
-                    |       |       UserDtoTest.java
-                    |       |       
-                    |       +---mappers
-                    |       |       CommentMapperTest.java
-                    |       |       PostMapperTest.java
-                    |       |       RoleMapperTest.java
-                    |       |       UserMapperTest.java
-                    |       |       
-                    |       \---services
-                    |           \---beans
-                    |                   MapperServiceBeanTest.java
-                    |                   
-                    +---configs
-                    |       JwtAuthenticationTest.java
-                    |       
-                    +---domains
-                    |       CommentTest.java
-                    |       ImageTest.java
-                    |       PostTest.java
-                    |       RoleTest.java
-                    |       UserTest.java
-                    |       
-                    +---it
-                    |       PostIT.java
-                    |       UserIT.java
-                    |       
-                    \---services
-                        +---beans
-                        |       AuthorizationServiceBeanTest.java
-                        |       CommentServiceBeanTest.java
-                        |       EmailServiceBeanTest.java
-                        |       ImageServiceBeanTest.java
-                        |       PostServiceBeanTest.java
-                        |       RoleServiceBeanTest.java
-                        |       UserDetailsServiceBeanTest.java
-                        |       UserServiceBeanTest.java
-                        |       
-                        \---utils
+├───main
+│   ├───java
+│   │   └───pl
+│   │       └───tscript3r
+│   │           └───photogram
+│   │               │   Application.java
+│   │               │
+│   │               ├───infrastructure
+│   │               │   │   AbstractEntity.java
+│   │               │   │   MappingsConsts.java
+│   │               │   │
+│   │               │   ├───aop
+│   │               │   │       LoggingAspect.java
+│   │               │   │
+│   │               │   ├───configuration
+│   │               │   │       EmailConfig.java
+│   │               │   │       JwtAuthentication.java
+│   │               │   │       JwtAuthorization.java
+│   │               │   │       PasswordEncoderConfig.java
+│   │               │   │       SecurityConfig.java
+│   │               │   │       SecurityConstants.java
+│   │               │   │
+│   │               │   ├───exception
+│   │               │   │       BadRequestPhotogramException.java
+│   │               │   │       ForbiddenPhotogramException.java
+│   │               │   │       IgnoredPhotogramException.java
+│   │               │   │       InternalErrorPhotogramException.java
+│   │               │   │       NotFoundPhotogramException.java
+│   │               │   │       PhotogramException.java
+│   │               │   │
+│   │               │   └───mapper
+│   │               │           AbstractMapper.java
+│   │               │           CollectionMapper.java
+│   │               │           DataStructure.java
+│   │               │           Dto.java
+│   │               │           Mapper.java
+│   │               │           MapperService.java
+│   │               │           MapperServiceBean.java
+│   │               │
+│   │               ├───post
+│   │               │   │   ExpiredNonValidPostRemoveSchedule.java
+│   │               │   │   Post.java
+│   │               │   │   PostRepository.java
+│   │               │   │   PostService.java
+│   │               │   │   Reactions.java
+│   │               │   │   Visibility.java
+│   │               │   │
+│   │               │   ├───api
+│   │               │   │   └───v1
+│   │               │   │           PostController.java
+│   │               │   │           PostDto.java
+│   │               │   │           PostDtoList.java
+│   │               │   │           PostMapper.java
+│   │               │   │
+│   │               │   ├───comment
+│   │               │   │   │   Comment.java
+│   │               │   │   │   CommentRepository.java
+│   │               │   │   │   CommentService.java
+│   │               │   │   │
+│   │               │   │   └───api
+│   │               │   │       └───v1
+│   │               │   │               CommentController.java
+│   │               │   │               CommentDto.java
+│   │               │   │               CommentDtoList.java
+│   │               │   │               CommentMapper.java
+│   │               │   │
+│   │               │   └───image
+│   │               │       │   Image.java
+│   │               │       │   ImageService.java
+│   │               │       │
+│   │               │       └───api
+│   │               │           └───v1
+│   │               │                   ImageDto.java
+│   │               │
+│   │               └───user
+│   │                   │   AuthorizationService.java
+│   │                   │   User.java
+│   │                   │   UserDetailsServiceImpl.java
+│   │                   │   UserRepository.java
+│   │                   │   UserService.java
+│   │                   │
+│   │                   ├───api
+│   │                   │   └───v1
+│   │                   │           LoginUserDto.java
+│   │                   │           RoleDto.java
+│   │                   │           UserController.java
+│   │                   │           UserDto.java
+│   │                   │           UserMapper.java
+│   │                   │           UUID.java
+│   │                   │
+│   │                   ├───email
+│   │                   │       EmailConfirmation.java
+│   │                   │       EmailConfirmationRepository.java
+│   │                   │       EmailMessageType.java
+│   │                   │       EmailService.java
+│   │                   │
+│   │                   └───role
+│   │                           Role.java
+│   │                           RoleMapper.java
+│   │                           RoleRepository.java
+│   │                           RoleService.java
+│   │
+│   └───resources
+│       │   application.properties
+│       │   data.sql
+│       │
+│       ├───posts
+│       │   ├───1
+│       │   │   └───images
+│       │   │           1000
+│       │   │
+│       │   ├───2
+│       │   │   └───images
+│       │   │           1000
+│       │   │
+│       │   ├───3
+│       │   │   └───images
+│       │   │           1000
+│       │   │
+│       │   ├───4
+│       │   │   └───images
+│       │   │           1000
+│       │   │
+│       │   ├───5
+│       │   │   └───images
+│       │   │           1000
+│       │   │
+│       │   └───6
+│       │       └───images
+│       │               1000
+│       │
+│       ├───templates
+│       │       EmailConfirmationTemplate.html
+│       │       PasswordResetTemplate.html
+│       │
+│       └───users
+│           │   default_avatar.png
+│           │
+│           ├───1
+│           │       avatar
+│           │
+│           └───2
+│                   avatar
+│
+└───test
+    └───java
+        └───pl
+            └───tscript3r
+                └───photogram
+                    │   ApplicationTests.java
+                    │   Consts.java
+                    │
+                    ├───api
+                    │   └───v1
+                    │       ├───controllers
+                    │       │       CommentControllerTest.java
+                    │       │       PostControllerTest.java
+                    │       │       UserControllerTest.java
+                    │       │
+                    │       ├───dtos
+                    │       │       CommentDtoTest.java
+                    │       │       PostDtoTest.java
+                    │       │       UserDtoTest.java
+                    │       │
+                    │       ├───mappers
+                    │       │       CommentMapperTest.java
+                    │       │       PostMapperTest.java
+                    │       │       RoleMapperTest.java
+                    │       │       UserMapperTest.java
+                    │       │
+                    │       └───services
+                    │           └───beans
+                    │                   MapperServiceBeanTest.java
+                    │
+                    ├───domains
+                    │       CommentTest.java
+                    │       ImageTest.java
+                    │       PostTest.java
+                    │       RoleTest.java
+                    │       UserTest.java
+                    │
+                    ├───infrastructure
+                    │   └───configuration
+                    │           JwtAuthenticationTest.java
+                    │
+                    ├───it
+                    │       PostIT.java
+                    │       UserIT.java
+                    │
+                    └───services
+                        ├───beans
+                        │       AuthorizationServiceBeanTest.java
+                        │       CommentServiceTest.java
+                        │       EmailServiceTest.java
+                        │       ImageServiceTest.java
+                        │       PostServiceTest.java
+                        │       RoleServiceTest.java
+                        │       UserDetailsServiceImplTest.java
+                        │       UserServiceTest.java
+                        │
+                        └───utils
                                 EmailMessageTypeTest.java
                                 ExpiredNonValidPostRemoveScheduleTest.java
                                 
