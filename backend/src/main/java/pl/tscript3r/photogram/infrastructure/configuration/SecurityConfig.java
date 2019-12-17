@@ -18,7 +18,7 @@ import static pl.tscript3r.photogram.infrastructure.MappingsConsts.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] PUBLIC_MATCHERS = {LOGIN_MAPPING, USER_MAPPING + "/**", POST_MAPPING + "/**", "/image/**",
-            "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/h2-console/**"};
+            "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/h2-console/**", "/*"};
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder passwordEncoder;
