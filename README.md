@@ -27,12 +27,25 @@ Photo sharing web service inspired by Instagram. Main functionalities:
 More details in their modules
 
 ### Running locally
+
+###### Java 11 SDK required
+
+* Linux
 ```
 git clone https://github.com/tscript3r/photogram.git
 cd photogram
 ./mvnw package
-java -jar target/*.jar
+java -jar backend/target/*.jar
 ```
+
+* Windows
+```
+git clone https://github.com/tscript3r/photogram.git
+cd photogram
+mvnw.cmd package
+java -jar backend/target/*.jar
+```
+
 By executing maven package goal frontend will be production ready builded and copied into resources of backend, so
 that http server of backend will also run the frontend part. Default port is 8080, so after running the jar just visit:
 http://localhost:8080
