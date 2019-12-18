@@ -8,10 +8,10 @@
 
 ### General info
 Photo sharing web service inspired by Instagram. Main functionalities:
-*    Registering new users
+*    New users register
 *    Account activation by email confirmation
 *    Login in
-*    Viewing newest posts
+*    New posts view
 *    Adding and removing posts
 *    Post likes
 *    Post comments
@@ -47,10 +47,10 @@ java -jar backend/target/*.jar
 ```
 
 By executing maven package goal frontend will be production ready builded and copied into resources of backend, so
-that http server of backend will also run the frontend part. Default port is 8080, so after running the jar just visit:
+that http server of backend runs also the frontend part. Default port is 8080, so after running the jar just visit:
 http://localhost:8080
 
-To login you can use following credentials:
+For login you can use following credentials:
 *    Username: admin
 *    Password: test
 
